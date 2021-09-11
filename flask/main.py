@@ -1,42 +1,27 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 import sqlite3
-import names
-import uuid
+import card_user
+import card_admin
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    con = sqlite3.connect('user.db')
-    cur = con.cursor()
     email = request.headers.get("X-Forwarded-Email")
-    cur.execute("select nickname from user where email = '" + email + "'")
-    username = cur.fetchone()
-    if(username is None):
-        while True:
-            uid = str(uuid.uuid4())
-            cur.execute("select uuid from user where uuid = '" + uid + "'")
-            if(cur.fetchone() is not None):
-                greetings = "Sorry, please reload page and try again."
-                break
-            username = names.get_last_name()
-            cur.execute(
-                "select nickname from user where nickname = '" + username + "'")
-            if(cur.fetchone() is not None):
-                greetings = "Sorry, please reload page and try again."
-                break
-            cur.execute("insert into user values ('" + uid +
-                        "','" + email + "','" + username + "')")
-            break
-        con.commit()
-        greetings = "Hello, " + username + "! Your name was made randomly."
-    else:
-        username = ''.join(username)
-        greetings = "Hello, " + username + "!"
+    greetings, uid = card_user.card_auth(email)
+    sid = request.cookies.get("card_sid", None)
+    if(sid is None):
+        sid = card_user.card_getsession(uid)
+    card_user.card_putsession(sid, uid)
+    resp = make_response(render_template(
+        'index.html', title='Cardgame', greetings=greetings))
+    resp.set_cookie("card_sid", sid)
+    return resp
 
-    con.close()
 
-    return render_template('index.html', title='Cardgame', greetings=greetings)
+@app.route('/admin/<option>', methods=['GET', 'POST'])
+def admin(option=None):
+    return card_admin.card_admin_view()
 
 
 @app.route('/chkheaders/')
@@ -51,23 +36,27 @@ def chkheaders():
     return render_template('chkheaders.html', title='Check Headers', headers=headers)
 
 
-@app.route('/chkusers/')
-def chkusers():
+@app.route('/chktable/<tablename>')
+def chkusers(tablename=None):
     headers = "<table border=1>"
-    con = sqlite3.connect('user.db')
+    if("session" in tablename):
+        con = sqlite3.connect('session.db')
+    else:
+        con = sqlite3.connect(tablename + '.db')
+
     cur = con.cursor()
 
-    for row in cur.execute('select * from user'):
+    for row in cur.execute('select * from ' + tablename):
         headers += "<tr>"
-        for str in row:
-            headers += "<td>" + str + "</td>"
+        for item in row:
+            headers += "<td>" + item + "</td>"
         headers += "</tr>"
         # envs += request.headers.get("Host")
     headers += "</table>"
 
     con.close()
 
-    return render_template('chkheaders.html', title='Check Users', headers=headers)
+    return render_template('chkheaders.html', title=tablename, headers=headers)
 
 
 @app.route('/hello/<name>')
