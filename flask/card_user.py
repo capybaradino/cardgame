@@ -5,13 +5,21 @@ import card_util
 import card_db
 
 
-def card_getsession(uid):
+def card_getsession(sid):
+    if(sid is not None):
+        sid = card_db.getsid_fromsid(sid)
+    return sid
+
+
+def card_postsession(uid):
     while True:
         sid = str(uuid.uuid4())
         sid_chk = card_db.getsid_fromsid(sid)
         if(sid_chk is not None):
             continue
         break
+    datestr = card_util.card_getdatestrnow()
+    card_db.postusersession(sid, uid, datestr)
     return sid
 
 

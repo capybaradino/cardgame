@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 import card_user
 import card_admin
@@ -9,10 +9,22 @@ app = Flask(__name__)
 def index():
     email = request.headers.get("X-Forwarded-Email")
     greetings, uid = card_user.card_auth(email)
+    #    cookie  table   work
+    # 1.  No      ANY     postsession
+    # 2.  Yes     No      postsession(cookie override)
+    # 3.  Yes     Yes     do nothing
     sid = request.cookies.get("card_sid", None)
     if(sid is None):
-        sid = card_user.card_getsession(uid)
-    card_user.card_putsession(sid, uid)
+        # 1.
+        sid = card_user.card_postsession(uid)
+    else:
+        sid_chk = card_user.card_getsession(sid)
+        if(sid_chk is None):
+            # 2.
+            sid = card_user.card_postsession(uid)
+        else:
+            # 3.
+            card_user.card_putsession(sid, uid)
     resp = make_response(render_template(
         'index.html', title='Cardgame', greetings=greetings))
     resp.set_cookie("card_sid", sid)
@@ -21,7 +33,11 @@ def index():
 
 @app.route('/admin/<option>', methods=['GET', 'POST'])
 def admin(option=None):
-    return card_admin.card_admin_view()
+    sid = request.cookies.get("card_sid", None)
+    sid = card_user.card_getsession(sid)
+    if(sid is None):
+        return redirect(url_for("index"))
+    return card_admin.card_admin_view(sid)
 
 
 @app.route('/chkheaders/')
@@ -51,7 +67,6 @@ def chkusers(tablename=None):
         for item in row:
             headers += "<td>" + item + "</td>"
         headers += "</tr>"
-        # envs += request.headers.get("Host")
     headers += "</table>"
 
     con.close()
