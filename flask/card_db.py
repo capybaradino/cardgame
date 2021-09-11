@@ -1,6 +1,13 @@
 import sqlite3
 
 
+def card_fetchone(cur):
+    item = cur.fetchone()
+    if(item is not None):
+        item = item[0]
+    return item
+
+
 def getuser_fromsid(sid):
     uid = getuid_fromsid(sid)
     user = getuser_fromuid(uid)
@@ -11,7 +18,7 @@ def getuid_fromsid(sid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
     cur.execute("select uid from usersession where sid = '" + sid + "'")
-    uid = cur.fetchone()[0]
+    uid = card_fetchone(cur)
     con.close()
     return uid
 
@@ -20,7 +27,7 @@ def getuser_fromuid(uid):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
     cur.execute("select * from user where uid = '" + uid + "'")
-    user = cur.fetchone()
+    user = card_fetchone(cur)
     con.close()
     return user
 
@@ -35,7 +42,7 @@ def getnickname_fromuid(uid):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
     cur.execute("select nickname from user where uid = '" + uid + "'")
-    nickname = cur.fetchone()[0]
+    nickname = card_fetchone(cur)
     con.close()
     return nickname
 
@@ -50,7 +57,7 @@ def getemail_fromuid(uid):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
     cur.execute("select email from user where uid = '" + uid + "'")
-    email = cur.fetchone()[0]
+    email = card_fetchone(cur)
     con.close()
     return email
 
@@ -59,7 +66,7 @@ def getsid_fromuid(uid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
     cur.execute("select sid from usersession where uid = '" + uid + "'")
-    sid = cur.fetchone()[0]
+    sid = card_fetchone(cur)
     con.close()
     return sid
 
@@ -68,7 +75,7 @@ def getsid_fromsid(sid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
     cur.execute("select sid from usersession where sid = '" + sid + "'")
-    sid = cur.fetchone()[0]
+    sid = card_fetchone(cur)
     con.close()
     return sid
 
@@ -98,7 +105,7 @@ def getnickname_fromemail(email):
     cur = con.cursor()
     cur.execute("select nickname from user where email = '" +
                 email + "'")
-    username = cur.fetchone()[0]
+    username = card_fetchone(cur)
     con.close()
     return username
 
@@ -107,7 +114,7 @@ def getuid_fromuid(uid):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
     cur.execute("select uid from user where uid = '" + uid + "'")
-    uid = cur.fetchone()[0]
+    uid = card_fetchone(cur)
     con.close()
     return uid
 
@@ -116,7 +123,7 @@ def getnickname_fromnickname(username):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
     cur.execute("select nickname from user where nickname = '" + username + "'")
-    username = cur.fetchone()[0]
+    username = card_fetchone(cur)
     con.close()
     return username
 
@@ -135,6 +142,6 @@ def getuid_fromemail(email):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
     cur.execute("select uid from user where email is '" + email + "'")
-    uid = cur.fetchone()[0]
+    uid = card_fetchone(cur)
     con.close()
     return uid
