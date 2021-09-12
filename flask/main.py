@@ -18,7 +18,7 @@ def index():
         # 1.
         sid = card_user.card_postsession(uid)
     else:
-        sid_chk = card_user.card_getsession(sid)
+        sid_chk = card_user.card_getsession(sid, email)
         if(sid_chk is None):
             # 2.
             sid = card_user.card_postsession(uid)
@@ -34,10 +34,16 @@ def index():
 @app.route('/admin/<option>', methods=['GET', 'POST'])
 def admin(option=None):
     sid = request.cookies.get("card_sid", None)
-    sid = card_user.card_getsession(sid)
+    email = request.headers.get("X-Forwarded-Email")
+    sid = card_user.card_getsession(sid, email)
     if(sid is None):
         return redirect(url_for("index"))
-    return card_admin.card_admin_view(sid)
+    if(request.method == 'POST'):
+        return card_admin.card_admin_post(sid, option, request, request.url)
+    else:
+        if(option == "view"):
+            return card_admin.card_admin_view(sid)
+        return card_admin.card_admin_view(sid)
 
 
 @app.route('/chkheaders/')
