@@ -1,6 +1,41 @@
 import sqlite3
 
 
+def postfile(fid, owneruid, kind, original_filename, filename, upload_date):
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute("insert into material values ('" + fid + "','" +
+                owneruid + "','" + kind + "','" + original_filename + "','" +
+                filename + "','" + upload_date + "')")
+    con.close()
+    return
+
+
+def isexist_filename(filename):
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute(
+        "select filename from material where filename = '" + filename + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    else:
+        con.close()
+        return True
+
+
+def isexist_fid(fid):
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute("select filename from material where fid = '" + fid + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    else:
+        con.close()
+        return True
+
+
 def card_fetchone(cur):
     item = cur.fetchone()
     if(item is not None):
