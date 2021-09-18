@@ -7,6 +7,7 @@ def postfile(fid, owneruid, kind, original_filename, filename, upload_date):
     cur.execute("insert into material values ('" + fid + "','" +
                 owneruid + "','" + kind + "','" + original_filename + "','" +
                 filename + "','" + upload_date + "')")
+    con.commit()
     con.close()
     return
 
