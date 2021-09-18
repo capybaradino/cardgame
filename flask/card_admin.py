@@ -1,4 +1,5 @@
 import os
+from flask.helpers import send_from_directory
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect
 import card_db
@@ -7,10 +8,6 @@ import uuid
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg'])
-
-app = Flask(__name__)
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def allowed_file(filename):
@@ -43,7 +40,7 @@ def card_admin_post(sid, option, request: request, callback):
             uid = card_db.getuid_fromsid(sid)
             card_db.postfile(fid, uid, option, original_filename,
                              filename, card_util.card_getdatestrnow())
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
             break
 
     return redirect(callback)
@@ -60,4 +57,19 @@ def card_admin_view(sid):
         card_db.getnickname_fromsid(sid) + "</td>"
     userinfo += "</tr>"
     userinfo += "</table>"
-    return render_template('admin.html', title='Admin', userinfo=userinfo)
+
+    upinfo = "<table border=1>"
+    upinfo += "<tr>"
+    upinfo += "<td>" + "Image" + "</td><td>" + "File name" + "</td><td>" + \
+        "Kind" + "</td><td>" + "Upload" + "</td>"
+    upinfo += "</tr>"
+    for fileinfo in card_db.getfileinfos_fromsid(sid):
+        upinfo += "<tr>"
+        upinfo += "<td>" + "<img width=100 src=\"" + \
+            "../uploads/" + fileinfo[4] + "\"></td>"
+        upinfo += "<td>" + fileinfo[3] + "</td>"
+        upinfo += "<td>" + fileinfo[2] + "</td>"
+        upinfo += "<td>" + fileinfo[5] + "</td>"
+        upinfo += "</tr>"
+    upinfo += "</table>"
+    return render_template('admin.html', title='Admin', userinfo=userinfo, upinfo=upinfo)
