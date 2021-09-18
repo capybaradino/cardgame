@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for
+from flask import Flask, render_template
+from flask import request, make_response, redirect, url_for
+from flask.helpers import send_from_directory
 import sqlite3
 import card_user
 import card_admin
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -44,6 +47,12 @@ def admin(option=None):
         if(option == "view"):
             return card_admin.card_admin_view(sid)
         return card_admin.card_admin_view(sid)
+
+
+@app.route('/uploads/<filename>')
+# ファイルを表示する
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 @app.route('/chkheaders/')

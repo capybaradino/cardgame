@@ -1,6 +1,16 @@
 import sqlite3
 
 
+def getfileinfos_fromsid(sid):
+    uid = getuid_fromsid(sid)
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute("select * from material where owneruid = '" + uid + "'")
+    fileinfos = cur.fetchall()
+    con.close()
+    return fileinfos
+
+
 def postfile(fid, owneruid, kind, original_filename, filename, upload_date):
     con = sqlite3.connect('material.db')
     cur = con.cursor()
