@@ -11,6 +11,22 @@ def getfileinfos_fromsid(sid):
     return fileinfos
 
 
+def deletefile_fromfilename(filename, sid):
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    uid = getuid_fromsid(sid)
+    cur.execute("select * from material where filename = '" +
+                filename + "' and owneruid = '" + uid + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    cur.execute("delete from material where filename = '" +
+                filename + "' and owneruid = '" + uid + "'")
+    con.commit()
+    con.close()
+    return True
+
+
 def postfile(fid, owneruid, kind, original_filename, filename, upload_date):
     con = sqlite3.connect('material.db')
     cur = con.cursor()

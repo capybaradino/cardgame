@@ -34,7 +34,7 @@ def index():
     return resp
 
 
-@app.route('/admin/<option>', methods=['GET', 'POST'])
+@app.route('/admin/<option>', methods=['GET', 'POST', 'DELETE'])
 def admin(option=None):
     sid = request.cookies.get("card_sid", None)
     email = request.headers.get("X-Forwarded-Email")
@@ -43,6 +43,8 @@ def admin(option=None):
         return redirect(url_for("index"))
     if(request.method == 'POST'):
         return card_admin.card_admin_post(sid, option, request, request.url)
+    if(request.method == 'DELETE' and option != "view"):
+        return card_admin.card_admin_delete(sid, option, 'admin/view')
     else:
         if(option == "view"):
             return card_admin.card_admin_view(sid)

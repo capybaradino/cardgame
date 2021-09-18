@@ -5,13 +5,31 @@ from flask import Flask, render_template, request, redirect
 import card_db
 import card_util
 import uuid
+import card_image
 
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg'])
+TMP_FOLDEF = '/tmp'
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in card_image.ALLOWED_EXTENSIONS
+
+
+def check_file(sid, file):
+    tmpfile = os.path.join(TMP_FOLDEF, "card_" + sid)
+    file.save(tmpfile)
+    ret = card_image.checksize(tmpfile)
+    if(ret == False):
+        os.remove(tmpfile)
+    return ret, tmpfile
+
+
+def card_admin_delete(sid, option, callback):
+    while True:
+        if(not card_db.deletefile_fromfilename(option, sid)):
+            break
+        os.remove(os.path.join(UPLOAD_FOLDER, option))
+    return redirect(callback)
 
 
 def card_admin_post(sid, option, request: request, callback):
@@ -23,7 +41,10 @@ def card_admin_post(sid, option, request: request, callback):
         file = request.files['file']
         if file.filename == '':
             break
-        if file and allowed_file(file.filename):
+        if file:
+            chkallowed = allowed_file(file.filename)
+            chkfile, tmpfile = check_file(sid, file)
+        if chkallowed and chkfile:
             original_filename = secure_filename(file.filename)
             extention = file.filename.rsplit('.', 1)[1].lower()
             while True:
@@ -40,9 +61,10 @@ def card_admin_post(sid, option, request: request, callback):
             uid = card_db.getuid_fromsid(sid)
             card_db.postfile(fid, uid, option, original_filename,
                              filename, card_util.card_getdatestrnow())
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            os.replace(tmpfile, os.path.join(UPLOAD_FOLDER, filename))
             break
-
+        else:
+            break
     return redirect(callback)
 
 
@@ -61,15 +83,22 @@ def card_admin_view(sid):
     upinfo = "<table border=1>"
     upinfo += "<tr>"
     upinfo += "<td>" + "Image" + "</td><td>" + "File name" + "</td><td>" + \
-        "Kind" + "</td><td>" + "Upload" + "</td>"
+        "Kind" + "</td><td>" + "Upload" + "</td><td></td>"
     upinfo += "</tr>"
     for fileinfo in card_db.getfileinfos_fromsid(sid):
-        upinfo += "<tr>"
+        filename = fileinfo[4]
+        upinfo += "\n<tr>"
         upinfo += "<td>" + "<img width=100 src=\"" + \
-            "../uploads/" + fileinfo[4] + "\"></td>"
+            "../uploads/" + filename + "\"></td>"
         upinfo += "<td>" + fileinfo[3] + "</td>"
         upinfo += "<td>" + fileinfo[2] + "</td>"
         upinfo += "<td>" + fileinfo[5] + "</td>"
+        upinfo += "<td>" + \
+            "<input type=button value=Delete onclick=\"send_delete(\'" + \
+            filename + "\');\"/>"
+#        upinfo += "<td>" + "<form onsubmit=send_delete(" + filename + ")" + \
+#            "><input type=submit value=Delete>" + \
+#            "</form>" + "</td>"
         upinfo += "</tr>"
     upinfo += "</table>"
     return render_template('admin.html', title='Admin', userinfo=userinfo, upinfo=upinfo)
