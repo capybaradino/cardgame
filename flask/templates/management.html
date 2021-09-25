@@ -2,8 +2,8 @@
 {% block content %}
 
 <script type="text/javascript">
-    function send_delete(filename) {
-        var url = filename;
+    function send_delete(cid) {
+        var url = cid;
         var xhr = new XMLHttpRequest();
         xhr.open("DELETE", url, true);
         xhr.onload = function () {

@@ -6,7 +6,12 @@ import card_util
 import card_db
 
 
-def card_management_post(sid, request: request, callback):
+def card_management_delete(cid, callback):
+    card_db.deletecard_fromcid(cid)
+    return redirect(callback)
+
+
+def card_management_post(request: request, callback):
     while True:
         fid = request.form['fid']
         cardname = request.form['cardname']
@@ -32,7 +37,8 @@ def card_management_view():
     cardupdateform = ""
     cardupdateform += '<form action=card method=post enctype=multipart/form-data>'
     cardupdateform += '<table border="1">'
-    columns = ("cid", "fid", "cardname", "attack", "defense", "type1", "type2")
+    columns = ("cid", "fid", "cardname", "attack",
+               "defense", "type1", "type2", "rarity")
     cardupdateform += "<tr>"
     for columnname in columns:
         cardupdateform += "<td>"+columnname+"</td>"
@@ -74,6 +80,14 @@ def card_management_view():
     for value in typevalues:
         cardupdateform += "<option value="+value+">"+value+"</option>"
     cardupdateform += "</select></td>"
+    # rarity
+    cardupdateform += "<td><select name=rarity>"
+    rarityvalues = ("SR", "C", "R", "SR", "SSR")
+    for value in rarityvalues:
+        value = str(value)
+        cardupdateform += "<option value="+value+">"+value+"</option>"
+    cardupdateform += "</select></td>"
+    # end form
     cardupdateform += "</tr></table>"
     cardupdateform += "<input type=submit value=Register>"
     cardupdateform += "</form>"
