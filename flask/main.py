@@ -4,6 +4,7 @@ from flask.helpers import send_from_directory
 import sqlite3
 import card_user
 import card_admin
+import card_util
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
 
@@ -71,34 +72,25 @@ def chkheaders():
 
 @app.route('/chktable/<tablename>')
 def chkusers(tablename=None):
-    headers = ""
-    if("session" in tablename):
-        con = sqlite3.connect('session.db')
-    elif("game_" in tablename):
-        con = sqlite3.connect('game.db')
-    else:
-        con = sqlite3.connect(tablename + '.db')
-
-    cur = con.cursor()
-
-    headers += "<table border=1>"
-    headers += "<tr>"
-    for row in cur.execute("PRAGMA table_info('" + tablename + "')").fetchall():
-        headers += "<td>"
-        headers += str(row[1]) + " (" + str(row[2]) + ")"
-        headers += "</td>"
-    headers += "</tr>"
-
-    for row in cur.execute('select * from ' + tablename):
-        headers += "<tr>"
-        for item in row:
-            headers += "<td>" + item + "</td>"
-        headers += "</tr>"
-    headers += "</table>"
-
-    con.close()
-
+    headers = card_util.card_gettablehtml(tablename, None)
     return render_template('chkheaders.html', title=tablename, headers=headers)
+
+
+@app.route('/management/<target>', methods=['GET', 'POST', 'DELETE'])
+def management(target=None):
+    sid = request.cookies.get("card_sid", None)
+    email = request.headers.get("X-Forwarded-Email")
+    sid = card_user.card_getsession(sid, email)
+    if(sid is None):
+        return redirect(url_for("index"))
+#    if(request.method == 'POST'):
+#        return card_admin.card_admin_post(sid, option, request, request.url)
+#    if(request.method == 'DELETE' and option != "view"):
+#        return card_admin.card_admin_delete(sid, option, 'management/' + target)
+    else:
+        cardinfo = card_util.card_gettablehtml('card_basicdata', None)
+        uploadedinfo = card_util.card_gettablehtml('material', None)
+        return render_template('management.html', title='management', cardinfo=cardinfo, uploadedinfo=uploadedinfo)
 
 
 @app.route('/hello/<name>')
