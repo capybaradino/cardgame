@@ -83,36 +83,6 @@ def card_admin_view(sid):
     userinfo += "</tr>"
     userinfo += "</table>"
 
-    upinfo = "<table border=1>"
-    upinfo += "<tr>"
-    upinfo += "<td>" + "Image" + "</td><td>" + "Name" + "</td><td>" + "File name" + "</td><td>" + \
-        "Kind" + "</td><td>" + "Upload" + "</td><td></td>"
-    upinfo += "</tr>"
-    for fileinfo in card_db.getfileinfos_fromsid(sid):
-        index = 0
-        fid = fileinfo[index]
-        index += 1
-        owneruid = fileinfo[index]
-        index += 1
-        kind = fileinfo[index]
-        index += 1
-        name = fileinfo[index]
-        index += 1
-        original_filename = fileinfo[index]
-        index += 1
-        filename = fileinfo[index]
-        index += 1
-        upload_date = fileinfo[index]
-        upinfo += "\n<tr>"
-        upinfo += "<td>" + "<img width=100 src=\"" + \
-            "../uploads/" + filename + "\"></td>"
-        upinfo += "<td>" + name + "</td>"
-        upinfo += "<td>" + original_filename + "</td>"
-        upinfo += "<td>" + kind + "</td>"
-        upinfo += "<td>" + upload_date + "</td>"
-        upinfo += "<td>" + \
-            "<input type=button value=Delete onclick=\"send_delete(\'" + \
-            filename + "\');\"/>"
-        upinfo += "</tr>"
-    upinfo += "</table>"
+    upinfo = card_util.card_gettablehtml('material', sid)
+
     return render_template('admin.html', title='Admin', userinfo=userinfo, upinfo=upinfo)
