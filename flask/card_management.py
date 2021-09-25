@@ -19,12 +19,14 @@ def card_management_post(request: request, callback):
         defense = request.form['defense']
         type1 = request.form['type1']
         type2 = request.form['type2']
+        rarity = request.form['rarity']
         while True:
             cid = str(uuid.uuid4())
             if(card_db.isexist_cid(cid)):
                 continue
             break
-        card_db.postcard(cid, fid, cardname, attack, defense, type1, type2)
+        card_db.postcard(cid, fid, cardname, attack,
+                         defense, type1, type2, rarity)
         break
     return redirect(callback)
 
