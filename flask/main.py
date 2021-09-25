@@ -71,13 +71,21 @@ def chkheaders():
 
 @app.route('/chktable/<tablename>')
 def chkusers(tablename=None):
-    headers = "<table border=1>"
+    headers = ""
     if("session" in tablename):
         con = sqlite3.connect('session.db')
     else:
         con = sqlite3.connect(tablename + '.db')
 
     cur = con.cursor()
+
+    headers += "<table border=1>"
+    headers += "<tr>"
+    for row in cur.execute("PRAGMA table_info('" + tablename + "')").fetchall():
+        headers += "<td>"
+        headers += str(row[1]) + " (" + str(row[2]) + ")"
+        headers += "</td>"
+    headers += "</tr>"
 
     for row in cur.execute('select * from ' + tablename):
         headers += "<tr>"
