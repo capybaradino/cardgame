@@ -41,6 +41,9 @@ def card_admin_post(sid, option, request: request, callback):
         file = request.files['file']
         if file.filename == '':
             break
+        name = request.form['name']
+        if (name is None):
+            break
         if file:
             chkallowed = allowed_file(file.filename)
             chkfile, tmpfile = check_file(sid, file)
@@ -59,7 +62,7 @@ def card_admin_post(sid, option, request: request, callback):
                     continue
                 break
             uid = card_db.getuid_fromsid(sid)
-            card_db.postfile(fid, uid, option, original_filename,
+            card_db.postfile(fid, uid, option, name, original_filename,
                              filename, card_util.card_getdatestrnow())
             os.replace(tmpfile, os.path.join(UPLOAD_FOLDER, filename))
             break
@@ -82,23 +85,34 @@ def card_admin_view(sid):
 
     upinfo = "<table border=1>"
     upinfo += "<tr>"
-    upinfo += "<td>" + "Image" + "</td><td>" + "File name" + "</td><td>" + \
+    upinfo += "<td>" + "Image" + "</td><td>" + "Name" + "</td><td>" + "File name" + "</td><td>" + \
         "Kind" + "</td><td>" + "Upload" + "</td><td></td>"
     upinfo += "</tr>"
     for fileinfo in card_db.getfileinfos_fromsid(sid):
-        filename = fileinfo[4]
+        index = 0
+        fid = fileinfo[index]
+        index += 1
+        owneruid = fileinfo[index]
+        index += 1
+        kind = fileinfo[index]
+        index += 1
+        name = fileinfo[index]
+        index += 1
+        original_filename = fileinfo[index]
+        index += 1
+        filename = fileinfo[index]
+        index += 1
+        upload_date = fileinfo[index]
         upinfo += "\n<tr>"
         upinfo += "<td>" + "<img width=100 src=\"" + \
             "../uploads/" + filename + "\"></td>"
-        upinfo += "<td>" + fileinfo[3] + "</td>"
-        upinfo += "<td>" + fileinfo[2] + "</td>"
-        upinfo += "<td>" + fileinfo[5] + "</td>"
+        upinfo += "<td>" + name + "</td>"
+        upinfo += "<td>" + original_filename + "</td>"
+        upinfo += "<td>" + kind + "</td>"
+        upinfo += "<td>" + upload_date + "</td>"
         upinfo += "<td>" + \
             "<input type=button value=Delete onclick=\"send_delete(\'" + \
             filename + "\');\"/>"
-#        upinfo += "<td>" + "<form onsubmit=send_delete(" + filename + ")" + \
-#            "><input type=submit value=Delete>" + \
-#            "</form>" + "</td>"
         upinfo += "</tr>"
     upinfo += "</table>"
     return render_template('admin.html', title='Admin', userinfo=userinfo, upinfo=upinfo)

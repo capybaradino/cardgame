@@ -74,6 +74,8 @@ def chkusers(tablename=None):
     headers = ""
     if("session" in tablename):
         con = sqlite3.connect('session.db')
+    elif("game_" in tablename):
+        con = sqlite3.connect('game.db')
     else:
         con = sqlite3.connect(tablename + '.db')
 
