@@ -22,57 +22,7 @@
 <h2>Card information</h2>
 {{ cardinfo | safe }}
 <h2>New card registration</h2>
-<form action=card method=post enctype=multipart/form-data>
-    <table border="1">
-        <tr>
-            <td>cid</td>
-            <td>cardname</td>
-            <td>attack</td>
-            <td>defense</td>
-            <td>type1</td>
-            <td>type2</td>
-        </tr>
-        <tr>
-            <td>Auto</td>
-            <td><input type="text" maxlength="32" name=name></td>
-            <td><select name=attack>
-                    <option value=1>1</option>
-                    <option value=2>2</option>
-                    <option value=3>3</option>
-                    <option value=4>4</option>
-                    <option value=5>5</option>
-                    <option value=6>6</option>
-                    <option value=7>7</option>
-                    <option value=8>8</option>
-                    <option value=9>9</option>
-                </select></td>
-            <td><select name=defense>
-                    <option value=1>1</option>
-                    <option value=2>2</option>
-                    <option value=3>3</option>
-                    <option value=4>4</option>
-                    <option value=5>5</option>
-                    <option value=6>6</option>
-                    <option value=7>7</option>
-                    <option value=8>8</option>
-                    <option value=9>9</option>
-                </select></td>
-            <td><select name=type1>
-                    <option value=fire>Fire</option>
-                    <option value=water>Water</option>
-                    <option value=wind>Wind</option>
-                    <option value=dark>Dark</option>
-                </select></td>
-            <td><select name=type2>
-                    <option value=fire>Fire</option>
-                    <option value=water>Water</option>
-                    <option value=wind>Wind</option>
-                    <option value=dark>Dark</option>
-                </select></td>
-        </tr>
-    </table>
-    <input type=submit value=Register>
-</form>
+{{ cardupdateform | safe }}
 <h2>Uploaded card list</h2>
 {{ uploadedinfo | safe }}
 {% endblock %}

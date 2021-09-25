@@ -1,10 +1,10 @@
 from flask import Flask, render_template
 from flask import request, make_response, redirect, url_for
 from flask.helpers import send_from_directory
-import sqlite3
 import card_user
 import card_admin
 import card_util
+import card_management
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
 
@@ -83,14 +83,12 @@ def management(target=None):
     sid = card_user.card_getsession(sid, email)
     if(sid is None):
         return redirect(url_for("index"))
-#    if(request.method == 'POST'):
-#        return card_admin.card_admin_post(sid, option, request, request.url)
+    if(request.method == 'POST'):
+        return card_management.card_management_post(sid, request, request.url)
 #    if(request.method == 'DELETE' and option != "view"):
 #        return card_admin.card_admin_delete(sid, option, 'management/' + target)
     else:
-        cardinfo = card_util.card_gettablehtml('card_basicdata', None)
-        uploadedinfo = card_util.card_gettablehtml('material', None)
-        return render_template('management.html', title='management', cardinfo=cardinfo, uploadedinfo=uploadedinfo)
+        return card_management.card_management_view()
 
 
 @app.route('/hello/<name>')
