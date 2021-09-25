@@ -19,12 +19,12 @@ def getfilename_fromfid(fid):
     return filename
 
 
-def postcard(cid, fid, cardname, attack, defense, type1, type2):
+def postcard(cid, fid, cardname, attack, defense, type1, type2, rarity):
     con = sqlite3.connect('game.db')
     cur = con.cursor()
     cur.execute("insert into card_basicdata values ('" + cid + "','" +
                 fid + "','" + cardname + "','" + attack + "','" + defense + "','" +
-                type1 + "','" + type2 + "')")
+                type1 + "','" + type2 + "','" + rarity + "')")
     con.commit()
     con.close()
     return
