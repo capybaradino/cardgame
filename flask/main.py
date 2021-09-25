@@ -84,9 +84,9 @@ def management(target=None):
     if(sid is None):
         return redirect(url_for("index"))
     if(request.method == 'POST'):
-        return card_management.card_management_post(sid, request, request.url)
-#    if(request.method == 'DELETE' and option != "view"):
-#        return card_admin.card_admin_delete(sid, option, 'management/' + target)
+        return card_management.card_management_post(request, request.url)
+    if(request.method == 'DELETE' and target != "card"):
+        return card_management.card_management_delete(target, 'management/card')
     else:
         return card_management.card_management_view()
 

@@ -1,6 +1,15 @@
 import sqlite3
 
 
+def deletecard_fromcid(cid):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute("delete from card_basicdata where cid = '" + cid + "'")
+    con.commit()
+    con.close()
+    return True
+
+
 def getfilename_fromfid(fid):
     con = sqlite3.connect('material.db')
     cur = con.cursor()
