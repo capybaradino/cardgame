@@ -23,12 +23,21 @@
 {{ userinfo | safe }}
 <h2>Upload information</h2>
 {{ upinfo | safe }}
-<h2>File upload</h2>
+<h2>New File upload</h2>
 <h3>card</h3>
 <p>Only 600 x 800 px (width x height) image is acceptable.</p>
 <form action=card method=post enctype=multipart/form-data>
-    <p><input type=file name=file>
-        <input type=submit value=Upload>
+    <table border="1">
+        <tr>
+            <td>Image(600 x 800 px)</td>
+            <td><input type=file name=file></td>
+        </tr>
+        <tr>
+            <td>Name(max 32 charcters)</td>
+            <td><input type="text" maxlength="32" name=name></td>
+        </tr>
+    </table>
+    <input type=submit value=Upload>
 </form>
 <h3>other</h3>
 TBD

@@ -1,12 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Cardgame</h1>
-<h3>{{ greetings }}</h3>
+<h2>{{ greetings }}</h2>
 <h3><a href="admin/view">Administration</a></h3>
 <h3>Play</h3>
-<h3>---vvv For Debug Only vvv---</h3>
+<h2>---vvv For Debug Only vvv---</h2>
 <h3><a href="chkheaders/">HTTP Header Checker</a></h3>
-<h3><a href="chktable/user">User table Checker</a></h3>
-<h3><a href="chktable/usersession">Session table Checker</a></h3>
-<h3><a href="chktable/material">Material table Checker</a></h3>
+<h2>Table checkers</h2>
+<h3><a href="chktable/user">User table</a></h3>
+<h3><a href="chktable/usersession">Session table</a></h3>
+<h3><a href="chktable/material">Material table</a></h3>
+<h3><a href="chktable/card_basicdata">Card_basicdata table</a></h3>
 {% endblock %}

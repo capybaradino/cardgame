@@ -27,11 +27,11 @@ def deletefile_fromfilename(filename, sid):
     return True
 
 
-def postfile(fid, owneruid, kind, original_filename, filename, upload_date):
+def postfile(fid, owneruid, kind, name, original_filename, filename, upload_date):
     con = sqlite3.connect('material.db')
     cur = con.cursor()
     cur.execute("insert into material values ('" + fid + "','" +
-                owneruid + "','" + kind + "','" + original_filename + "','" +
+                owneruid + "','" + kind + "','" + name + "','" + original_filename + "','" +
                 filename + "','" + upload_date + "')")
     con.commit()
     con.close()
