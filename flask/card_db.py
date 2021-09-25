@@ -1,6 +1,49 @@
 import sqlite3
 
 
+def getfilename_fromfid(fid):
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute("select filename from material where fid = '" + fid + "'")
+    filename = card_fetchone(cur)
+    con.close()
+    return filename
+
+
+def postcard(cid, fid, cardname, attack, defense, type1, type2):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute("insert into card_basicdata values ('" + cid + "','" +
+                fid + "','" + cardname + "','" + attack + "','" + defense + "','" +
+                type1 + "','" + type2 + "')")
+    con.commit()
+    con.close()
+    return
+
+
+def isexist_cid(cid):
+    ret = True
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute(
+        "select cid from card_basicdata where cid = '" + cid + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    else:
+        con.close()
+        return True
+
+
+def getallfids_frommaterial():
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute("select fid from material")
+    fids = cur.fetchall()
+    con.close()
+    return fids
+
+
 def getfileinfos_fromsid(sid):
     uid = getuid_fromsid(sid)
     con = sqlite3.connect('material.db')

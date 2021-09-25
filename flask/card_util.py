@@ -18,9 +18,13 @@ def card_gettablehtml(tablename, sid):
     headers += "<tr>"
     if(tablename == 'material'):
         headers += "<td></td>"
+    if(tablename == 'card_basicdata'):
+        headers += "<td></td>"
 
     index = 0
     index_filename = 0
+    index_fid = 0
+    index_cid = 0
     admin_uploadtarget = (2, 3, 4, 6)
     for row in cur.execute("PRAGMA table_info('" + tablename + "')").fetchall():
         if(tablename == 'material'):
@@ -30,11 +34,18 @@ def card_gettablehtml(tablename, sid):
                 if(index not in admin_uploadtarget):
                     index += 1
                     continue
+        if(tablename == 'card_basicdata'):
+            if (row[1] == "fid"):
+                index_fid = index
+            if (row[1] == "cid"):
+                index_cid = index
         headers += "<td>"
         headers += str(row[1]) + " (" + str(row[2]) + ")"
         headers += "</td>"
         index += 1
     if(sid is not None):
+        headers += "<td></td>"
+    if(tablename == 'card_basicdata'):
         headers += "<td></td>"
     headers += "</tr>\n"
 
@@ -45,8 +56,13 @@ def card_gettablehtml(tablename, sid):
 
     for row in rows:
         headers += "<tr>"
+        filename = None
         if(tablename == 'material'):
             filename = row[index_filename]
+        if(tablename == 'card_basicdata'):
+            fid = row[index_fid]
+            filename = card_db.getfilename_fromfid(fid)
+        if filename:
             headers += "<td>" + "<img width=100 src=\"" + \
                 "../uploads/" + filename + "\"></td>"
         index = 0
@@ -55,12 +71,18 @@ def card_gettablehtml(tablename, sid):
                 if(index not in admin_uploadtarget):
                     index += 1
                     continue
-            headers += "<td>" + item + "</td>"
+            headers += "<td>" + str(item) + "</td>"
             index += 1
         if(sid is not None and tablename == 'material'):
             headers += "<td>" + \
                 "<input type=button value=Delete onclick=\"send_delete(\'" + \
                 filename + "\');\"/>" + \
+                "</td>"
+        if(tablename == 'card_basicdata'):
+            cid = row[index_cid]
+            headers += "<td>" + \
+                "<input type=button value=Delete onclick=\"send_delete(\'" + \
+                cid + "\');\"/>" + \
                 "</td>"
         headers += "</tr>"
     headers += "</table>"
