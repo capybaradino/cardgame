@@ -5,6 +5,7 @@ import card_user
 import card_admin
 import card_util
 import card_management
+import card_play
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
 
@@ -33,6 +34,21 @@ def index():
         'index.html', title='Cardgame', greetings=greetings))
     resp.set_cookie("card_sid", sid)
     return resp
+
+
+@app.route('/play/<target>', methods=['GET', 'POST', 'DELETE'])
+def play(target=None):
+    sid = request.cookies.get("card_sid", None)
+    email = request.headers.get("X-Forwarded-Email")
+    sid = card_user.card_getsession(sid, email)
+    if(sid is None):
+        return redirect(url_for("index"))
+    if(request.method == 'POST'):
+        return card_play.card_play_post(sid, request, request.url)
+    if(request.method == 'DELETE' and target != "card"):
+        return card_play.card_play_delete(sid, target, 'play/card')
+    else:
+        return card_play.card_play_view(sid)
 
 
 @app.route('/admin/<option>', methods=['GET', 'POST', 'DELETE'])
