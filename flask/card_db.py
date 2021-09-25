@@ -1,6 +1,84 @@
 import sqlite3
 
 
+# utility
+def card_fetchone(cur):
+    item = cur.fetchone()
+    if(item is not None):
+        item = item[0]
+    return item
+
+
+# accesser
+def isexist_gsid(gsid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute(
+        "select gsid from gamesession where gsid = '" + gsid + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    else:
+        con.close()
+        return True
+
+
+def getallcids():
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute("select cid from card_basicdata")
+    cids = cur.fetchall()
+    con.close()
+    return cids
+
+
+def deletegamesession(gsid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("delete from gamesession where gsid = '" + gsid + "'")
+    con.commit()
+    con.close()
+    return
+
+
+def getgamesession(gsid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("select * from gamesession where gsid = '" + gsid + "'")
+    gamesession = cur.fetchall()
+    if(len(gamesession) != 0):
+        gamesession = gamesession[0]
+    else:
+        gamesession = None
+    con.close()
+    return gamesession
+
+
+def getgsid_fromsid(sid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("select gsid from usersession where sid = '" + sid + "'")
+    gsid = card_fetchone(cur)
+    con.close()
+    return gsid
+
+
+def postgamesession(gsid, p1_card0_ucid, p1_card0_status, p2_card0_ucid, p2_card0_status, log, lastupdate):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("insert into gamesession values (?,?,?,?,?,?,?)", (
+        gsid, p1_card0_ucid, p1_card0_status, p2_card0_ucid, p2_card0_status, log, lastupdate))
+    con.commit()
+    con.close()
+    return
+
+
+def getgamesession_fromgsid(gsid):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    return
+
+
 def deletecard_fromcid(cid):
     con = sqlite3.connect('game.db')
     cur = con.cursor()
@@ -19,6 +97,31 @@ def getfilename_fromfid(fid):
     return filename
 
 
+def getfid_fromcid(cid):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute("select fid from card_basicdata where cid = '" + cid + "'")
+    fid = card_fetchone(cur)
+    con.close()
+    return fid
+
+
+def getfilename_fromcid(cid):
+    fid = getfid_fromcid(cid)
+    filename = getfilename_fromfid(fid)
+    return filename
+
+
+def getcardname_fromcid(cid):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute(
+        "select cardname from card_basicdata where cid = '" + cid + "'")
+    cardname = card_fetchone(cur)
+    con.close()
+    return cardname
+
+
 def postcard(cid, fid, cardname, attack, defense, type1, type2, rarity):
     con = sqlite3.connect('game.db')
     cur = con.cursor()
@@ -31,7 +134,6 @@ def postcard(cid, fid, cardname, attack, defense, type1, type2, rarity):
 
 
 def isexist_cid(cid):
-    ret = True
     con = sqlite3.connect('game.db')
     cur = con.cursor()
     cur.execute(
@@ -115,13 +217,6 @@ def isexist_fid(fid):
         return True
 
 
-def card_fetchone(cur):
-    item = cur.fetchone()
-    if(item is not None):
-        item = item[0]
-    return item
-
-
 def getuser_fromsid(sid):
     uid = getuid_fromsid(sid)
     user = getuser_fromuid(uid)
@@ -198,7 +293,7 @@ def postusersession(sid, uid, datestr):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
     cur.execute("insert into usersession values ('" +
-                sid + "','" + uid + "','" + datestr + "')")
+                sid + "','" + uid + "','" + datestr + "','" + "" + "')")
     con.commit()
     con.close()
     return
@@ -209,6 +304,16 @@ def putusersession(sid, datestr):
     cur = con.cursor()
     cur.execute("update usersession set accessdate = '" +
                 datestr + "' where sid = '" + sid + "'")
+    con.commit()
+    con.close()
+    return
+
+
+def putusersession_gsid(sid, gsid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("update usersession set gsid = '" +
+                gsid + "' where sid = '" + sid + "'")
     con.commit()
     con.close()
     return
