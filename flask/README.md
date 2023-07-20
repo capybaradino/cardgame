@@ -17,6 +17,15 @@ sudo pip3 install names
 sudo apt install sqlite3
 sudo pip3 install Pillow
 
+## Debug
+To skip user authentication, create file below in the same directory with main.py
+
+debug.conf
+```
+[debug]
+email = user1@example.com
+```
+
 ## Contribution
 
 ## Licence
