@@ -111,7 +111,7 @@ def management(target=None):
     if(request.method == 'POST'):
         return card_management.card_management_post(request, request.url)
     if(request.method == 'DELETE' and target != "card"):
-        return card_management.card_management_delete(target, 'management/card')
+        return card_management.card_management_delete(target, '/management/card')
     else:
         return card_management.card_management_view()
 
