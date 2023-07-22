@@ -122,12 +122,13 @@ def getcardname_fromcid(cid):
     return cardname
 
 
-def postcard(cid, fid, cardname, attack, defense, type1, type2, rarity):
+def postcard(cid, fid, cardname, leader, cardpack, cost, category, rarity, type, attack, hp, effect, flavor):
     con = sqlite3.connect('game.db')
     cur = con.cursor()
     cur.execute("insert into card_basicdata values ('" + cid + "','" +
-                fid + "','" + cardname + "','" + attack + "','" + defense + "','" +
-                type1 + "','" + type2 + "','" + rarity + "')")
+                fid + "','" + cardname + "','" + leader + "','" + cardpack + "','" +
+                cost + "','" + category + "','" + rarity + "','" + type + "','" +
+                attack + "','" + hp + "','" + effect + "','" + flavor + "')")
     con.commit()
     con.close()
     return

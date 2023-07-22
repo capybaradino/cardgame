@@ -32,11 +32,16 @@ def create_table(db_name, table_name):
                     cid TEXT PRIMARY KEY,
                     fid TEXT NOT NULL,
                     cardname TEXT NOT NULL,
+                    leader TEXT NOT NULL,
+                    cardpack TEXT NOT NULL,
+                    cost INTEGER,
+                    category TEXT NOT NULL,
+                    rarity TEXT NOT NULL,
+                    type TEXT,
                     attack INTEGER,
-                    defense INTEGER,
-                    type1 TEXT NOT NULL,
-                    type2 TEXT NOT NULL,
-                    rarity TEXT NOT NULL
+                    hp INTEGER,
+                    effect TEXT,
+                    flavor TEXT
                 )
             """
         cursor.execute(query)
