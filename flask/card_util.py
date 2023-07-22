@@ -4,6 +4,14 @@ import card_db
 
 
 def card_gettablehtml(tablename, sid):
+    return card_gettablehtml_impl(tablename, sid, 'false')
+
+
+def card_gettablehtml_admin(tablename):
+    return card_gettablehtml_impl(tablename, None, 'true')
+
+
+def card_gettablehtml_impl(tablename, sid, isadmin):
     headers = ""
     if("session" in tablename):
         con = sqlite3.connect('session.db')
@@ -17,8 +25,6 @@ def card_gettablehtml(tablename, sid):
     headers += "<table border=1>"
     headers += "<tr>"
     if(tablename == 'material'):
-        headers += "<td></td>"
-    if(tablename == 'card_basicdata'):
         headers += "<td></td>"
 
     index = 0
@@ -43,9 +49,7 @@ def card_gettablehtml(tablename, sid):
         headers += str(row[1]) + " (" + str(row[2]) + ")"
         headers += "</td>"
         index += 1
-    if(sid is not None):
-        headers += "<td></td>"
-    if(tablename == 'card_basicdata'):
+    if(isadmin == 'true'):
         headers += "<td></td>"
     headers += "</tr>\n"
 
@@ -78,7 +82,12 @@ def card_gettablehtml(tablename, sid):
                 "<input type=button value=Delete onclick=\"send_delete(\'" + \
                 filename + "\');\"/>" + \
                 "</td>"
-        if(tablename == 'card_basicdata'):
+        if(tablename == 'material' and isadmin == 'true'):
+            headers += "<td>" + \
+                "<input type=button value=Delete onclick=\"send_delete(\'" + \
+                filename + "\');\"/>" + \
+                "</td>"
+        if(tablename == 'card_basicdata' and isadmin == 'true'):
             cid = row[index_cid]
             headers += "<td>" + \
                 "<input type=button value=Delete onclick=\"send_delete(\'" + \
