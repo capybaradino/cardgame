@@ -5,7 +5,8 @@ from flask import abort
 import card_user
 import card_admin
 import card_util
-import card_management
+import card_manage_card
+import card_manage_image
 import card_play
 import debug
 app = Flask(__name__)
@@ -101,19 +102,31 @@ def chkusers(tablename=None):
     return render_template('chkheaders.html', title=tablename, headers=headers)
 
 
-@app.route('/management/<target>', methods=['GET', 'POST', 'DELETE'])
-def management(target=None):
+@app.route('/manage_card/<target>', methods=['GET', 'POST', 'DELETE'])
+def manage_card(target=None):
     sid = request.cookies.get("card_sid", None)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
     if(sid is None):
         return redirect(url_for("index"))
     if(request.method == 'POST'):
-        return card_management.card_management_post(request, request.url)
+        return card_manage_card.card_management_post(request, request.url)
     if(request.method == 'DELETE' and target != "card"):
-        return card_management.card_management_delete(target, '/management/card')
+        return card_manage_card.card_management_delete(target, '/manage_card/card')
     else:
-        return card_management.card_management_view()
+        return card_manage_card.card_management_view()
+
+@app.route('/manage_image/<target>', methods=['GET', 'DELETE'])
+def manage_image(target=None):
+    sid = request.cookies.get("card_sid", None)
+    email = request.cookies.get("card-email")
+    sid = card_user.card_getsession(sid, email)
+    if(sid is None):
+        return redirect(url_for("index"))
+    if(request.method == 'DELETE' and target != "card"):
+        return card_manage_image.card_management_delete(target, '/manage_image/card')
+    else:
+        return card_manage_image.card_management_view()
 
 
 @app.route('/hello/<name>')

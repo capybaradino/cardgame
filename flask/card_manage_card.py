@@ -32,7 +32,7 @@ def card_management_post(request: request, callback):
 
 
 def card_management_view():
-    cardinfo = card_util.card_gettablehtml('card_basicdata', None)
+    cardinfo = card_util.card_gettablehtml_admin('card_basicdata')
     uploadedinfo = card_util.card_gettablehtml('material', None)
 
     # make form
@@ -94,5 +94,5 @@ def card_management_view():
     cardupdateform += "<input type=submit value=Register>"
     cardupdateform += "</form>"
 
-    return render_template('management.html', title='management', cardinfo=cardinfo,
+    return render_template('manage_card.html', title='manage_card', cardinfo=cardinfo,
                            uploadedinfo=uploadedinfo, cardupdateform=cardupdateform)
