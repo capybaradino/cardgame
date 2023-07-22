@@ -24,7 +24,8 @@ def card_gettablehtml_impl(tablename, sid, isadmin):
 
     headers += "<table border=1>"
     headers += "<tr>"
-    if(tablename == 'material'):
+    # 左端に画像を表示する為に1列追加
+    if(tablename == 'material' or tablename == 'card_basicdata'):
         headers += "<td></td>"
 
     index = 0
