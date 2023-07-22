@@ -181,6 +181,21 @@ def deletefile_fromfilename(filename, sid):
     return True
 
 
+def deletefile_fromfilename_admin(filename):
+    con = sqlite3.connect('material.db')
+    cur = con.cursor()
+    cur.execute("select * from material where filename = '" +
+                filename + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    cur.execute("delete from material where filename = '" +
+                filename + "'")
+    con.commit()
+    con.close()
+    return True
+
+
 def postfile(fid, owneruid, kind, name, original_filename, filename, upload_date):
     con = sqlite3.connect('material.db')
     cur = con.cursor()
