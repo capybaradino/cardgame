@@ -44,6 +44,18 @@ def create_table(db_name, table_name):
                     flavor TEXT
                 )
             """
+        if(table_name == 'card_material'):
+            query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    fid TEXT PRIMARY KEY,
+                    owneruid TEXT NOT NULL,
+                    kind TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    original_filename TEXT NOT NULL,
+                    filename TEXT NOT NULL,
+                    upload_date TEXT NOT NULL
+                )
+            """
         cursor.execute(query)
 
         conn.commit()
@@ -65,6 +77,8 @@ dbfile_path = 'game.db'
 delete_file(dbfile_path)
 create_database(dbfile_path)
 table_name = 'card_basicdata'
+create_table(dbfile_path, table_name)
+table_name = 'card_material'
 create_table(dbfile_path, table_name)
 
 print("[INFO] Initialize db end.")

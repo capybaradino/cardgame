@@ -83,6 +83,6 @@ def card_admin_view(sid):
     userinfo += "</tr>"
     userinfo += "</table>"
 
-    upinfo = card_util.card_gettablehtml('material', sid)
+    upinfo = card_util.card_gettablehtml('card_material', sid)
 
     return render_template('admin.html', title='Admin', userinfo=userinfo, upinfo=upinfo)
