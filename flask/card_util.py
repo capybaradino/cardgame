@@ -25,8 +25,8 @@ def card_gettablehtml_impl(tablename, sid, isadmin):
     headers += "<table border=1>"
     headers += "<tr>"
     # 左端に画像を表示する為に1列追加
-    if(tablename == 'material' or tablename == 'card_basicdata'):
-        headers += "<td></td>"
+    if(tablename == 'card_material' or tablename == 'card_basicdata'):
+        headers += "<td>image</td>"
 
     index = 0
     index_filename = 0
@@ -34,7 +34,7 @@ def card_gettablehtml_impl(tablename, sid, isadmin):
     index_cid = 0
     admin_uploadtarget = (2, 3, 4, 6)
     for row in cur.execute("PRAGMA table_info('" + tablename + "')").fetchall():
-        if(tablename == 'material'):
+        if(tablename == 'card_material'):
             if (row[1] == "filename"):
                 index_filename = index
             if(sid is not None):
@@ -62,7 +62,7 @@ def card_gettablehtml_impl(tablename, sid, isadmin):
     for row in rows:
         headers += "<tr>"
         filename = None
-        if(tablename == 'material'):
+        if(tablename == 'card_material'):
             filename = row[index_filename]
         if(tablename == 'card_basicdata'):
             fid = row[index_fid]
@@ -78,12 +78,12 @@ def card_gettablehtml_impl(tablename, sid, isadmin):
                     continue
             headers += "<td>" + str(item) + "</td>"
             index += 1
-        if(sid is not None and tablename == 'material'):
+        if(sid is not None and tablename == 'card_material'):
             headers += "<td>" + \
                 "<input type=button value=Delete onclick=\"send_delete(\'" + \
                 filename + "\');\"/>" + \
                 "</td>"
-        if(tablename == 'material' and isadmin == 'true'):
+        if(tablename == 'card_material' and isadmin == 'true'):
             headers += "<td>" + \
                 "<input type=button value=Delete onclick=\"send_delete(\'" + \
                 filename + "\');\"/>" + \

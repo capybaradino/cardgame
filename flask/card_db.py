@@ -89,9 +89,9 @@ def deletecard_fromcid(cid):
 
 
 def getfilename_fromfid(fid):
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
-    cur.execute("select filename from material where fid = '" + fid + "'")
+    cur.execute("select filename from card_material where fid = '" + fid + "'")
     filename = card_fetchone(cur)
     con.close()
     return filename
@@ -148,9 +148,9 @@ def isexist_cid(cid):
 
 
 def getallfids_frommaterial():
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
-    cur.execute("select fid from material")
+    cur.execute("select fid from card_material")
     fids = cur.fetchall()
     con.close()
     return fids
@@ -158,24 +158,24 @@ def getallfids_frommaterial():
 
 def getfileinfos_fromsid(sid):
     uid = getuid_fromsid(sid)
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
-    cur.execute("select * from material where owneruid = '" + uid + "'")
+    cur.execute("select * from card_material where owneruid = '" + uid + "'")
     fileinfos = cur.fetchall()
     con.close()
     return fileinfos
 
 
 def deletefile_fromfilename(filename, sid):
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
     uid = getuid_fromsid(sid)
-    cur.execute("select * from material where filename = '" +
+    cur.execute("select * from card_material where filename = '" +
                 filename + "' and owneruid = '" + uid + "'")
     if(card_fetchone(cur) is None):
         con.close()
         return False
-    cur.execute("delete from material where filename = '" +
+    cur.execute("delete from card_material where filename = '" +
                 filename + "' and owneruid = '" + uid + "'")
     con.commit()
     con.close()
@@ -183,14 +183,14 @@ def deletefile_fromfilename(filename, sid):
 
 
 def deletefile_fromfilename_admin(filename):
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
-    cur.execute("select * from material where filename = '" +
+    cur.execute("select * from card_material where filename = '" +
                 filename + "'")
     if(card_fetchone(cur) is None):
         con.close()
         return False
-    cur.execute("delete from material where filename = '" +
+    cur.execute("delete from card_material where filename = '" +
                 filename + "'")
     con.commit()
     con.close()
@@ -198,9 +198,9 @@ def deletefile_fromfilename_admin(filename):
 
 
 def postfile(fid, owneruid, kind, name, original_filename, filename, upload_date):
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
-    cur.execute("insert into material values ('" + fid + "','" +
+    cur.execute("insert into card_material values ('" + fid + "','" +
                 owneruid + "','" + kind + "','" + name + "','" + original_filename + "','" +
                 filename + "','" + upload_date + "')")
     con.commit()
@@ -209,10 +209,10 @@ def postfile(fid, owneruid, kind, name, original_filename, filename, upload_date
 
 
 def isexist_filename(filename):
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
     cur.execute(
-        "select filename from material where filename = '" + filename + "'")
+        "select filename from card_material where filename = '" + filename + "'")
     if(card_fetchone(cur) is None):
         con.close()
         return False
@@ -222,9 +222,9 @@ def isexist_filename(filename):
 
 
 def isexist_fid(fid):
-    con = sqlite3.connect('material.db')
+    con = sqlite3.connect('game.db')
     cur = con.cursor()
-    cur.execute("select filename from material where fid = '" + fid + "'")
+    cur.execute("select filename from card_material where fid = '" + fid + "'")
     if(card_fetchone(cur) is None):
         con.close()
         return False

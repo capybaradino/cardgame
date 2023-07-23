@@ -49,7 +49,7 @@ def selectform(name, cardupdateform, values):
 
 def card_management_view():
     cardinfo = card_util.card_gettablehtml_admin('card_basicdata')
-    uploadedinfo = card_util.card_gettablehtml('material', None)
+    uploadedinfo = card_util.card_gettablehtml('card_material', None)
 
     # make form
     cardupdateform = ""
