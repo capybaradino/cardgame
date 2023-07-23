@@ -56,6 +56,35 @@ def create_table(db_name, table_name):
                     upload_date TEXT NOT NULL
                 )
             """
+        if(table_name == 'user'):
+            query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    uid TEXT PRIMARY KEY,
+                    email TEXT NOT NULL,
+                    nickname TEXT NOT NULL
+                )
+            """
+        if(table_name == 'usersession'):
+            query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    sid TEXT PRIMARY KEY,
+                    uid TEXT NOT NULL,
+                    accessdate TEXT NOT NULL,
+                    gsid TEXT NOT NULL
+                )
+            """
+        if(table_name == 'gamesession'):
+            query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    gsid TEXT PRIMARY KEY,
+                    p1_card0_ucid TEXT NOT NULL,
+                    p1_card0_status TEXT NOT NULL,
+                    p2_card0_ucid TEXT NOT NULL,
+                    p2_card0_status TEXT NOT NULL,
+                    log TEXT NOT NULL,
+                    lastupdate TEXT NOT NULL
+                )
+            """
         cursor.execute(query)
 
         conn.commit()
@@ -73,12 +102,27 @@ if(str != 'y'):
 
 print("[INFO] Initialize db start.")
 
+# game.db
 dbfile_path = 'game.db'
 delete_file(dbfile_path)
 create_database(dbfile_path)
 table_name = 'card_basicdata'
 create_table(dbfile_path, table_name)
 table_name = 'card_material'
+create_table(dbfile_path, table_name)
+# user.db
+dbfile_path = 'user.db'
+delete_file(dbfile_path)
+create_database(dbfile_path)
+table_name = 'user'
+create_table(dbfile_path, table_name)
+# session.db
+dbfile_path = 'session.db'
+delete_file(dbfile_path)
+create_database(dbfile_path)
+table_name = 'usersession'
+create_table(dbfile_path, table_name)
+table_name = 'gamesession'
 create_table(dbfile_path, table_name)
 
 print("[INFO] Initialize db end.")
