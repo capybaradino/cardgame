@@ -77,10 +77,10 @@ def create_table(db_name, table_name):
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     gsid TEXT PRIMARY KEY,
-                    p1_card0_ucid TEXT NOT NULL,
-                    p1_card0_status TEXT NOT NULL,
-                    p2_card0_ucid TEXT NOT NULL,
-                    p2_card0_status TEXT NOT NULL,
+                    p1_player_table TEXT NOT NULL,
+                    p2_player_table TEXT NOT NULL,
+                    p1_card_table TEXT NOT NULL,
+                    p2_card_table TEXT NOT NULL,
                     log TEXT NOT NULL,
                     lastupdate TEXT NOT NULL
                 )
@@ -93,36 +93,43 @@ def create_table(db_name, table_name):
     except Exception as e:
         print(f"テーブルの作成中にエラーが発生しました: {e}")
 
-print("[INFO] This will initialize all db. Are you sure to continue? (y/n)")
 
+# main start
+print("[INFO] Select db to initialize.")
+print("       1:game.db 2:user.db 3:session.db A:ALL C:Cancel")
 str = input()
 
-if(str != 'y'):
+if(str == 'C'):
     exit()
 
 print("[INFO] Initialize db start.")
 
 # game.db
-dbfile_path = 'game.db'
-delete_file(dbfile_path)
-create_database(dbfile_path)
-table_name = 'card_basicdata'
-create_table(dbfile_path, table_name)
-table_name = 'card_material'
-create_table(dbfile_path, table_name)
+if(str == '1' or str == 'A'):
+    dbfile_path = 'game.db'
+    delete_file(dbfile_path)
+    create_database(dbfile_path)
+    table_name = 'card_basicdata'
+    create_table(dbfile_path, table_name)
+    table_name = 'card_material'
+    create_table(dbfile_path, table_name)
+
 # user.db
-dbfile_path = 'user.db'
-delete_file(dbfile_path)
-create_database(dbfile_path)
-table_name = 'user'
-create_table(dbfile_path, table_name)
+if(str == '2' or str == 'A'):
+    dbfile_path = 'user.db'
+    delete_file(dbfile_path)
+    create_database(dbfile_path)
+    table_name = 'user'
+    create_table(dbfile_path, table_name)
+
 # session.db
-dbfile_path = 'session.db'
-delete_file(dbfile_path)
-create_database(dbfile_path)
-table_name = 'usersession'
-create_table(dbfile_path, table_name)
-table_name = 'gamesession'
-create_table(dbfile_path, table_name)
+if(str == '3' or str == 'A'):
+    dbfile_path = 'session.db'
+    delete_file(dbfile_path)
+    create_database(dbfile_path)
+    table_name = 'usersession'
+    create_table(dbfile_path, table_name)
+    table_name = 'gamesession'
+    create_table(dbfile_path, table_name)
 
 print("[INFO] Initialize db end.")
