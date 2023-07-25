@@ -23,6 +23,25 @@ def isexist_gsid(gsid):
         return True
 
 
+def is_table_exists(table_name):
+    db_name = "session.db"
+    try:
+        conn = sqlite3.connect(db_name)
+        cursor = conn.cursor()
+
+        # sqlite_masterテーブルをクエリして指定したテーブル名が存在するか確認する
+        query = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+        cursor.execute(query)
+
+        table_exists = len(cursor.fetchall()) > 0
+
+        conn.close()
+        return table_exists
+    except Exception as e:
+        print(f"テーブルの存在確認中にエラーが発生しました: {e}")
+        return False
+
+
 def getallcids():
     con = sqlite3.connect('game.db')
     cur = con.cursor()
@@ -63,11 +82,13 @@ def getgsid_fromsid(sid):
     return gsid
 
 
-def postgamesession(gsid, p1_card0_ucid, p1_card0_status, p2_card0_ucid, p2_card0_status, log, lastupdate):
+def postgamesession(gsid, p1_player_table, p2_player_table,
+                     p1_card_table, p2_card_table, log, lastupdate):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
     cur.execute("insert into gamesession values (?,?,?,?,?,?,?)", (
-        gsid, p1_card0_ucid, p1_card0_status, p2_card0_ucid, p2_card0_status, log, lastupdate))
+        gsid, p1_player_table, p2_player_table,
+          p1_card_table, p2_card_table, log, lastupdate))
     con.commit()
     con.close()
     return

@@ -1,5 +1,80 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>{{ title }}</h1>
+<table border="1">
+    <tr>
+        <td>player1</td>
+        <td>player2</td>
+        <td>turn_status</td>
+        <td>
+            <table border="1">
+                <tr>
+                    <td>p2_card1</td>
+                    <td>p2_card2</td>
+                    <td>p2_card3</td>
+                    <td>p2_card4</td>
+                    <td>p2_card5</td>
+                    <td>p2_card6</td>
+                    <td>p2_card7</td>
+                    <td>p2_card8</td>
+                    <td>p2_card9</td>
+                    <td>p2_card10</td>
+                </tr>
+                <tr>
+                    <td>p2_hp</td>
+                    <td>p2_deck</td>
+                    <td>p2_mp</td>
+                    <td>p2_tension</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<table border="1">
+    <tr>
+        <td>empty</td>
+        <td>1-1</td>
+        <td>2-1</td>
+        <td>empty</td>
+        <td>3-1</td>
+        <td>4-1</td>
+        <td>empty</td>
+    </tr>
+    <tr>
+        <td>player1</td>
+        <td>1-2</td>
+        <td>2-2</td>
+        <td>empty</td>
+        <td>3-2</td>
+        <td>4-2</td>
+        <td>player2</td>
+    </tr>
+    <tr>
+        <td>empty</td>
+        <td>1-3</td>
+        <td>2-3</td>
+        <td>empty</td>
+        <td>3-3</td>
+        <td>4-3</td>
+        <td>empty</td>
+    </tr>
+</table>
+<table border="1">
+    <tr>
+        <td>p1_hp</td>
+        <td>p1_deck</td>
+        <td>p1_mp</td>
+        <td>p1_tension</td>
+        <td>{{p1_card1|safe}}</td>
+        <td>p1_card2</td>
+        <td>p1_card3</td>
+        <td>p1_card4</td>
+        <td>p1_card5</td>
+        <td>p1_card6</td>
+        <td>p1_card7</td>
+        <td>p1_card8</td>
+        <td>p1_card9</td>
+        <td>p1_card10</td>
+    </tr>
+</table>
 {{ contents | safe }}
 {% endblock %}
