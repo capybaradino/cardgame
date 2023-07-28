@@ -1,4 +1,5 @@
 import sqlite3
+import uuid
 
 
 # utility
@@ -83,21 +84,114 @@ def getgsid_fromsid(sid):
 
 
 def postgamesession(gsid, p1_player_table, p2_player_table,
-                     p1_card_table, p2_card_table, log, lastupdate):
+                     card_table, log, lastupdate):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("insert into gamesession values (?,?,?,?,?,?,?)", (
+    cur.execute("insert into gamesession values (?,?,?,?,?,?)", (
         gsid, p1_player_table, p2_player_table,
-          p1_card_table, p2_card_table, log, lastupdate))
+          card_table, log, lastupdate))
     con.commit()
     con.close()
     return
 
 
-def getgamesession_fromgsid(gsid):
-    con = sqlite3.connect('game.db')
+def postplayerstats(player_tid, name, job, hp):
+    con = sqlite3.connect('session.db')
     cur = con.cursor()
+    cur.execute("insert into playerstats values (?,?,?,?)", (
+        player_tid, name, job, hp))
+    con.commit()
+    con.close()
     return
+
+
+def getplayerstats(player_tid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("select * from playerstats where player_tid = '" + player_tid + "'")
+    session = cur.fetchall()
+    if(len(session) != 0):
+        session = session[0]
+    else:
+        session = None
+    con.close()
+    return session
+
+
+def createdecktable(table_name):
+    conn = sqlite3.connect('session.db')
+    cursor = conn.cursor()
+
+    # テーブルの作成
+    query = f"""
+        CREATE TABLE IF NOT EXISTS {table_name} (
+            cid TEXT NOT NULL,
+            loc TEXT,
+            cuid PRIMARY KEY
+        )
+    """
+    cursor.execute(query)
+
+    conn.commit()
+    conn.close()
+    return
+
+
+def postdeck(table_name, cid, loc):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    while True:
+        # gsid生成
+        cuid = str(uuid.uuid4())
+        if(isexist_cuid(table_name, cuid)):
+            continue
+        break
+    query = f"INSERT INTO {table_name} VALUES (?,?,?)"
+    cursor.execute(query, (cid, loc, cuid))
+    con.commit()
+    con.close()
+    return
+
+
+def putdeck(table_name, cuid, loc):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    query = f"UPDATE {table_name} SET loc = ? WHERE cuid = ?"
+    cursor.execute(query, (loc, cuid))
+    con.commit()
+    con.close()
+    return
+
+
+def isexist_cuid(table_name, cuid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute(
+        "select cuid from '" + table_name + "' where cid = '" + cuid + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    else:
+        con.close()
+        return True
+
+
+def getfirstcuid_fromdeck(table_name, name):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("select cuid from " + table_name + " where loc = '" + name + "'")
+    cuid = card_fetchone(cur)
+    con.close()
+    return cuid
+
+
+def getcards_fromdeck(table_name, name):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("select * from " + table_name + " where loc = '" + name + "'")
+    cards = cur.fetchall()
+    con.close()
+    return cards
 
 
 def deletecard_fromcid(cid):
@@ -130,6 +224,16 @@ def getfid_fromcid(cid):
 def getfilename_fromcid(cid):
     fid = getfid_fromcid(cid)
     filename = getfilename_fromfid(fid)
+    return filename
+
+
+def getfilename_fromupname(name):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute(
+        "select filename from card_material where name = '" + name + "'")
+    filename = card_fetchone(cur)
+    con.close()
     return filename
 
 
