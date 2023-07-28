@@ -62,3 +62,7 @@ def card_auth(email):
         greetings = "Hello, " + username + "!"
 
     return greetings, uid
+
+
+def card_cleargame(sid):
+    card_db.putusersession_gsid(sid, '')

@@ -118,6 +118,15 @@ def getplayerstats(player_tid):
     return session
 
 
+def deleteplayerstats(player_tid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("delete from playerstats where player_tid = '" + player_tid + "'")
+    con.commit()
+    con.close()
+    return
+
+
 def createdecktable(table_name):
     conn = sqlite3.connect('session.db')
     cursor = conn.cursor()
@@ -130,6 +139,19 @@ def createdecktable(table_name):
             cuid PRIMARY KEY
         )
     """
+    cursor.execute(query)
+
+    conn.commit()
+    conn.close()
+    return
+
+
+def deletedecktable(table_name):
+    conn = sqlite3.connect('session.db')
+    cursor = conn.cursor()
+
+    # テーブルの作成
+    query = f"DROP TABLE IF EXISTS {table_name}"
     cursor.execute(query)
 
     conn.commit()
