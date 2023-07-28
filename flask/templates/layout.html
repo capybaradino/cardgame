@@ -1,11 +1,29 @@
 <!doctype html>
 <html>
+
 <head>
-<title>{{ title }}</title>
+    <title>{{ title }}</title>
 </head>
+<script type="text/javascript">
+    function send_delete(item) {
+        var url = item;
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", url, true);
+        xhr.onload = function () {
+            var result = xhr.responseText;
+            if (xhr.readyState == 4 && xhr.status == "200") {
+                window.location.reload()
+            } else {
+            }
+        }
+        xhr.send(null);
+    }
+</script>
+
 <body>
-{% block content %}
-<!-- ここにメインコンテンツを書く -->
-{% endblock %}
+    {% block content %}
+    <!-- ここにメインコンテンツを書く -->
+    {% endblock %}
 </body>
+
 </html>
