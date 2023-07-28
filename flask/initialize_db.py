@@ -77,12 +77,20 @@ def create_table(db_name, table_name):
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     gsid TEXT PRIMARY KEY,
-                    p1_player_table TEXT NOT NULL,
-                    p2_player_table TEXT NOT NULL,
-                    p1_card_table TEXT NOT NULL,
-                    p2_card_table TEXT NOT NULL,
+                    p1_player_tid TEXT NOT NULL,
+                    p2_player_tid TEXT NOT NULL,
+                    card_table TEXT NOT NULL,
                     log TEXT NOT NULL,
                     lastupdate TEXT NOT NULL
+                )
+            """
+        if(table_name == 'playerstats'):
+            query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    player_tid TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    job TEXT NOT NULL,
+                    hp INTEGER NOT NULL
                 )
             """
         cursor.execute(query)
@@ -130,6 +138,8 @@ if(str == '3' or str == 'A'):
     table_name = 'usersession'
     create_table(dbfile_path, table_name)
     table_name = 'gamesession'
+    create_table(dbfile_path, table_name)
+    table_name = 'playerstats'
     create_table(dbfile_path, table_name)
 
 print("[INFO] Initialize db end.")
