@@ -40,11 +40,16 @@ class Playdata:
         self.card_table = ""
         self.log = ""
         self.lastupdate = ""
+        self.stat = ""
 
         # 既存ゲームがあるか確認
         self.gsid = card_db.getgsid_fromsid(sid)
         if(self.gsid != ""):
-            gamesession = card_db.getgamesession(self.gsid)
+            if(self.gsid != "lose"):
+                gamesession = card_db.getgamesession(self.gsid)
+            else:
+                self.stat = "lose"
+                return
         else:
             gamesession = None
 
@@ -149,6 +154,9 @@ class Playdata:
             self.card_table
         )
 
-    def gameover(self):
+    def gameover(self, sid):
+        card_db.deletedecktable(self.card_table)
+        card_db.deleteplayerstats(self.p1_player_tid)
+        card_db.deleteplayerstats(self.p2_player_tid)
         card_db.deletegamesession(self.gsid)
-        card_db.putusersession_gsid(self.sid, '')
+        card_db.putusersession_gsid(sid, 'lose')

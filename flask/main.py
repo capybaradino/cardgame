@@ -43,6 +43,7 @@ def index():
         'index.html', title='Cardgame', greetings=greetings))
     resp.set_cookie("card_sid", sid)
     resp.set_cookie("card-email", email)
+    card_user.card_cleargame(sid)
     return resp
 
 
@@ -56,7 +57,7 @@ def play(target=None):
     if(request.method == 'POST'):
         return card_play.card_play_post(sid, request, request.url)
     if(request.method == 'DELETE' and target != "card"):
-        return card_play.card_play_delete(sid, target, 'play/card')
+        return card_play.card_play_delete(sid, target, 'card')
     else:
         return card_play.card_play_view(sid)
 
@@ -71,7 +72,7 @@ def admin(option=None):
     if(request.method == 'POST'):
         return card_admin.card_admin_post(sid, option, request, request.url)
     if(request.method == 'DELETE' and option != "view"):
-        return card_admin.card_admin_delete(sid, option, 'admin/view')
+        return card_admin.card_admin_delete(sid, option, 'view')
     else:
         if(option == "view"):
             return card_admin.card_admin_view(sid)

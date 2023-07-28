@@ -1,4 +1,5 @@
 from flask.templating import render_template
+from flask import redirect
 from class_playdata import Playdata
 import card_db
 
@@ -6,7 +7,10 @@ import card_db
 def card_play_view(sid):
     playdata = Playdata(sid)
 
-    # playdata.gameover()
+    if(playdata.stat == "lose"):
+        return render_template(
+            'play_lose.html', title='Lose'
+        )
 
     p1=playdata.player1
     p2=playdata.player2
@@ -70,5 +74,13 @@ def card_play_view(sid):
         center_cell=centercell,
         p2_name=p2.name, p2_hp=p2.hp,
         p2_card=p2hand,
-        p2_banmen=p2banmen
+        p2_banmen=p2banmen,
+        play_data=playdata,
+        card_db=card_db
         )
+
+def card_play_delete(sid, target, callback):
+    playdata = Playdata(sid)
+    playdata.gameover(sid)
+    return redirect(callback)
+    
