@@ -30,7 +30,10 @@ class Player:
 
     def draw_card(self):
         cuid = card_db.getfirstcuid_fromdeck(self.card_table, self.name)
-        card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+        if(len(self.get_hand()) < 10):
+            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+        else:
+            card_db.putdeck(self.card_table, cuid, "drop")
         return
     
     def get_hand(self):
@@ -101,6 +104,7 @@ class Playdata:
 
             # ユーザ情報初期化
             self.player1 = Player(
+                self.p1_player_tid,
                 card_db.getnickname_fromsid(sid),
                 "kensi",
                 30,
@@ -110,6 +114,7 @@ class Playdata:
                 self.card_table
             )
             self.player2 = Player(
+                self.p2_player_tid,
                 "dummy",
                 "kensi",
                 30,
