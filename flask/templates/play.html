@@ -3,9 +3,9 @@
 <!-- ヘッダーエリア -->
 <table border="1">
     <tr>
-        <td>[[ {{p1_name}} ]]</td>
+        <td>[[ {{viewdata.p1name}} ]]</td>
         <td>vs</td>
-        <td>[[ {{p2_name}} ]]</td>
+        <td>[[ {{viewdata.p2name}} ]]</td>
         <td>=== turn_status ===</td>
         <td>
             <table border="1">
@@ -25,10 +25,10 @@
             <div style="float: right;">
                 <table border="1">
                     <tr>
-                        <td>HP={{p2_hp}}</td>
-                        <td>p2_deck</td>
-                        <td>p2_mp</td>
-                        <td>p2_tension</td>
+                        <td>HP={{viewdata.p2hp}}</td>
+                        <td>Deck={{viewdata.p2decknum}}</td>
+                        <td>MP={{viewdata.p2mp}}/{{viewdata.p2maxmp}}</td>
+                        <td>TS={{viewdata.p2tension}}/3</td>
                     </tr>
                 </table>
             </div>
@@ -94,10 +94,10 @@
         </table>
         <table border="1">
             <tr>
-                <td>HP={{p1_hp}}</td>
-                <td>p1_deck</td>
-                <td>p1_mp</td>
-                <td>p1_tension</td>
+                <td>HP={{viewdata.p1hp}}</td>
+                <td>Deck={{viewdata.p1decknum}}</td>
+                <td>MP={{viewdata.p1mp}}/{{viewdata.p1maxmp}}</td>
+                <td>TS={{viewdata.p1tension}}/3</td>
                 <td><input type=button value=Surrender onclick="send_delete('hoge')"></td>
             </tr>
         </table>

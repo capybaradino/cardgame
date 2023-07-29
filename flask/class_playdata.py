@@ -5,11 +5,15 @@ import random
 
 
 class Player:
-    def __init__(self, name, job, hp, card_table):
+    def __init__(self, name, job, hp, mp, maxmp, tension, card_table):
         self.name = name
         self.job = job
         self.hp = hp
+        self.mp = mp
+        self.maxmp = maxmp
+        self.tension = tension
         self.card_table = card_table
+        self.hand = []
 
     def __str__(self):
         return f"Name: {self.name}, Job: {self.job}"
@@ -21,6 +25,10 @@ class Player:
     
     def get_hand(self):
         return card_db.getcards_fromdeck(self.card_table, self.name + "_hand")
+
+    def get_decknum(self):
+        deckcards = card_db.getcards_fromdeck(self.card_table, self.name)
+        return len(deckcards)
 
     def take_damage(self, damage):
         self.health -= damage
@@ -86,18 +94,26 @@ class Playdata:
                 card_db.getnickname_fromsid(sid),
                 "kensi",
                 30,
+                0,
+                0,
+                0,
                 self.card_table
             )
             self.player2 = Player(
                 "dummy",
                 "kensi",
                 30,
+                0,
+                0,
+                2,
                 self.card_table
             )
             card_db.postplayerstats(
-                self.p1_player_tid, self.player1.name, self.player1.job, self.player1.hp)
+                self.p1_player_tid, self.player1.name, self.player1.job,
+                self.player1.hp, self.player1.mp, self.player1.maxmp, self.player1.tension)
             card_db.postplayerstats(
-                self.p2_player_tid, self.player2.name, self.player2.job, self.player2.hp)
+                self.p2_player_tid, self.player2.name, self.player2.job,
+                self.player2.hp, self.player2.mp, self.player2.maxmp, self.player2.tension)
 
             # カード情報初期化
             card_db.createdecktable(self.card_table)
@@ -127,17 +143,19 @@ class Playdata:
             self.player2.draw_card()
 
             # ゲームセッション登録
+            self.state = "p1turn"
             self.lastupdate = card_util.card_getdatestrnow()
             card_db.postgamesession(
                 self.gsid, self.p1_player_tid, self.p2_player_tid,
-                  self.card_table, self.log, self.lastupdate)
+                  self.card_table, self.log, self.state, self.lastupdate)
             card_db.putusersession_gsid(sid, self.gsid)
         else:
             self.p1_player_tid = gamesession[1]
             self.p2_player_tid = gamesession[2]
             self.card_table = gamesession[3]
             self.log = gamesession[4]
-            self.lastupdate = gamesession[5]
+            self.state = gamesession[5]
+            self.lastupdate = gamesession[6]
 
         self.p1_player_stats = card_db.getplayerstats(self.p1_player_tid)
         self.p2_player_stats = card_db.getplayerstats(self.p2_player_tid)
@@ -145,12 +163,18 @@ class Playdata:
             self.p1_player_stats[1],
             self.p1_player_stats[2],
             self.p1_player_stats[3],
+            self.p1_player_stats[4],
+            self.p1_player_stats[5],
+            self.p1_player_stats[6],
             self.card_table
         )
         self.player2 = Player(
             self.p2_player_stats[1],
             self.p2_player_stats[2],
             self.p2_player_stats[3],
+            self.p2_player_stats[4],
+            self.p2_player_stats[5],
+            self.p2_player_stats[6],
             self.card_table
         )
 
