@@ -16,6 +16,7 @@ sudo pip3 install Flask
 sudo pip3 install names
 sudo apt install sqlite3
 sudo pip3 install Pillow
+sudo pip3 install flask-restx
 
 ## Debug
 To skip user authentication, create file below in the same directory with main.py
