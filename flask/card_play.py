@@ -95,8 +95,6 @@ def card_play_view(sid):
     p2hands = viewdata.p2hand
     for hand in p2hands:
         if(hand is not None):
-            filename = card_db.getfilename_fromupname("sleeve")
-            text = "<img width=50 src='../uploads/"+filename+"'>"
             p2hand.append(card_createcardhtmlp2())
         else:
             p2hand.append(None)
