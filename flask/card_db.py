@@ -74,6 +74,26 @@ def getgamesession(gsid):
     return gamesession
 
 
+def putsession(table_name, key_name, key, column, value):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    query = f"UPDATE {table_name} SET {column} = ? WHERE {key_name} = ?"
+    cursor.execute(query, (value, key))
+    con.commit()
+    con.close()
+    return
+
+
+def putgamesession(gsid, column, value):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    query = f"UPDATE gamesession SET {column} = ? WHERE gsid = ?"
+    cursor.execute(query, (value, gsid))
+    con.commit()
+    con.close()
+    return
+
+
 def getgsid_fromsid(sid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
