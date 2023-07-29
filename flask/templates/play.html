@@ -6,7 +6,12 @@
         <td>[[ {{viewdata.p1name}} ]]</td>
         <td>vs</td>
         <td>[[ {{viewdata.p2name}} ]]</td>
-        <td>=== turn_status ===</td>
+        <td>
+            <div style="text-align: center;">
+                === {{viewdata.turnstate}} ===<br>
+                <input type=button value="Turn end" onclick="send('post','turnend')">
+            </div>
+        </td>
         <td>
             <table border="1">
                 <tr>

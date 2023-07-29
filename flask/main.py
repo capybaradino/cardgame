@@ -55,7 +55,7 @@ def play(target=None):
     if(sid is None):
         return redirect(url_for("index"))
     if(request.method == 'POST'):
-        return card_play.card_play_post(sid, request, request.url)
+        return card_play.card_play_post(sid, target, 'card')
     if(request.method == 'DELETE' and target != "card"):
         return card_play.card_play_delete(sid, target, 'card')
     else:
