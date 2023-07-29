@@ -81,6 +81,7 @@ def create_table(db_name, table_name):
                     p2_player_tid TEXT NOT NULL,
                     card_table TEXT NOT NULL,
                     log TEXT NOT NULL,
+                    state TEXT NOT NULL,
                     lastupdate TEXT NOT NULL
                 )
             """
@@ -90,7 +91,10 @@ def create_table(db_name, table_name):
                     player_tid TEXT PRIMARY KEY,
                     name TEXT NOT NULL,
                     job TEXT NOT NULL,
-                    hp INTEGER NOT NULL
+                    hp INTEGER NOT NULL,
+                    mp INTEGER NOT NULL,
+                    maxmp INTEGER NOT NULL,
+                    tension INTEGER NOT NULL
                 )
             """
         cursor.execute(query)

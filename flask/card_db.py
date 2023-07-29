@@ -84,22 +84,22 @@ def getgsid_fromsid(sid):
 
 
 def postgamesession(gsid, p1_player_table, p2_player_table,
-                     card_table, log, lastupdate):
+                     card_table, log, state, lastupdate):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("insert into gamesession values (?,?,?,?,?,?)", (
+    cur.execute("insert into gamesession values (?,?,?,?,?,?,?)", (
         gsid, p1_player_table, p2_player_table,
-          card_table, log, lastupdate))
+          card_table, log, state, lastupdate))
     con.commit()
     con.close()
     return
 
 
-def postplayerstats(player_tid, name, job, hp):
+def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("insert into playerstats values (?,?,?,?)", (
-        player_tid, name, job, hp))
+    cur.execute("insert into playerstats values (?,?,?,?,?,?,?)", (
+        player_tid, name, job, hp, mp, maxmp, tension))
     con.commit()
     con.close()
     return
