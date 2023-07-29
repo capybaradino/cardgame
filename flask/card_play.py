@@ -127,6 +127,20 @@ def card_play_view(sid):
         viewdata = viewdata
         )
 
+
+def card_play_post(sid, target, callback):
+    if(target=="turnend"):
+        playdata = Playdata(sid)
+        if(playdata.state == "p1turn"):
+            card_db.putgamesession(playdata.gsid, "state", "p2turn")
+            nextp = playdata.player2
+        else:
+            card_db.putgamesession(playdata.gsid, "state", "p1turn")
+            nextp = playdata.player1
+        nextp.start_turn()
+    return redirect(callback)
+
+
 def card_play_delete(sid, target, callback):
     playdata = Playdata(sid)
     playdata.gameover(sid)

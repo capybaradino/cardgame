@@ -5,7 +5,8 @@ import random
 
 
 class Player:
-    def __init__(self, name, job, hp, mp, maxmp, tension, card_table):
+    def __init__(self, player_tid, name, job, hp, mp, maxmp, tension, card_table):
+        self.player_tid = player_tid
         self.name = name
         self.job = job
         self.hp = hp
@@ -17,6 +18,15 @@ class Player:
 
     def __str__(self):
         return f"Name: {self.name}, Job: {self.job}"
+    
+    def start_turn(self):
+        self.draw_card()
+        if(self.maxmp < 11):
+            self.maxmp = self.maxmp + 1
+        self.mp = self.maxmp
+        card_db.putsession('playerstats', 'player_tid', self.player_tid, 'mp', self.mp)
+        card_db.putsession('playerstats', 'player_tid', self.player_tid, 'maxmp', self.maxmp)
+        return
 
     def draw_card(self):
         cuid = card_db.getfirstcuid_fromdeck(self.card_table, self.name)
@@ -160,6 +170,7 @@ class Playdata:
         self.p1_player_stats = card_db.getplayerstats(self.p1_player_tid)
         self.p2_player_stats = card_db.getplayerstats(self.p2_player_tid)
         self.player1 = Player(
+            self.p1_player_stats[0],
             self.p1_player_stats[1],
             self.p1_player_stats[2],
             self.p1_player_stats[3],
@@ -169,6 +180,7 @@ class Playdata:
             self.card_table
         )
         self.player2 = Player(
+            self.p2_player_stats[0],
             self.p2_player_stats[1],
             self.p2_player_stats[2],
             self.p2_player_stats[3],
