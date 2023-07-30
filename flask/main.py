@@ -59,7 +59,7 @@ def play(target=None):
     if(request.method == 'DELETE' and target != "card"):
         return card_play.card_play_delete(sid, target, 'card')
     else:
-        return card_play.card_play_view(sid)
+        return card_play.card_play_get(sid)
 
 
 @app.route('/admin/<option>', methods=['GET', 'POST', 'DELETE'])

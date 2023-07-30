@@ -236,6 +236,24 @@ def getcards_fromdeck(table_name, name):
     return cards
 
 
+def getrecord_fromgame(table_name, key_name, key):
+    # データベースに接続
+    conn = sqlite3.connect('game.db')
+    cursor = conn.cursor()
+
+    # レコードを取得するSQL文を実行
+    query = f"SELECT * FROM {table_name} WHERE {key_name} = ?"
+    cursor.execute(query, (key,))
+
+    # レコードを取得
+    record = cursor.fetchone()
+
+    # 接続を閉じる
+    conn.close()
+
+    return record
+
+
 def deletecard_fromcid(cid):
     con = sqlite3.connect('game.db')
     cur = con.cursor()
