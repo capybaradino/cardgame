@@ -16,4 +16,4 @@ class Game(Resource):
 # Omajinai
 if __name__ == "__main__":
     # 自動リロードでエラーが出る場合はVSCodeのBREAKPOINTSの"Uncaught Exceptions"のチェックを外すこと
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
