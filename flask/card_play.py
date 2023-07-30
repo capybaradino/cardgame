@@ -2,10 +2,22 @@ from flask.templating import render_template
 from flask import redirect
 from class_playdata import Playdata
 import card_db
+from class_playview import Play_view
+from class_playinfo import Card_info
 
 
-def card_createcardhtml(cuid):
-    return
+def card_createcardhtml(cardview: Card_info, group, id):
+    text = ""
+    text = text + f"<font color='Blue'>={cardview.cost}=</font><br>"
+    text = text + f"<img width=100 src='../uploads/{cardview.filename}'>"
+    text = text + f"<br>"+"<table width='100%' cellspacing='0' cellpadding='0'><tr>"
+    text = text + f"<td><font color='Red'>({cardview.attack})</font></td>"
+    text = text + f"<td><div style='float: right;'><font color='Green'>({cardview.hp})</font></div></td>"
+    text = text + f"</tr></table>"
+    text = text + f"<div style='text-align: center;'>{cardview.name}"
+    text = text + f'<input type="radio" name="{group}" value="'+str(id)+'">'
+    text = text + f"</div>"
+    return text
 
 
 def card_createcardhtmlp2():
@@ -14,50 +26,7 @@ def card_createcardhtmlp2():
     return text
 
 
-class Card_view:
-    def __init__(self, cid):
-        self.cid = cid
-
-
-class Play_view:
-    def __init__(self, sid):
-        playdata = Playdata(sid)
-        p1=playdata.player1
-        p2=playdata.player2
-        # ヘッダ情報
-        self.p1name = p1.name
-        self.p2name = p2.name
-        self.turnstate = playdata.state
-        # Player2情報
-        self.p2hp = p2.hp
-        self.p2job = p2.job
-        self.p2decknum = p2.get_decknum()
-        self.p2mp = p2.mp
-        self.p2maxmp = p2.maxmp
-        self.p2tension = p2.tension
-        # Player2ハンド
-        # P2のハンドは枚数のみでスリーブ表示
-        self.p2hand = []
-        p2hands = p2.get_hand()
-        i = 0
-        while(i < 10):
-            if(i < len(p2hands)):
-                self.p2hand.append(Card_view(None))
-            else:
-                self.p2hand.append(None)
-            i = i + 1
-        # Player1盤面情報
-        # Player2盤面情報
-        # Player1情報
-        self.p1hp = p1.hp
-        self.p1job = p1.job
-        self.p1decknum = p1.get_decknum()
-        self.p1mp = p1.mp
-        self.p1maxmp = p1.maxmp
-        self.p1tension = p1.tension
-
-
-def card_play_view(sid):
+def card_play_get(sid):
     playdata = Playdata(sid)
 
     if(playdata.stat == "lose"):
@@ -70,25 +39,12 @@ def card_play_view(sid):
     p2=playdata.player2
 
     # ハンド
-    i = 0
     p1hand = []
-    p1hands = p1.get_hand()
-    while(i < 10):
-        if(i < len(p1hands)):
-            cid = p1hands[i][0]
-            filename = card_db.getfilename_fromcid(cid)
-            cardname = card_db.getcardname_fromcid(cid)
-            text = ""
-            text = text + "<font color='Blue'>=1=</font><br>"
-            text = text + "<img width=100 src='../uploads/"+filename+"'>"
-            text = text + "<br>"+"<table width='100%' cellspacing='0' cellpadding='0'><tr>"
-            text = text + "<td><font color='Red'>(1)</font></td>"
-            text = text + "<td><div style='float: right;'><font color='Green'>(1)</font></div></td>"
-            text = text + "</tr></table>"
-            text = text + "<div style='text-align: center;'>"+cardname
-            text = text + '<input type="radio" name="p1_hand" value="'+str(i)+'">'
-            text = text + "</div>"
-            p1hand.append(text)
+    p1hands = viewdata.p1hand
+    i = 0
+    for hand in p1hands:
+        if(hand is not None):
+            p1hand.append(card_createcardhtml(hand, "p1_hand", i))
         else:
             p1hand.append(None)
         i = i + 1
