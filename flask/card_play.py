@@ -4,26 +4,7 @@ from class_playdata import Playdata
 import card_db
 from class_playview import Play_view
 from class_playinfo import Card_info
-
-
-def card_createcardhtml(cardview: Card_info, group, id):
-    text = ""
-    text = text + f"<font color='Blue'>={cardview.cost}=</font><br>"
-    text = text + f"<img width=100 src='../uploads/{cardview.filename}'>"
-    text = text + f"<br>"+"<table width='100%' cellspacing='0' cellpadding='0'><tr>"
-    text = text + f"<td><font color='Red'>({cardview.attack})</font></td>"
-    text = text + f"<td><div style='float: right;'><font color='Green'>({cardview.hp})</font></div></td>"
-    text = text + f"</tr></table>"
-    text = text + f"<div style='text-align: center;'>{cardview.name}"
-    text = text + f'<input type="radio" name="{group}" value="'+str(id)+'">'
-    text = text + f"</div>"
-    return text
-
-
-def card_createcardhtmlp2():
-    filename = card_db.getfilename_fromupname("sleeve")
-    text = "<img width=50 src='../uploads/"+filename+"'>"
-    return text
+import card_play_util
 
 
 def card_play_get(sid):
@@ -44,7 +25,7 @@ def card_play_get(sid):
     i = 0
     for hand in p1hands:
         if(hand is not None):
-            p1hand.append(card_createcardhtml(hand, "p1_hand", i))
+            p1hand.append(card_play_util.card_createcardhtml(hand, "p1_hand", i))
         else:
             p1hand.append(None)
         i = i + 1
@@ -53,7 +34,7 @@ def card_play_get(sid):
     p2hands = viewdata.p2hand
     for hand in p2hands:
         if(hand is not None):
-            p2hand.append(card_createcardhtmlp2())
+            p2hand.append(card_play_util.card_createcardhtmlp2())
         else:
             p2hand.append(None)
     
@@ -61,15 +42,16 @@ def card_play_get(sid):
     p1banmen = []
     i = 0
     while(i < 6):
-        filename = card_db.getfilename_fromupname("land")
-        p1banmen.append("../uploads/" + filename)
+        p1banmen.append(card_play_util.card_createcardhtml(None, "p1_banmen", i))
         i = i + 1
     p2banmen = []
     i = 0
     while(i < 6):
-        filename = card_db.getfilename_fromupname("land")
-        p2banmen.append("../uploads/" + filename)
+        p2banmen.append(card_play_util.card_createcardhtml(None, "p2_banmen", i+10))
         i = i + 1
+    # プレイヤー
+    p1name = card_play_util.card_radiobutton("p1_banmen", 100)
+    p2name = card_play_util.card_radiobutton("p2_banmen", 200)
     # 中央の空きマス
     filename = card_db.getfilename_fromupname("land")
     centercell = "../uploads/" + filename
@@ -78,9 +60,11 @@ def card_play_get(sid):
         'play.html', title='Play',
         p1_card=p1hand,
         p1_banmen=p1banmen,
+        p1_name = p1name,
         center_cell=centercell,
         p2_card=p2hand,
         p2_banmen=p2banmen,
+        p2_name = p2name,
         play_data=playdata,
         viewdata = viewdata
         )
