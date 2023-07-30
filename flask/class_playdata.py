@@ -157,6 +157,9 @@ class Playdata:
             self.player2.draw_card()
             self.player2.draw_card()
 
+            # Player1先行
+            self.player1.start_turn()
+
             # ゲームセッション登録
             self.state = "p1turn"
             self.lastupdate = card_util.card_getdatestrnow()
