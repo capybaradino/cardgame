@@ -85,7 +85,9 @@ def card_play_view(sid):
             text = text + "<td><font color='Red'>(1)</font></td>"
             text = text + "<td><div style='float: right;'><font color='Green'>(1)</font></div></td>"
             text = text + "</tr></table>"
-            text = text + "<div style='text-align: center;'>"+cardname+"</div>"
+            text = text + "<div style='text-align: center;'>"+cardname
+            text = text + '<input type="radio" name="p1_hand" value="'+str(i)+'">'
+            text = text + "</div>"
             p1hand.append(text)
         else:
             p1hand.append(None)
