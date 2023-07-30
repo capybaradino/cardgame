@@ -2,6 +2,7 @@ import card_db
 import uuid
 import card_util
 import random
+from class_playinfo import Card_info
 
 
 class Player:
@@ -37,7 +38,11 @@ class Player:
         return
     
     def get_hand(self):
-        return card_db.getcards_fromdeck(self.card_table, self.name + "_hand")
+        records = card_db.getcards_fromdeck(self.card_table, self.name + "_hand")
+        cards = []
+        for record in records:
+            cards.append(Card_info(record[0], record[2]))
+        return cards
 
     def get_decknum(self):
         deckcards = card_db.getcards_fromdeck(self.card_table, self.name)
