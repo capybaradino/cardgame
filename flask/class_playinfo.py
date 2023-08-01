@@ -2,9 +2,10 @@ import card_db
 
 
 class Card_info:
-    def __init__(self, cid, cuid):
+    def __init__(self, cid, cuid, locnum: int):
         self.cid = cid
-        self.ucid = cuid
+        self.cuid = cuid
+        self.locnum = locnum
         if(self.cid is not None):
             record = card_db.getrecord_fromgame("card_basicdata", "cid", cid)
             self.name = record[2]

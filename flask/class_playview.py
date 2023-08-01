@@ -1,11 +1,12 @@
 import card_db
-from class_playdata import Playdata
+from class_playdata import Playdata, Field
 from class_playinfo import Card_info
 
 
 class Play_view:
     def __init__(self, sid):
         playdata = Playdata(sid)
+        self.playdata = playdata
         p1=playdata.player1
         p2=playdata.player2
         # ヘッダ情報
@@ -26,11 +27,22 @@ class Play_view:
         i = 0
         while(i < 10):
             if(i < len(p2hands)):
-                self.p2hand.append(Card_info(None, None))
+                self.p2hand.append(Card_info(None, None, None))
             else:
                 self.p2hand.append(None)
             i = i + 1
         # Player1盤面情報
+        field = Field(self.p1name, self.p2name, playdata.card_table)
+        self.p1board = []
+        p1boards = field.get_p1board()
+        i = 0
+        while(i < 6):
+            self.p1board.append(None)
+            for board in p1boards:
+                if(i == board.locnum):
+                    self.p1board[0] = board
+                    break
+            i = i + 1
         # Player2盤面情報
         # Player1情報
         self.p1hp = p1.hp

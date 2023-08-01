@@ -5,6 +5,12 @@ import card_util
 import card_db
 
 
+def card_checksession(sid):
+    if(sid is not None):
+        sid = card_db.getsid_fromsid(sid)
+    return sid
+
+
 def card_getsession(sid, email):
     # Check email for security
     if(sid is not None):
