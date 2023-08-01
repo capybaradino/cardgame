@@ -3,7 +3,6 @@ from flask import redirect
 from class_playdata import Playdata
 import card_db
 from class_playview import Play_view
-from class_playinfo import Card_info
 import card_play_util
 
 
@@ -25,7 +24,7 @@ def card_play_get(sid):
     i = 0
     for hand in p1hands:
         if(hand is not None):
-            p1hand.append(card_play_util.card_createcardhtml(hand, "p1_hand", i))
+            p1hand.append(card_play_util.card_createcardhtml(hand, "hand", i))
         else:
             p1hand.append(None)
         i = i + 1
@@ -42,16 +41,21 @@ def card_play_get(sid):
     p1banmen = []
     i = 0
     while(i < 6):
-        p1banmen.append(card_play_util.card_createcardhtml(None, "p1_banmen", i))
+        p1banmen.append(card_play_util.card_createcardhtml(None, "p1board", i))
         i = i + 1
+    for board in viewdata.p1board:
+        # p1banmen.append(card_play_util.card_createcardhtml(board, "p1board", i))
+        if(board is not None):
+            i = board.locnum
+            p1banmen[i] = card_play_util.card_createcardhtml(board, "p1board", i)
     p2banmen = []
     i = 0
     while(i < 6):
-        p2banmen.append(card_play_util.card_createcardhtml(None, "p2_banmen", i+10))
+        p2banmen.append(card_play_util.card_createcardhtml(None, "p2board", i))
         i = i + 1
     # プレイヤー
-    p1name = card_play_util.card_radiobutton("p1_banmen", 100)
-    p2name = card_play_util.card_radiobutton("p2_banmen", 200)
+    p1name = card_play_util.card_radiobutton("p1board", 10)
+    p2name = card_play_util.card_radiobutton("p2board", 10)
     # 中央の空きマス
     filename = card_db.getfilename_fromupname("land")
     centercell = "../uploads/" + filename
