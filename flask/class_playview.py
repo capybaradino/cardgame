@@ -40,7 +40,7 @@ class Play_view:
             self.p1board.append(None)
             for board in p1boards:
                 if(i == board.locnum):
-                    self.p1board[0] = board
+                    self.p1board[i] = board
                     break
             i = i + 1
         # Player2盤面情報
