@@ -4,6 +4,7 @@ from flask_restx import Resource, Api
 import card_user, card_db
 import re
 from class_playview import Play_view
+from class_playinfo import Card_info
 app = Flask(__name__)
 api = Api(app)
 
@@ -38,6 +39,7 @@ class Card_play(Resource):
             pattern = r'[0-9]'
             number = int(re.findall(pattern, card1)[0])
             hands = playview.p1hand
+            objcard1: Card_info
             objcard1 = hands[number]
             if(objcard1 is None):
                 return {"error": "illegal card1 number"}
@@ -52,6 +54,14 @@ class Card_play(Resource):
                 objcard2 = boards[number]
                 if(objcard2 is not None):
                     return {"error": "unit exists in card2"}
+                # MP減算
+                remainingmp = playview.p1mp - objcard1.cost
+                if(remainingmp < 0):
+                    return {"error": "MP short"}
+                card_db.putsession("playerstats",
+                                   "name", playview.p1name,
+                                   "mp", remainingmp)
+                # ALL OK DB更新
                 card_db.putsession(playview.playdata.card_table,
                                    "cuid", objcard1.cuid,
                                    "loc", playview.p1name + "_board")
