@@ -24,6 +24,19 @@ def isexist_gsid(gsid):
         return True
 
 
+def isexist_player_tid(name):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute(
+        "select player_tid from playerstats where player_tid = '" + name + "'")
+    if(card_fetchone(cur) is None):
+        con.close()
+        return False
+    else:
+        con.close()
+        return True
+
+
 def is_table_exists(table_name):
     db_name = "session.db"
     try:
@@ -235,6 +248,24 @@ def getcards_fromdeck(table_name, name):
     cards = cur.fetchall()
     con.close()
     return cards
+
+
+def getrecord_fromsession(table_name, key_name, key):
+    # データベースに接続
+    conn = sqlite3.connect('session.db')
+    cursor = conn.cursor()
+
+    # レコードを取得するSQL文を実行
+    query = f"SELECT * FROM {table_name} WHERE {key_name} = ?"
+    cursor.execute(query, (key,))
+
+    # レコードを取得
+    record = cursor.fetchone()
+
+    # 接続を閉じる
+    conn.close()
+
+    return record
 
 
 def getrecord_fromgame(table_name, key_name, key):
