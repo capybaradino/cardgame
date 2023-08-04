@@ -13,14 +13,30 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
 
 
-@app.route('/')
-def index():
-    email = request.headers.get("X-Forwarded-Email")
-    if(email is None):
-        email = debug.getdebugparam("email")
+@app.route('/<debugp>')
+def debugp(debugp=None):
+    if(debugp == "p1"):
+        email = debug.getdebugparam("email1")
         if(email is None):
-            abort(401)
+            abort(404)
             return
+        return index(email)
+    elif(debugp == "p2"):
+        email = debug.getdebugparam("email2")
+        if(email is None):
+            abort(404)
+            return
+        return index(email)
+    else:
+        abort(404)
+
+
+@app.route('/')
+def index(email=None):
+    if(email is None):
+        email = request.headers.get("X-Forwarded-Email")
+    if(email is None):
+        abort(401)
 
     greetings, uid = card_user.card_auth(email)
     #    cookie  table   work
