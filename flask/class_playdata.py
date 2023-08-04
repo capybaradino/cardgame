@@ -95,6 +95,26 @@ class Playdata:
         else:
             gamesession = None
 
+        # 既存ゲームがあるか確認(2)
+        record = card_db.getrecord_fromsession("playerstats",
+                                               "name",
+                                               card_db.getnickname_fromsid(sid))
+        if(record is not None):
+            player_tid = record[0]
+            gamesession = card_db.getrecord_fromsession("gamesession",
+                                                      "p1_player_tid",
+                                                      player_tid)
+            if(gamesession is not None):
+                self.gsid = gamesession[0]
+                card_db.putusersession_gsid(sid, self.gsid)
+            else:
+                gamesession = card_db.getrecord_fromsession("gamesession",
+                                                        "p2_player_tid",
+                                                        player_tid)
+                if(gamesession is not None):
+                    self.gsid = gamesession[0]
+                    card_db.putusersession_gsid(sid, self.gsid)
+
         # 対戦待ちのゲームがあるか確認
         if(self.gsid == "" or gamesession is None):
             gamesession = card_db.getrecord_fromsession("gamesession",
