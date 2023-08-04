@@ -95,8 +95,37 @@ class Playdata:
         else:
             gamesession = None
 
-        # 新規ゲームの場合はテーブルを初期化
+        # 対戦待ちのゲームがあるか確認
         if(self.gsid == "" or gamesession is None):
+            gamesession = card_db.getrecord_fromsession("gamesession",
+                                                      "p2_player_tid",
+                                                      "waiting")
+            if(gamesession is not None):
+                p1_player_tid = gamesession[1]
+                record = card_db.getrecord_fromsession("playerstats",
+                                                               "player_tid",
+                                                               p1_player_tid)
+                p1_player_name = record[1]
+                if(p1_player_name == card_db.getnickname_fromsid(sid)):
+                    # ゾンビゲームセッションがあった場合はつなぐ
+                    self.gsid = gamesession[0]
+                    card_db.putusersession_gsid(sid, self.gsid)
+                    newgame = 0
+                    matchinggame = 0
+                else:
+                    self.gsid = gamesession[0]
+                    self.card_table = gamesession[3]
+                    newgame = 0
+                    matchinggame = 1
+            else:
+                newgame = 1
+                matchinggame = 0
+        else:
+            newgame = 0
+            matchinggame = 0
+        
+        # 新規ゲームの場合はテーブルを初期化
+        if(newgame):
             while True:
                 # gsid生成
                 self.gsid = str(uuid.uuid4())
@@ -104,26 +133,31 @@ class Playdata:
                     continue
                 break
             i = 0
-            table = []
-            while(i < 3):
-                while True:
-                    name = str(uuid.uuid4())
-                    if(i < 2):
-                        # player_tid
-                        name = "p_" + name
-                    else:
-                        # card_table
-                        name = "c_" + name.replace('-','_')
-                    if(card_db.is_table_exists(name)):
-                        continue
-                    break
-                table.append(name)
-                i = i + 1
-            self.p1_player_tid = table[0]
-            self.p2_player_tid = table[1]
-            self.card_table = table[2]
+            while True:
+                # card_table生成
+                name = str(uuid.uuid4())
+                # card_table
+                self.card_table = "c_" + name.replace('-','_')
+                if(card_db.is_table_exists(self.card_table)):
+                    continue
+                break
 
-            # ユーザ情報初期化
+        if(newgame or matchinggame):
+            while True:
+                # player_tid生成
+                name = str(uuid.uuid4())
+                # player_tid
+                name = "p_" + name
+                if(card_db.isexist_player_tid(name)):
+                    continue
+                break
+            if(newgame):
+                self.p1_player_tid = name
+            else:
+                self.p2_player_tid = name
+
+        # ユーザ情報初期化
+        if(newgame):
             self.player1 = Player(
                 self.p1_player_tid,
                 card_db.getnickname_fromsid(sid),
@@ -134,9 +168,13 @@ class Playdata:
                 0,
                 self.card_table
             )
+            card_db.postplayerstats(
+                self.p1_player_tid, self.player1.name, self.player1.job,
+                self.player1.hp, self.player1.mp, self.player1.maxmp, self.player1.tension)
+        elif(matchinggame):
             self.player2 = Player(
                 self.p2_player_tid,
-                "dummy",
+                card_db.getnickname_fromsid(sid),
                 "kensi",
                 30,
                 0,
@@ -145,56 +183,69 @@ class Playdata:
                 self.card_table
             )
             card_db.postplayerstats(
-                self.p1_player_tid, self.player1.name, self.player1.job,
-                self.player1.hp, self.player1.mp, self.player1.maxmp, self.player1.tension)
-            card_db.postplayerstats(
                 self.p2_player_tid, self.player2.name, self.player2.job,
                 self.player2.hp, self.player2.mp, self.player2.maxmp, self.player2.tension)
 
+        if(newgame):
             # カード情報初期化
             card_db.createdecktable(self.card_table)
 
+        if(newgame or matchinggame):
             cids = card_db.getallcids()
             num_cids = len(cids)
-            # Player1デッキ登録(TBD)
+            # デッキ登録(TODO)
+            if(newgame):
+                playername = self.player1.name
+            else:
+                playername = self.player2.name
             i = 0
             while(i < 30):
                 tcid = cids[random.randrange(num_cids)][0]
-                card_db.postdeck(self.card_table, tcid, self.player1.name)
-                i = i + 1
-            # Player2デッキ登録(TBD)
-            i = 0
-            while(i < 30):
-                tcid = cids[random.randrange(num_cids)][0]
-                card_db.postdeck(self.card_table, tcid, self.player2.name)
+                card_db.postdeck(self.card_table, tcid, playername)
                 i = i + 1
 
+        if(newgame):
             # Player1ハンド
             self.player1.draw_card()
             self.player1.draw_card()
             self.player1.draw_card()
+        elif(matchinggame):
             # Player2ハンド
             self.player2.draw_card()
             self.player2.draw_card()
             self.player2.draw_card()
 
-            # Player1先行
+        if(newgame):
+            # Player1先行(TODO)
             self.player1.start_turn()
 
             # ゲームセッション登録
-            self.state = "p1turn"
+            self.state = "p1turn"   #TODO
             self.lastupdate = card_util.card_getdatestrnow()
             card_db.postgamesession(
-                self.gsid, self.p1_player_tid, self.p2_player_tid,
+                self.gsid, self.p1_player_tid, "waiting",
                   self.card_table, self.log, self.state, self.lastupdate)
             card_db.putusersession_gsid(sid, self.gsid)
-        else:
-            self.p1_player_tid = gamesession[1]
-            self.p2_player_tid = gamesession[2]
-            self.card_table = gamesession[3]
-            self.log = gamesession[4]
-            self.state = gamesession[5]
-            self.lastupdate = gamesession[6]
+        elif(matchinggame):
+            # マッチング完了登録
+            card_db.putgamesession(self.gsid, "p2_player_tid",
+                                   self.p2_player_tid)
+            card_db.putusersession_gsid(sid, self.gsid)
+
+        # マッチング中・・・
+        i = 0
+        gamesession = card_db.getgamesession(self.gsid)
+        self.p2_player_tid = gamesession[2]
+        if(self.p2_player_tid == "waiting"):
+            self.stat = "matching"
+            return
+
+        self.p1_player_tid = gamesession[1]
+        self.p2_player_tid = gamesession[2]
+        self.card_table = gamesession[3]
+        self.log = gamesession[4]
+        self.state = gamesession[5]
+        self.lastupdate = gamesession[6]
 
         self.p1_player_stats = card_db.getplayerstats(self.p1_player_tid)
         self.p2_player_stats = card_db.getplayerstats(self.p2_player_tid)
