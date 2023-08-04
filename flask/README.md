@@ -19,12 +19,17 @@ sudo pip3 install Pillow
 sudo pip3 install flask-restx
 
 ## Debug
-To skip user authentication, create file below in the same directory with main.py
+To skip user authentication, create file below in the same directory with main.py  
+Then, open two browser window. (Note: need using secret mode to use cookies individualy)  
+Access as follows:  
+  Player1 - http://127.0.0.1:5000/p1  
+  Player2 - http://127.0.0.1:5000/p2  
 
 debug.conf
 ```
 [debug]
-email = user1@example.com
+email1 = user1@example.com
+email2 = user2@example.com
 ```
 
 ## Contribution
