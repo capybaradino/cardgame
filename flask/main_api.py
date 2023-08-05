@@ -33,6 +33,10 @@ class Card_play(Resource):
             return {"error": "gamesession is null"}
         playview = Play_view(sid)
 
+        # Player1(自分のターン)か確認
+        if(playview.turnstate != "p1turn"):
+            return 401
+
         pattern_hand = r'^hand_[0-9]$'
         if re.match(pattern_hand, card1):
             # ハンドからカードをプレイ
