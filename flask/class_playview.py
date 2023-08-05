@@ -7,12 +7,21 @@ class Play_view:
     def __init__(self, sid):
         playdata = Playdata(sid)
         self.playdata = playdata
-        p1=playdata.player1
-        p2=playdata.player2
+        nickname = card_db.getnickname_fromsid(sid)
+        if(playdata.player1.name == nickname):
+            p1=playdata.player1
+            p2=playdata.player2
+            self.turnstate = playdata.state
+        else:
+            p1=playdata.player2
+            p2=playdata.player1
+            if(playdata.state == "p1turn"):
+                self.turnstate = "p2turn"
+            else:
+                self.turnstate = "p1turn"
         # ヘッダ情報
         self.p1name = p1.name
         self.p2name = p2.name
-        self.turnstate = playdata.state
         # Player2情報
         self.p2hp = p2.hp
         self.p2job = p2.job
@@ -44,6 +53,17 @@ class Play_view:
                     break
             i = i + 1
         # Player2盤面情報
+        field = Field(self.p1name, self.p2name, playdata.card_table)
+        self.p2board = []
+        p2boards = field.get_p2board()
+        i = 0
+        while(i < 6):
+            self.p2board.append(None)
+            for board in p2boards:
+                if(i == board.locnum):
+                    self.p2board[i] = board
+                    break
+            i = i + 1
         # Player1情報
         self.p1hp = p1.hp
         self.p1job = p1.job

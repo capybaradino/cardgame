@@ -20,8 +20,6 @@ def card_play_get(sid):
         )
 
     viewdata = Play_view(sid)
-    p1=playdata.player1
-    p2=playdata.player2
 
     # ハンド
     p1hand = []
@@ -49,7 +47,6 @@ def card_play_get(sid):
         p1banmen.append(card_play_util.card_createcardhtml(None, "p1board", i))
         i = i + 1
     for board in viewdata.p1board:
-        # p1banmen.append(card_play_util.card_createcardhtml(board, "p1board", i))
         if(board is not None):
             i = board.locnum
             p1banmen[i] = card_play_util.card_createcardhtml(board, "p1board", i)
@@ -58,6 +55,10 @@ def card_play_get(sid):
     while(i < 6):
         p2banmen.append(card_play_util.card_createcardhtml(None, "p2board", i))
         i = i + 1
+    for board in viewdata.p2board:
+        if(board is not None):
+            i = board.locnum
+            p2banmen[i] = card_play_util.card_createcardhtml(board, "p2board", i)
     # プレイヤー
     p1name = card_play_util.card_radiobutton("p1board", 10)
     p2name = card_play_util.card_radiobutton("p2board", 10)
@@ -82,10 +83,15 @@ def card_play_get(sid):
 def card_play_post(sid, target, callback):
     if(target=="turnend"):
         playdata = Playdata(sid)
+        nickname = card_db.getnickname_fromsid(sid)
         if(playdata.state == "p1turn"):
+            if(nickname != playdata.player1.name):
+                return 401
             card_db.putgamesession(playdata.gsid, "state", "p2turn")
             nextp = playdata.player2
         else:
+            if(nickname != playdata.player2.name):
+                return 401
             card_db.putgamesession(playdata.gsid, "state", "p1turn")
             nextp = playdata.player1
         nextp.start_turn()
