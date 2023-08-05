@@ -18,7 +18,7 @@ def api_play_hand(playview, card1, card2):
     pattern_p1board = r'leftboard_[0-5]'
     if re.match(pattern_p1board, card2):
         # ボードの確認
-        pattern = r'[0-9]'
+        pattern = r'[0-5]'
         number = int(re.findall(pattern, card2)[0])
         boards = playview.p1board
         objcard2 = boards[number]
