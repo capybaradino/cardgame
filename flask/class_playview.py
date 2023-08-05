@@ -36,7 +36,7 @@ class Play_view:
         i = 0
         while(i < 10):
             if(i < len(p2hands)):
-                self.p2hand.append(Card_info(None, None, None))
+                self.p2hand.append(Card_info.empty)
             else:
                 self.p2hand.append(None)
             i = i + 1
