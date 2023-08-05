@@ -170,7 +170,9 @@ def createdecktable(table_name):
             cid TEXT NOT NULL,
             loc TEXT,
             cuid PRIMARY KEY,
-            locnum INTEGER
+            locnum INTEGER,
+            dhp INTEGER NOT NULL,
+            dattack INTEGER NOT NULL
         )
     """
     cursor.execute(query)
@@ -202,8 +204,8 @@ def postdeck(table_name, cid, loc):
         if(isexist_cuid(table_name, cuid)):
             continue
         break
-    query = f"INSERT INTO {table_name} VALUES (?,?,?,?)"
-    cursor.execute(query, (cid, loc, cuid, -1))
+    query = f"INSERT INTO {table_name} VALUES (?,?,?,?,?,?)"
+    cursor.execute(query, (cid, loc, cuid, -1, 0, 0))
     con.commit()
     con.close()
     return
