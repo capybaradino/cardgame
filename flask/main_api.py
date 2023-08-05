@@ -1,5 +1,6 @@
 from flask import Flask
 from api_play import api_play_hand
+from api_attack import api_unit_attack
 import debug
 from flask_restx import Resource, Api
 import card_user, card_db
@@ -39,9 +40,13 @@ class Card_play(Resource):
             return 401
 
         pattern_hand = r'^hand_[0-9]$'
+        pattern_leftboard = r'leftboard_[0-5]'
         if re.match(pattern_hand, card1):
             # ハンドからカードをプレイ
             return api_play_hand(playview, card1, card2)
+        elif re.match(pattern_leftboard, card1):
+            # ユニットで攻撃
+            return api_unit_attack(playview, card1, card2)
         else:
             return {"error": "illegal card1"}
             

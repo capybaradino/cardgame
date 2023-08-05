@@ -2,12 +2,7 @@
 {% block content %}
 <!-- ヘッダーエリア -->
 <script type="text/javascript">
-    function play_left() {
-        var sid = getCookieValue("card_sid");
-        var card1 = getSelectedValue("hand");
-        var card2 = getSelectedValue("p1board");
-        var url = "/api/play/" + sid + "/hand_" + card1 + "/leftboard_" + card2;
-        // url = "/api/play/hogehoge/card1/card2"
+    function play_post(url) {
         var xhr = new XMLHttpRequest();
         xhr.open("post", url, true);
         xhr.onload = function () {
@@ -18,6 +13,21 @@
             }
         }
         xhr.send(null);
+    }
+    function play_left() {
+        var sid = getCookieValue("card_sid");
+        var card1 = getSelectedValue("hand");
+        var card2 = getSelectedValue("p1board");
+        var url = "/api/play/" + sid + "/hand_" + card1 + "/leftboard_" + card2;
+        // url = "/api/play/hogehoge/card1/card2"
+        play_post(url);
+    }
+    function play_attack() {
+        var sid = getCookieValue("card_sid");
+        var card1 = getSelectedValue("p1board");
+        var card2 = getSelectedValue("p2board");
+        var url = "/api/play/" + sid + "/leftboard_" + card1 + "/rightboard_" + card2;
+        play_post(url);
     }
     function getSelectedValue(name) {
         // ラジオボタンの値を取得する
@@ -40,6 +50,9 @@
         }
         return cookieValue;
     }
+    function reloadPage() {
+        location.reload();
+    }
 </script>
 <table border="1">
     <tr>
@@ -49,7 +62,8 @@
         <td>
             <div style="text-align: center;">
                 === {{viewdata.turnstate}} ===<br>
-                <input type=button value="Turn end" onclick="send('post','turnend')">
+                <input type=button value="Turn end" onclick="send('post','turnend')"><br>
+                <input type="button" value="Reload" onclick="reloadPage()">
             </div>
         </td>
         <td>
@@ -144,8 +158,8 @@
                 <td>MP={{viewdata.p1mp}}/{{viewdata.p1maxmp}}</td>
                 <td>TS={{viewdata.p1tension}}/3</td>
                 <td><input type=button value=Play_Left onclick="play_left()"></td>
-                <td><input type=button value=Play_Right onclick="send('hoge')"></td>
-                <td><input type=button value=Attack onclick="send('hoge')"></td>
+                <td><input type=button value=Play_Right onclick="play_right()"></td>
+                <td><input type=button value=Attack onclick="play_attack()"></td>
                 <td>===</td>
                 <td><input type=button value=Surrender onclick="send_delete('hoge')"></td>
             </tr>

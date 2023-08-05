@@ -41,7 +41,7 @@ class Player:
         records = card_db.getcards_fromdeck(self.card_table, self.name + "_hand")
         cards: Card_info = []
         for record in records:
-            cards.append(Card_info(record[0], record[2], record[3]))
+            cards.append(Card_info(record[0], record[2], record[3], record[4], record[5]))
         return cards
 
     def get_decknum(self):
@@ -63,14 +63,14 @@ class Field:
         records = card_db.getcards_fromdeck(self.card_table, self.p1name + "_board")
         cards: Card_info = []
         for record in records:
-            cards.append(Card_info(record[0], record[2], record[3]))
+            cards.append(Card_info(record[0], record[2], record[3], record[4], record[5]))
         return cards    
 
     def get_p2board(self):
         records = card_db.getcards_fromdeck(self.card_table, self.p2name + "_board")
         cards: Card_info = []
         for record in records:
-            cards.append(Card_info(record[0], record[2], record[3]))
+            cards.append(Card_info(record[0], record[2], record[3], record[4], record[5]))
         return cards    
 
 
