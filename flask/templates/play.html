@@ -14,6 +14,11 @@
         }
         xhr.send(null);
     }
+    function system_turnend() {
+        var sid = getCookieValue("card_sid");
+        var url = "/api/system/" + sid + "/turnend";
+        play_post(url);
+    }
     function play_left() {
         var sid = getCookieValue("card_sid");
         var card1 = getSelectedValue("hand");
@@ -62,7 +67,7 @@
         <td>
             <div style="text-align: center;">
                 === {{viewdata.turnstate}} ===<br>
-                <input type=button value="Turn end" onclick="send('post','turnend')"><br>
+                <input type=button value="Turn end" onclick="system_turnend()"><br>
                 <input type="button" value="Reload" onclick="reloadPage()">
             </div>
         </td>
