@@ -4,7 +4,7 @@ from class_playinfo import Card_info
 import card_db
 
 
-def api_unit_attack(playview: Play_view, card1, card2):
+def api_unit_attack(sid, playview: Play_view, card1, card2):
     # ユニットで攻撃
     pattern = r'[0-9]'
     number = int(re.findall(pattern, card1)[0])
@@ -14,7 +14,8 @@ def api_unit_attack(playview: Play_view, card1, card2):
     if(objcard1 is None):
         return {"error": "illegal card1 number"}
     # ユニットの攻撃先確認
-    pattern_p2board = r'rightboard_[0-5]'
+    pattern_p2board = r'rightboard_[0-5]$'   # 盤面
+    pattern_p2leader = r'rightboard_10'  # リーダー
     if re.match(pattern_p2board, card2):
         # ボードの確認
         pattern = r'[0-5]'
@@ -43,6 +44,20 @@ def api_unit_attack(playview: Play_view, card1, card2):
             card_db.putsession(playview.playdata.card_table,
                                "cuid", objcard2.cuid,
                                "loc", playview.p2name + "_cemetery")
+    elif re.match(pattern_p2leader, card2):
+        # TODO ウォールのチェック
+        # リーダーHP減算
+        newhp = playview.p2hp - objcard1.attack
+        if(newhp <= 0):
+            playview.playdata.gamewin(sid)
+        if(playview.playdata.player1.name == playview.p1name):
+            card_db.putsession("playerstats",
+                               "player_tid", playview.playdata.p2_player_tid,
+                                "hp", newhp)
+        else:
+            card_db.putsession("playerstats",
+                               "player_tid", playview.playdata.p1_player_tid,
+                                "hp", newhp)
     else:
         return {"error": "illegal card2"}
     

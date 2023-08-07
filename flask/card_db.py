@@ -116,6 +116,15 @@ def getgsid_fromsid(sid):
     return gsid
 
 
+def getsid_fromgsid(gsid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    cur.execute("select sid from usersession where gsid = '" + gsid + "'")
+    gsid = card_fetchone(cur)
+    con.close()
+    return gsid
+
+
 def postgamesession(gsid, p1_player_table, p2_player_table,
                      card_table, log, state, lastupdate):
     con = sqlite3.connect('session.db')
