@@ -1,6 +1,7 @@
 from flask import Flask
 from api_play import api_play_hand
 from api_attack import api_unit_attack
+import api_system
 import debug
 from flask_restx import Resource, Api
 import card_user, card_db
@@ -18,6 +19,14 @@ class Test(Resource):
         return {"message":"OK GET"}
     def post(self, sid, card1, card2):
         return {"message":"OK POST"}
+
+
+@api.route('/system/<sid>/<command>')
+class Card_system(Resource):
+    def post(self, sid, command):
+        if(command == "turnend"):
+            return api_system.turnend(sid)
+        return 404
 
 
 @api.route('/play/<sid>/<card1>/<card2>')
