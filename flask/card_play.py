@@ -14,6 +14,11 @@ def card_play_get(sid):
             'play_lose.html', title='Lose'
         )
 
+    if(playdata.stat == "win"):
+        return render_template(
+            'play_win.html', title='Win'
+        )
+
     if(playdata.stat == "matching"):
         return render_template(
             'play_matching.html', title='Matching'
