@@ -55,7 +55,7 @@ class Card_play(Resource):
             return api_play_hand(playview, card1, card2)
         elif re.match(pattern_leftboard, card1):
             # ユニットで攻撃
-            return api_unit_attack(playview, card1, card2)
+            return api_unit_attack(sid, playview, card1, card2)
         else:
             return {"error": "illegal card1"}
             
