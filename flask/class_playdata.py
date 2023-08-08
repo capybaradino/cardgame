@@ -3,7 +3,7 @@ import uuid
 import card_util
 import random
 from class_playinfo import Card_info
-import game
+import game, debug
 
 
 class Player:
@@ -139,6 +139,7 @@ class Playdata:
                 else:
                     self.gsid = gamesession[0]
                     self.card_table = gamesession[3]
+                    self.state = gamesession[5]
                     newgame = 0
                     matchinggame = 1
             else:
@@ -183,6 +184,8 @@ class Playdata:
         # ゲーム設定値読み込み
         p1hp = int(game.getparam("p1hp"))
         p2hp = int(game.getparam("p2hp"))
+        p1mp = int(game.getparam("p1mp"))
+        p2mp = int(game.getparam("p2mp"))
 
         # ユーザ情報初期化
         if(newgame):
@@ -191,8 +194,8 @@ class Playdata:
                 card_db.getnickname_fromsid(sid),
                 "kensi",
                 p1hp,
-                0,
-                0,
+                p1mp,
+                p1mp,
                 0,
                 self.card_table
             )
@@ -205,8 +208,8 @@ class Playdata:
                 card_db.getnickname_fromsid(sid),
                 "kensi",
                 p2hp,
-                0,
-                0,
+                p2mp,
+                p2mp,
                 2,
                 self.card_table
             )
@@ -244,11 +247,19 @@ class Playdata:
             self.player2.draw_card()
 
         if(newgame):
-            # Player1先行(TODO)
-            self.player1.start_turn()
+            # Player先行後攻コイントス
+            ret = debug.getdebugparam("senkou")
+            if(ret is None):
+                ret = str(random.randrange(2))
+            if(ret == "0"):
+                # self.player1.start_turn()
+                self.state = "p1turn"
+                self.player1.start_turn()
+            else:
+                # self.player2.start_turn()
+                self.state = "p2turn"
 
             # ゲームセッション登録
-            self.state = "p1turn"   #TODO
             self.lastupdate = card_util.card_getdatestrnow()
             card_db.postgamesession(
                 self.gsid, self.p1_player_tid, "waiting",
@@ -259,6 +270,8 @@ class Playdata:
             card_db.putgamesession(self.gsid, "p2_player_tid",
                                    self.p2_player_tid)
             card_db.putusersession_gsid(sid, self.gsid)
+            if(self.state == "p2turn"):
+                self.player2.start_turn()
 
         # マッチング中・・・
         i = 0
