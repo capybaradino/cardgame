@@ -3,6 +3,7 @@ import uuid
 import card_util
 import random
 from class_playinfo import Card_info
+import game
 
 
 class Player:
@@ -178,6 +179,10 @@ class Playdata:
                 self.p1_player_tid = name
             else:
                 self.p2_player_tid = name
+        
+        # ゲーム設定値読み込み
+        p1hp = int(game.getparam("p1hp"))
+        p2hp = int(game.getparam("p2hp"))
 
         # ユーザ情報初期化
         if(newgame):
@@ -185,7 +190,7 @@ class Playdata:
                 self.p1_player_tid,
                 card_db.getnickname_fromsid(sid),
                 "kensi",
-                30,
+                p1hp,
                 0,
                 0,
                 0,
@@ -199,7 +204,7 @@ class Playdata:
                 self.p2_player_tid,
                 card_db.getnickname_fromsid(sid),
                 "kensi",
-                30,
+                p2hp,
                 0,
                 0,
                 2,
