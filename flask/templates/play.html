@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- ヘッダーエリア -->
+<script type="text/javascript">
+    function play_post(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", url, true);
+        xhr.onload = function () {
+            var result = xhr.responseText;
+            if (xhr.readyState == 4 && xhr.status == "200") {
+                window.location.reload()
+            } else {
+            }
+        }
+        xhr.send(null);
+    }
+    function system_turnend() {
+        var sid = getCookieValue("card_sid");
+        var url = "/api/system/" + sid + "/turnend";
+        play_post(url);
+    }
+    function play_left() {
+        var sid = getCookieValue("card_sid");
+        var card1 = getSelectedValue("hand");
+        var card2 = getSelectedValue("p1board");
+        var url = "/api/play/" + sid + "/hand_" + card1 + "/leftboard_" + card2;
+        // url = "/api/play/hogehoge/card1/card2"
+        play_post(url);
+    }
+    function play_attack() {
+        var sid = getCookieValue("card_sid");
+        var card1 = getSelectedValue("p1board");
+        var card2 = getSelectedValue("p2board");
+        var url = "/api/play/" + sid + "/leftboard_" + card1 + "/rightboard_" + card2;
+        play_post(url);
+    }
+    function getSelectedValue(name) {
+        // ラジオボタンの値を取得する
+        var selectedValue = document.querySelector('input[name="' + name + '"]:checked').value;
+        return selectedValue;
+    }
+    function getCookieValue(key) {
+        // Cookieの値を取得
+        var cookies = document.cookie;
+        var cookieArray = cookies.split(';');
+
+        var cookieValue = null;
+        for (var i = 0; i < cookieArray.length; i++) {
+            var cookie = cookieArray[i].trim();
+            var keystring = key + '='
+            if (cookie.indexOf(keystring) === 0) {
+                cookieValue = cookie.substring(keystring.length, cookie.length);
+                break;
+            }
+        }
+        return cookieValue;
+    }
+    function reloadPage() {
+        location.reload();
+    }
+</script>
+<table border="1">
+    <tr>
+        <td>[[ {{viewdata.p1name}} ]]</td>
+        <td>vs</td>
+        <td>[[ {{viewdata.p2name}} ]]</td>
+        <td>
+            <div style="text-align: center;">
+                === {{viewdata.turnstate}} ===<br>
+                <input type=button value="Turn end" onclick="system_turnend()"><br>
+                <input type="button" value="Reload" onclick="reloadPage()">
+            </div>
+        </td>
+        <td>
+            <table border="1">
+                <tr>
+                    <td>{{p2_card[0]|safe}}</td>
+                    <td>{{p2_card[1]|safe}}</td>
+                    <td>{{p2_card[2]|safe}}</td>
+                    <td>{{p2_card[3]|safe}}</td>
+                    <td>{{p2_card[4]|safe}}</td>
+                    <td>{{p2_card[5]|safe}}</td>
+                    <td>{{p2_card[6]|safe}}</td>
+                    <td>{{p2_card[7]|safe}}</td>
+                    <td>{{p2_card[8]|safe}}</td>
+                    <td>{{p2_card[9]|safe}}</td>
+                </tr>
+            </table>
+            <div style="float: right;">
+                <table border="1">
+                    <tr>
+                        <td>HP={{viewdata.p2hp}}</td>
+                        <td>Deck={{viewdata.p2decknum}}</td>
+                        <td>MP={{viewdata.p2mp}}/{{viewdata.p2maxmp}}</td>
+                        <td>TS={{viewdata.p2tension}}/3</td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- 盤面 -->
+<div style="text-align: center;">
+    <table border="1">
+        <!-- 上段 -->
+        <tr>
+            <!-- 左から右 -->
+            <td>////</td>
+            <td>{{p1_banmen[3]|safe}}</td>
+            <td>{{p1_banmen[0]|safe}}</td>
+            <td>////</td>
+            <td>{{p2_banmen[0]|safe}}</td>
+            <td>{{p2_banmen[3]|safe}}</td>
+            <td>////</td>
+        </tr>
+        <!-- 中段 -->
+        <tr>
+            <!-- 左から右 -->
+            <td>== PLAYER1 ==<br>{{p1_name|safe}}</td>
+            <td>{{p1_banmen[4]|safe}}</td>
+            <td>{{p1_banmen[1]|safe}}</td>
+            <td><img width="100" src="{{center_cell}}"><br>////</td>
+            <td>{{p2_banmen[1]|safe}}</td>
+            <td>{{p2_banmen[4]|safe}}</td>
+            <td>== PLAYER2 ==<br>{{p2_name|safe}}</td>
+        </tr>
+        <!-- 下段 -->
+        <tr>
+            <!-- 左から右 -->
+            <td>////</td>
+            <td>{{p1_banmen[5]|safe}}</td>
+            <td>{{p1_banmen[2]|safe}}</td>
+            <td>////</td>
+            <td>{{p2_banmen[2]|safe}}</td>
+            <td>{{p2_banmen[5]|safe}}</td>
+            <td>////</td>
+        </tr>
+    </table>
+</div>
+
+<!-- フッターエリア -->
+<table border="1">
+    <tr>
+        <table border="1">
+            <tr>
+                <td>{{p1_card[0]|safe}}</td>
+                <td>{{p1_card[1]|safe}}</td>
+                <td>{{p1_card[2]|safe}}</td>
+                <td>{{p1_card[3]|safe}}</td>
+                <td>{{p1_card[4]|safe}}</td>
+                <td>{{p1_card[5]|safe}}</td>
+                <td>{{p1_card[6]|safe}}</td>
+                <td>{{p1_card[7]|safe}}</td>
+                <td>{{p1_card[8]|safe}}</td>
+                <td>{{p1_card[9]|safe}}</td>
+            </tr>
+        </table>
+        <table border="1">
+            <tr>
+                <td>HP={{viewdata.p1hp}}</td>
+                <td>Deck={{viewdata.p1decknum}}</td>
+                <td>MP={{viewdata.p1mp}}/{{viewdata.p1maxmp}}</td>
+                <td>TS={{viewdata.p1tension}}/3</td>
+                <td><input type=button value=Play_Left onclick="play_left()"></td>
+                <td><input type=button value=Play_Right onclick="play_right()"></td>
+                <td><input type=button value=Attack onclick="play_attack()"></td>
+                <td>===</td>
+                <td><input type=button value=Surrender onclick="send_delete('hoge')"></td>
+            </tr>
+        </table>
+    </tr>
+</table>
+{% endblock %}
