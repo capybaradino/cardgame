@@ -41,4 +41,4 @@ def api_play_hand(playview, card1, card2):
     else:
         return {"error": "illegal card2"}
     
-    return {"normal": "OK"}
+    return {"info": "OK"}

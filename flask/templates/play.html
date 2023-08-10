@@ -7,12 +7,23 @@
         xhr.open("post", url, true);
         xhr.onload = function () {
             var result = xhr.responseText;
-            if (xhr.readyState == 4 && xhr.status == "200") {
+            // if (xhr.readyState == 4 && xhr.status == "200") {
+            if (xhr.readyState == 4) {
+                var json = JSON.parse(result);
+                document.cookie = "card_lastlog=" + JSON.stringify(json);
                 window.location.reload()
             } else {
             }
         }
         xhr.send(null);
+    }
+    function disp_lastlog() {
+        var lastlog = getCookieValue("card_lastlog");
+        if (lastlog) {
+            document.getElementById("lastlog").textContent = lastlog;
+        } else {
+            document.getElementById("lastlog").textContent = "-";
+        }
     }
     function system_turnend() {
         var sid = getCookieValue("card_sid");
@@ -58,6 +69,8 @@
     function reloadPage() {
         location.reload();
     }
+    // ページ表示時に実行
+    window.onload = disp_lastlog;
 </script>
 <table border="1">
     <tr>
@@ -167,6 +180,9 @@
                 <td><input type=button value=Attack onclick="play_attack()"></td>
                 <td>===</td>
                 <td><input type=button value=Surrender onclick="send_delete('hoge')"></td>
+                <td>
+                    <p id="lastlog"></p>
+                </td>
             </tr>
         </table>
     </tr>

@@ -28,6 +28,7 @@ class Player:
         self.mp = self.maxmp
         card_db.putsession('playerstats', 'player_tid', self.player_tid, 'mp', self.mp)
         card_db.putsession('playerstats', 'player_tid', self.player_tid, 'maxmp', self.maxmp)
+        card_db.putsession(self.card_table, "loc", self.name+"_board", "active", 1)
         return
 
     def draw_card(self):
