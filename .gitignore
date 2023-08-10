@@ -1,0 +1,6 @@
+*.pyc
+*.png
+flask/debug.conf
+flask/game.db
+flask/session.db
+flask/user.db
