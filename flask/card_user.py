@@ -3,12 +3,17 @@ import names
 import uuid
 import card_util
 import card_db
+import re
 
 
 def card_checksession(sid):
-    if(sid is not None):
-        sid = card_db.getsid_fromsid(sid)
-    return sid
+    pattern_session = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    if re.match(pattern_session, sid):
+        if(sid is not None):
+            sid = card_db.getsid_fromsid(sid)
+        return sid
+    else:
+        return None
 
 
 def card_getsession(sid, email):
