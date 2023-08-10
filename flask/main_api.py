@@ -24,6 +24,9 @@ class Test(Resource):
 @api.route('/system/<sid>/<command>')
 class Card_system(Resource):
     def post(self, sid, command):
+        sid = card_user.card_checksession(sid)
+        if(sid is None):
+            return {"error": "illegal session"}, 403
         if(command == "turnend"):
             return api_system.turnend(sid)
         return 404
