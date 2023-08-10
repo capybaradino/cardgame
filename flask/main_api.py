@@ -34,9 +34,9 @@ class Card_play(Resource):
     def post(self, sid, card1, card2):
         sid = card_user.card_checksession(sid)
         if(sid is None):
-            return 403
+            return {"error": "illegal session"}, 403
         if(card1 is None):
-            return {"error": "card1 is null"}
+            return {"error": "card1 is null"}, 401
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
@@ -46,7 +46,7 @@ class Card_play(Resource):
 
         # Player1(自分のターン)か確認
         if(playview.turnstate != "p1turn"):
-            return 401
+            return {"error": "not in your turn"}, 401
 
         pattern_hand = r'^hand_[0-9]$'
         pattern_leftboard = r'leftboard_[0-5]'
@@ -57,13 +57,7 @@ class Card_play(Resource):
             # ユニットで攻撃
             return api_unit_attack(sid, playview, card1, card2)
         else:
-            return {"error": "illegal card1"}
-            
-
-        return {
-            "sid": sid
-        }
-
+            return {"error": "illegal card1"}, 401
 
 # Omajinai
 if __name__ == "__main__":
