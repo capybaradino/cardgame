@@ -25,7 +25,10 @@ A
 [Note] need edit cardgame.service for your environment  
 sudo pip3 install uwsgi  
 sudo ln -s /home/pi/cardgame/cardgame.service /etc/systemd/system/  
+sudo ln -s /home/pi/cardgame/cardgame_api.service /etc/systemd/system/  
+sudo systemctl daemon-reload  
 sudo systemctl enable cardgame  
+sudo systemctl enable cardgame_api  
 
 ## Debug
 To skip user authentication, create file below in the same directory with main.py  
