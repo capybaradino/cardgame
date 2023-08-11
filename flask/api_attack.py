@@ -12,10 +12,10 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
     objcard1: Card_info
     objcard1 = boards[number]
     if(objcard1 is None):
-        return {"error": "illegal card1 number"}, 401
+        return {"error": "illegal card1 number"}, 403
     record = card_db.getrecord_fromsession(playview.playdata.card_table, "cuid", objcard1.cuid)
     if(record[6] == 0):
-        return {"error": "card1 is not active"}, 401
+        return {"error": "card1 is not active"}, 403
     # ユニットの攻撃先確認
     pattern_p2board = r'rightboard_[0-5]$'   # 盤面
     pattern_p2leader = r'rightboard_10'  # リーダー
@@ -27,7 +27,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         objcard2: Card_info
         objcard2 = boards[number]
         if(objcard2 is None):
-            return {"error": "unit don't exists in card2"}, 401
+            return {"error": "unit don't exists in card2"}, 403
         # ALL OK DB更新
         # 自ユニットHP減算
         dhp = objcard1.dhp - objcard2.attack
@@ -52,7 +52,9 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
                            "cuid", objcard1.cuid,
                            "active", 0)
     elif re.match(pattern_p2leader, card2):
-        # TODO ウォールのチェック
+        # ウォールのチェック
+        if(playview.iswall()):
+            return {"error": "wall exists"}, 403
         # リーダーHP減算
         newhp = playview.p2hp - objcard1.attack
         if(newhp <= 0):
@@ -66,6 +68,6 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
                                "player_tid", playview.playdata.p1_player_tid,
                                 "hp", newhp)
     else:
-        return {"error": "illegal card2"}, 401
+        return {"error": "illegal card2"}, 403
     
     return {"info": "OK"}
