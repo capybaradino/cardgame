@@ -55,8 +55,15 @@ def index(email=None):
         else:
             # 3.
             card_user.card_putsession(sid, uid)
-    resp = make_response(render_template(
-        'index.html', title='Cardgame', greetings=greetings))
+
+    grant = card_user.card_getgrant(uid)
+    if(grant == "admin"):
+        resp = make_response(render_template(
+            'index.html', title='Cardgame(admin)', greetings=greetings))
+    else:
+        resp = make_response(render_template(
+            'index2.html', title='Cardgame', greetings=greetings))
+
     resp.set_cookie("card_sid", sid)
     resp.set_cookie("card-email", email)
     card_user.card_cleargame(sid)
@@ -66,6 +73,9 @@ def index(email=None):
 @app.route('/play/<target>', methods=['GET', 'POST', 'DELETE'])
 def play(target=None):
     sid = request.cookies.get("card_sid", None)
+    sid = card_user.card_checksession(sid)
+    if(sid is None):
+        return abort(401)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
     if(sid is None):
@@ -81,6 +91,12 @@ def play(target=None):
 @app.route('/admin/<option>', methods=['GET', 'POST', 'DELETE'])
 def admin(option=None):
     sid = request.cookies.get("card_sid", None)
+    sid = card_user.card_checksession(sid)
+    if(sid is None):
+        return abort(401)
+    grant = card_user.card_getgrant_fromsid(sid)
+    if(grant != "admin"):
+        return abort(403)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
     if(sid is None):
@@ -103,6 +119,13 @@ def uploaded_file(filename):
 
 @app.route('/chkheaders/')
 def chkheaders():
+    sid = request.cookies.get("card_sid", None)
+    sid = card_user.card_checksession(sid)
+    if(sid is None):
+        return abort(401)
+    grant = card_user.card_getgrant_fromsid(sid)
+    if(grant != "admin"):
+        return abort(403)
     headers = "<table border=1>"
     for header in request.headers:
         headers += "<tr>"
@@ -115,6 +138,13 @@ def chkheaders():
 
 @app.route('/chktable/<tablename>')
 def chkusers(tablename=None):
+    sid = request.cookies.get("card_sid", None)
+    sid = card_user.card_checksession(sid)
+    if(sid is None):
+        return abort(401)
+    grant = card_user.card_getgrant_fromsid(sid)
+    if(grant != "admin"):
+        return abort(403)
     headers = card_util.card_gettablehtml(tablename, None)
     return render_template('chkheaders.html', title=tablename, headers=headers)
 
@@ -126,6 +156,9 @@ def manage_card(target=None):
     sid = card_user.card_getsession(sid, email)
     if(sid is None):
         return redirect(url_for("index"))
+    grant = card_user.card_getgrant_fromsid(sid)
+    if(grant != "admin"):
+        return abort(403)
     if(request.method == 'POST'):
         return card_manage_card.card_management_post(request, request.url)
     if(request.method == 'DELETE' and target != "card"):
@@ -140,6 +173,9 @@ def manage_image(target=None):
     sid = card_user.card_getsession(sid, email)
     if(sid is None):
         return redirect(url_for("index"))
+    grant = card_user.card_getgrant_fromsid(sid)
+    if(grant != "admin"):
+        return abort(403)
     if(request.method == 'DELETE' and target != "card"):
         return card_manage_image.card_management_delete(target, '/manage_image/card')
     else:
