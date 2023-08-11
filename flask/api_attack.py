@@ -28,6 +28,9 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         objcard2 = boards[number]
         if(objcard2 is None):
             return {"error": "unit don't exists in card2"}, 403
+        # ブロックの確認
+        if(playview.isblocked(number)):
+            return {"error": "card2 is blocked by other unit"}, 403
         # ALL OK DB更新
         # 自ユニットHP減算
         dhp = objcard1.dhp - objcard2.attack

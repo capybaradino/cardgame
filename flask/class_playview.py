@@ -89,6 +89,15 @@ class Play_view:
             return True
         else:
             return False
+        
+    def isblocked(self, number):
+        if(number < 3):
+            return False
+        front = self.p2board[number-3]
+        if(self.isblockable(front)):
+            return True
+        else:
+            return False
 
     def iswall(self):
         #上段
