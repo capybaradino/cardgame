@@ -61,7 +61,8 @@ def create_table(db_name, table_name):
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     uid TEXT PRIMARY KEY,
                     email TEXT NOT NULL,
-                    nickname TEXT NOT NULL
+                    nickname TEXT NOT NULL,
+                    grant TEXT
                 )
             """
         if(table_name == 'usersession'):

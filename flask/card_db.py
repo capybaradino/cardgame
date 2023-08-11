@@ -592,11 +592,20 @@ def getnickname_fromnickname(username):
     return username
 
 
+def getgrant_fromuid(uid):
+    con = sqlite3.connect('user.db')
+    cur = con.cursor()
+    cur.execute("select grant from user where uid = '" + uid + "'")
+    username = card_fetchone(cur)
+    con.close()
+    return username
+
+
 def postuser(uid, email, username):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
-    cur.execute("insert into user values ('" + uid +
-                "','" + email + "','" + username + "')")
+    query = f"INSERT INTO user VALUES (?,?,?,?)"
+    cur.execute(query, (uid, email, username, ""))
     con.commit()
     con.close()
     return
