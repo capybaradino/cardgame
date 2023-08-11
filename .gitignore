@@ -4,3 +4,5 @@ flask/debug.conf
 flask/game.db
 flask/session.db
 flask/user.db
+uwsgi.log
+uwsgi_api.log
