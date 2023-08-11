@@ -17,6 +17,15 @@ sudo pip3 install names
 sudo apt install sqlite3  
 sudo pip3 install Pillow  
 sudo pip3 install flask-restx  
+cd cardgame/flask  
+python3 ./initialize_db.py  
+A  
+
+### Cardgame for production mode
+[Note] need edit cardgame.service for your environment  
+sudo pip3 install uwsgi  
+sudo ln -s /home/pi/cardgame/cardgame.service /etc/systemd/system/  
+sudo systemctl enable cardgame  
 
 ## Debug
 To skip user authentication, create file below in the same directory with main.py  
