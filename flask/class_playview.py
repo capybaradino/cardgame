@@ -82,3 +82,27 @@ class Play_view:
             else:
                 self.p1hand.append(None)
             i = i + 1
+
+    def isblockable(self, board: Card_info):
+        # TODO ステルス状態などのチェック
+        if(board is not None):
+            return True
+        else:
+            return False
+
+    def iswall(self):
+        #上段
+        upper1 = self.isblockable(self.p2board[0])
+        upper2 = self.isblockable(self.p2board[3])
+        #中段
+        middle1 = self.isblockable(self.p2board[1])
+        middle2 = self.isblockable(self.p2board[4])
+        #下段
+        lower1 = self.isblockable(self.p2board[2])
+        lower2 = self.isblockable(self.p2board[5])
+
+        if(upper1 or upper2):
+            if(middle1 or middle2):
+                if(lower1 or lower2):
+                    return True
+        return False
