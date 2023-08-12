@@ -5,7 +5,8 @@ import api_system
 import api_view
 import debug
 from flask_restx import Resource, Api
-import card_user, card_db
+import card_user
+import card_db
 import re
 from class_playview import Play_view
 from class_playdata import Playdata
@@ -17,53 +18,53 @@ api = Api(app)
 class Card_system(Resource):
     def post(self, sid, command):
         sid = card_user.card_checksession(sid)
-        if(sid is None):
+        if (sid is None):
             return {"error": "illegal session"}, 403
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if(gsid == ""):
-            if(command == "newgame"):
+        if (gsid == ""):
+            if (command == "newgame"):
                 stat = api_system.newgame(sid)
                 return {"info": stat}, 200
             else:
                 return {"error": "gamesession not exist"}, 403
 
-        if(sid is None):
+        if (sid is None):
             return {"error": "illegal session"}, 403
-        if(command == "turnend"):
+        if (command == "turnend"):
             return api_system.turnend(sid)
         else:
-            if(command == "newgame"):
+            if (command == "newgame"):
                 return {"error": "gamesession exists"}, 403
             else:
                 return {"error": "illegal command"}, 403
 
     def get(self, sid, command):
         sid = card_user.card_checksession(sid)
-        if(sid is None):
+        if (sid is None):
             return {"error": "illegal session"}, 403
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if(command == "status"):
-            if(gsid == "win" or gsid == "lose" or gsid == "matching"):
+        if (command == "status"):
+            if (gsid == "win" or gsid == "lose" or gsid == "matching"):
                 return {"status": gsid}, 200
-            elif(gsid == ""):
+            elif (gsid == ""):
                 return {"status": "-"}, 200
             else:
                 playdata = Playdata(sid)
-                if(playdata.stat == "matching"):
+                if (playdata.stat == "matching"):
                     return {"status": "matching"}, 200
                 return {"status": "playing"}, 200
-        elif(command == "result"):
-            if(gsid == "win"):
+        elif (command == "result"):
+            if (gsid == "win"):
                 card_user.card_cleargame(sid)
                 return {"info": "you win!"}, 200
-            elif(gsid == "lose"):
+            elif (gsid == "lose"):
                 card_user.card_cleargame(sid)
                 return {"info": "you lose..."}, 200
-            elif(gsid == ""):
+            elif (gsid == ""):
                 return {"error": "gamesession not exist"}, 403
             else:
                 return {"error": "gamesession exists"}, 403
@@ -75,12 +76,12 @@ class Card_system(Resource):
 class Card_view(Resource):
     def get(self, sid):
         sid = card_user.card_checksession(sid)
-        if(sid is None):
+        if (sid is None):
             return {"error": "illegal session"}, 403
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if(gsid == ""):
+        if (gsid == ""):
             return {"error": "gamesession is null"}, 403
         playview = Play_view(sid)
 
@@ -91,19 +92,19 @@ class Card_view(Resource):
 class Card_play(Resource):
     def post(self, sid, card1, card2):
         sid = card_user.card_checksession(sid)
-        if(sid is None):
+        if (sid is None):
             return {"error": "illegal session"}, 403
-        if(card1 is None):
+        if (card1 is None):
             return {"error": "card1 is null"}, 403
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if(gsid == ""):
+        if (gsid == ""):
             return {"error": "gamesession is null"}
         playview = Play_view(sid)
 
         # Player1(自分のターン)か確認
-        if(playview.turnstate != "p1turn"):
+        if (playview.turnstate != "p1turn"):
             return {"error": "not in your turn"}, 403
 
         pattern_hand = r'^hand_[0-9]$'
@@ -116,6 +117,7 @@ class Card_play(Resource):
             return api_unit_attack(sid, playview, card1, card2)
         else:
             return {"error": "illegal card1"}, 403
+
 
 # Omajinai
 if __name__ == "__main__":
