@@ -71,6 +71,10 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             card_db.putsession("playerstats",
                                "player_tid", playview.playdata.p1_player_tid,
                                "hp", newhp)
+        # 自ユニットを行動済みに変更
+        card_db.putsession(playview.playdata.card_table,
+                           "cuid", objcard1.cuid,
+                           "active", 0)
     else:
         return {"error": "illegal card2"}, 403
 
