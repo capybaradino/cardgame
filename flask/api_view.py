@@ -1,5 +1,6 @@
 from class_playview import Play_view
 from class_playinfo import Card_info
+import card_db
 
 
 def get(playview: Play_view):
@@ -38,6 +39,8 @@ def get(playview: Play_view):
         if(boardinfo is not None):
             board = {}
             board["location"] = loc
+            record = card_db.getrecord_fromsession(playview.playdata.card_table, "cuid", boardinfo.cuid)
+            board["active"] = record[6]
             board["cost"] = boardinfo.cost
             board["attack"] = boardinfo.attack
             board["attack_org"] = boardinfo.attack_org
@@ -102,6 +105,7 @@ sample = {
         "board": [
             {
                 "location": 0,
+                "active": 1,
                 "cost": 1,
                 "attack": 2,
                 "hp": 3,
