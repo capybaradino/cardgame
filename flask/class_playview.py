@@ -9,14 +9,14 @@ class Play_view:
         self.playdata = playdata
         nickname = card_db.getnickname_fromsid(sid)
         # TODO ゲーム終了時にここでエラーが出る場合あり
-        if(playdata.player1.name == nickname):
-            p1=playdata.player1
-            p2=playdata.player2
+        if (playdata.player1.name == nickname):
+            p1 = playdata.player1
+            p2 = playdata.player2
             self.turnstate = playdata.state
         else:
-            p1=playdata.player2
-            p2=playdata.player1
-            if(playdata.state == "p1turn"):
+            p1 = playdata.player2
+            p2 = playdata.player1
+            if (playdata.state == "p1turn"):
                 self.turnstate = "p2turn"
             else:
                 self.turnstate = "p1turn"
@@ -35,8 +35,8 @@ class Play_view:
         self.p2hand = []
         p2hands = p2.get_hand()
         i = 0
-        while(i < 10):
-            if(i < len(p2hands)):
+        while (i < 10):
+            if (i < len(p2hands)):
                 self.p2hand.append(Card_info.empty)
             else:
                 self.p2hand.append(None)
@@ -46,10 +46,10 @@ class Play_view:
         self.p1board = []
         p1boards = field.get_p1board()
         i = 0
-        while(i < 6):
+        while (i < 6):
             self.p1board.append(None)
             for board in p1boards:
-                if(i == board.locnum):
+                if (i == board.locnum):
                     self.p1board[i] = board
                     break
             i = i + 1
@@ -58,10 +58,10 @@ class Play_view:
         self.p2board = []
         p2boards = field.get_p2board()
         i = 0
-        while(i < 6):
+        while (i < 6):
             self.p2board.append(None)
             for board in p2boards:
-                if(i == board.locnum):
+                if (i == board.locnum):
                     self.p2board[i] = board
                     break
             i = i + 1
@@ -77,8 +77,8 @@ class Play_view:
         self.p1hand = []
         p1hands = p1.get_hand()
         i = 0
-        while(i < 10):
-            if(i < len(p1hands)):
+        while (i < 10):
+            if (i < len(p1hands)):
                 self.p1hand.append(p1hands[i])
             else:
                 self.p1hand.append(None)
@@ -86,33 +86,33 @@ class Play_view:
 
     def isblockable(self, board: Card_info):
         # TODO ステルス状態などのチェック
-        if(board is not None):
+        if (board is not None):
             return True
         else:
             return False
-        
+
     def isblocked(self, number):
-        if(number < 3):
+        if (number < 3):
             return False
         front = self.p2board[number-3]
-        if(self.isblockable(front)):
+        if (self.isblockable(front)):
             return True
         else:
             return False
 
     def iswall(self):
-        #上段
+        # 上段
         upper1 = self.isblockable(self.p2board[0])
         upper2 = self.isblockable(self.p2board[3])
-        #中段
+        # 中段
         middle1 = self.isblockable(self.p2board[1])
         middle2 = self.isblockable(self.p2board[4])
-        #下段
+        # 下段
         lower1 = self.isblockable(self.p2board[2])
         lower2 = self.isblockable(self.p2board[5])
 
-        if(upper1 or upper2):
-            if(middle1 or middle2):
-                if(lower1 or lower2):
+        if (upper1 or upper2):
+            if (middle1 or middle2):
+                if (lower1 or lower2):
                     return True
         return False
