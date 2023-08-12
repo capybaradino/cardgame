@@ -17,3 +17,8 @@ def turnend(sid):
         nextp = playdata.player1
     nextp.start_turn()
     return {"info": "OK"}
+
+
+def newgame(sid):
+    playdata = Playdata(sid)
+    return playdata.stat

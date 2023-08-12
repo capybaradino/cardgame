@@ -26,17 +26,55 @@ class Test(Resource):
 class Card_system(Resource):
     def post(self, sid, command):
         sid = card_user.card_checksession(sid)
+        if(sid is None):
+            return {"error": "illegal session"}, 403
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
         if(gsid == ""):
-            return {"error": "gamesession is null"}, 403
+            if(command == "newgame"):
+                stat = api_system.newgame(sid)
+                return {"info": stat}, 200
+            else:
+                return {"error": "gamesession not exist"}, 403
 
         if(sid is None):
             return {"error": "illegal session"}, 403
         if(command == "turnend"):
             return api_system.turnend(sid)
-        return 404
+        else:
+            if(command == "newgame"):
+                return {"error": "gamesession exists"}, 403
+            else:
+                return {"error": "illegal command"}, 403
+
+    def get(self, sid, command):
+        sid = card_user.card_checksession(sid)
+        if(sid is None):
+            return {"error": "illegal session"}, 403
+
+        # 既存ゲームがあるか確認
+        gsid = card_db.getgsid_fromsid(sid)
+        if(command == "status"):
+            if(gsid == "win" or gsid == "lose" or gsid == "matching"):
+                return {"status": gsid}, 200
+            elif(gsid == ""):
+                return {"status": "-"}, 200
+            else:
+                return {"status": "playing"}, 200
+        elif(command == "result"):
+            if(gsid == "win"):
+                card_user.card_cleargame(sid)
+                return {"info": "you win!"}, 200
+            elif(gsid == "lose"):
+                card_user.card_cleargame(sid)
+                return {"info": "you lose..."}, 200
+            elif(gsid == ""):
+                return {"error": "gamesession not exist"}, 403
+            else:
+                return {"error": "gamesession exists"}, 403
+        else:
+            return {"error": "illegal command"}, 403
 
 
 @api.route('/view/<sid>')
