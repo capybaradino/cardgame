@@ -1,9 +1,10 @@
 import requests
 import json
 import time
+import botini
 
-base_url = "http://localhost:5001"  # Flask REST APIのベースURL
-sid = "bb1a656b-3083-4735-b638-35ffe584189a"
+base_url = ""  # Flask REST APIのベースURL
+sid = ""
 
 
 def start_game():
@@ -58,6 +59,13 @@ def end_game():
     print(response.json()["message"])
 
 
+# iniファイル読み込み
+polling_interval_sec = int(botini.getdebugparam("polling_interval_sec"))
+command_interval_sec = int(botini.getdebugparam("command_interval_sec"))
+exec_mode = botini.getdebugparam("exec_mode")   # daemon/onetime
+base_url = botini.getdebugparam("base_url")
+sid = botini.getdebugparam("sid")
+
 # 前回のゲームをクリア
 print("[INFO] reset game")
 get_result()
@@ -72,7 +80,7 @@ while True:
 
     while True:
         print("[INFO] sleep 5 sec")
-        time.sleep(5)
+        time.sleep(polling_interval_sec)
         print("[INFO] get status")
         ret, restext = get_status()
         if (ret != 200):
@@ -100,7 +108,7 @@ while True:
             remainact = True
             while (remainhand or remainact):
                 # TODO 暴走したときの対策
-                time.sleep(1)
+                time.sleep(command_interval_sec)
                 ret, restext = get_view()
                 if (ret != 200):
                     break
@@ -185,5 +193,6 @@ while True:
         print("[ERROR] failed to get result")
         exit(1)
 
-    # TODO 解放
-    exit(0)
+    # 解放
+    if (exec_mode == "onetime"):
+        exit(0)
