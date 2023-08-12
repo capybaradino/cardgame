@@ -8,7 +8,7 @@ from flask_restx import Resource, Api
 import card_user, card_db
 import re
 from class_playview import Play_view
-from class_playinfo import Card_info
+from class_playdata import Playdata
 app = Flask(__name__)
 api = Api(app)
 
@@ -52,6 +52,9 @@ class Card_system(Resource):
             elif(gsid == ""):
                 return {"status": "-"}, 200
             else:
+                playdata = Playdata(sid)
+                if(playdata.stat == "matching"):
+                    return {"status": "matching"}, 200
                 return {"status": "playing"}, 200
         elif(command == "result"):
             if(gsid == "win"):
