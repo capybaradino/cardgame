@@ -19,6 +19,14 @@
             "cwd": "${workspaceRoot}/flask",
             "program": "main_api.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "botmain.py",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/bot",
+            "program": "botmain.py",
+            "console": "integratedTerminal"
         }
     ]
 }
