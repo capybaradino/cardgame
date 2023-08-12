@@ -24,13 +24,18 @@ def get_result():
     print(response.text)
     return response.status_code
 
-def next_turn():
-    response = requests.post(f"{base_url}/next_turn")
-    print(response.json()["message"])
+def turn_end():
+    response = requests.post(f"{base_url}/system/{sid}/turnend")
+    print(response.text)
+    return response.status_code
 
 def end_game():
     response = requests.post(f"{base_url}/end_game")
     print(response.json()["message"])
+
+# 前回のゲームをクリア
+print("[INFO] reset game")
+get_result()
 
 while True:
     # ゲームを開始
@@ -41,16 +46,34 @@ while True:
         exit(1)
 
     while True:
+        print("[INFO] sleep 5 sec")
+        time.sleep(5)
         print("[INFO] get status")
         ret, restext = get_status()
         if(ret != 200):
             print("[ERROR] failed to get state")
             exit(1)
         data = json.loads(restext)
+        if(data["status"] == "matching"):
+            continue
         if(data["status"] != "playing"):
             break
-        print("[INFO] sleep 5 sec")
-        time.sleep(5)
+        else:
+            # TODO 自動プレイ
+            print("[INFO] get view")
+            ret, restext = get_view()
+            if(ret != 200):
+                print("[ERROR] failed to get view")
+                break
+            data = json.loads(restext)
+            if(data["turn"] != "p1turn"):
+                print("[INFO] turn = " + data["turn"])
+                continue
+            print("[INFO] turn end")
+            ret = turn_end()
+            if(ret != 200):
+                print("[ERROR] failed to turn end")
+                break
         continue
 
     print("[INFO] get result")
@@ -59,4 +82,5 @@ while True:
         print("[ERROR] failed to get result")
         exit(1)
 
+    # TODO 解放
     exit(0)
