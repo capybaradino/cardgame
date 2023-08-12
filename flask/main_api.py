@@ -13,15 +13,6 @@ app = Flask(__name__)
 api = Api(app)
 
 
-@api.route('/test')
-# @api.route('/play/<sid>/<card1>/<card2>')
-class Test(Resource):
-    def get(self):
-        return {"message":"OK GET"}
-    def post(self, sid, card1, card2):
-        return {"message":"OK POST"}
-
-
 @api.route('/system/<sid>/<command>')
 class Card_system(Resource):
     def post(self, sid, command):
