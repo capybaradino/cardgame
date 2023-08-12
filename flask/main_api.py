@@ -1,3 +1,4 @@
+import json
 from flask import Flask
 from api_play import api_play_hand
 from api_attack import api_unit_attack
@@ -12,6 +13,18 @@ from class_playview import Play_view
 from class_playdata import Playdata
 app = Flask(__name__)
 api = Api(app)
+
+
+def _getstatus(gsid, sid):
+    if (gsid == "win" or gsid == "lose" or gsid == "matching"):
+        return {"status": gsid}, 200
+    elif (gsid == ""):
+        return {"status": "-"}, 200
+    else:
+        playdata = Playdata(sid)
+        if (playdata.stat == "matching"):
+            return {"status": "matching"}, 200
+        return {"status": "playing"}, 200
 
 
 @api.route('/system/<sid>/<command>')
@@ -48,15 +61,7 @@ class Card_system(Resource):
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
         if (command == "status"):
-            if (gsid == "win" or gsid == "lose" or gsid == "matching"):
-                return {"status": gsid}, 200
-            elif (gsid == ""):
-                return {"status": "-"}, 200
-            else:
-                playdata = Playdata(sid)
-                if (playdata.stat == "matching"):
-                    return {"status": "matching"}, 200
-                return {"status": "playing"}, 200
+            return _getstatus(gsid, sid)
         elif (command == "result"):
             if (gsid == "win"):
                 card_user.card_cleargame(sid)
@@ -84,6 +89,11 @@ class Card_view(Resource):
         if (gsid == ""):
             return {"error": "gamesession is null"}, 403
         playview = Play_view(sid)
+
+        # ゲームが終了処理中でないか確認
+        data, statuscode = _getstatus(gsid, sid)
+        if (data["status"] != "playing"):
+            return {"error": "game is over"}, 403
 
         return api_view.get(playview)
 
