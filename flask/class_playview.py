@@ -8,6 +8,7 @@ class Play_view:
         playdata = Playdata(sid)
         self.playdata = playdata
         nickname = card_db.getnickname_fromsid(sid)
+        # TODO ゲーム終了時にここでエラーが出る場合あり
         if(playdata.player1.name == nickname):
             p1=playdata.player1
             p2=playdata.player2
