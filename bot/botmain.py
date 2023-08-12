@@ -26,9 +26,11 @@ def play_card(handno, boardno):
     print("[INFO] play card end")
     return response.status_code
 
-def attack_card():
-    response = requests.post(f"{base_url}/play/{sid}/newgame")
+def play_attack(cardno, boardno):
+    print("[INFO] play attack start")
+    response = requests.post(f"{base_url}/play/{sid}/leftboard_{cardno}/rightboard_{boardno}")
     print(response.text)
+    print("[INFO] play attack end")
     return response.status_code
 
 def get_result():
@@ -86,7 +88,11 @@ while True:
             remainhand = True
             remainact = True
             while(remainhand or remainact):
+                # TODO 暴走したときの対策
+                time.sleep(1)
                 ret, restext = get_view()
+                if(ret != 200):
+                    break
                 data = json.loads(restext)
                 player1 = data["player1"]
                 mp = player1["MP"]
@@ -131,11 +137,30 @@ while True:
                         continue
                 if(remainact):
                     #行動するユニットを選択
-                    #TODO 対象ユニットがいない
-                    remainact = False
+                    attack_card = -1
+                    for card in board:
+                        if(card["active"] > 0):
+                            attack_card = card["location"]
+                    #対象ユニットがいない
+                    if(attack_card < 0):
+                        remainact = False
                     #相手の盤面を検索
-                    #攻撃
-                    continue
+                    attack_board = -1
+                    for card in p2board:
+                        #前衛を優先して攻撃
+                        if(card["location"] < 3):
+                            attack_board = card["location"]
+                    if(attack_board < 0):
+                        for card in p2board:
+                            #前衛がいない場合は後衛を攻撃
+                            attack_board = card["location"]
+                    #対象盤面がいない場合はリーダーを攻撃
+                    if(attack_board < 0):
+                        attack_board = 10
+                    if(remainact):
+                        #攻撃
+                        play_attack(attack_card, attack_board)
+                        continue
             print("[INFO] turn end")
             ret = turn_end()
             if(ret != 200):
