@@ -4,6 +4,8 @@ import card_db
 
 def turnend(sid):
     playdata = Playdata(sid)
+    if(playdata.stat == "win" or playdata.stat == "lose"):
+        return {"error": "game was over"}, 403
     nickname = card_db.getnickname_fromsid(sid)
     if(playdata.state == "p1turn"):
         if(nickname != playdata.player1.name):
