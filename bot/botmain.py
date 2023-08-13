@@ -20,6 +20,7 @@ def run():
 
     # 前回のゲームをクリア
     print("[INFO] reset game")
+    sub.surrender()
     sub.get_result()
 
     while True:
