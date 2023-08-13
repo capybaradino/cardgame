@@ -7,3 +7,4 @@ flask/user.db
 uwsgi.log
 uwsgi_api.log
 bot/bot.conf
+flask/game.ini

@@ -1,5 +1,6 @@
 import configparser
 import debug
+import os
 
 def getparam(key):
     debugparam = debug.getdebugparam(key)
@@ -7,6 +8,10 @@ def getparam(key):
         return debugparam
     else:
         conf = configparser.ConfigParser()
-        conf.read("game.ini")
+        if (os.path.isfile("game.ini")):
+            game_ini = "game.ini"
+        else:
+            game_ini = "game_sample.ini"
+        conf.read(game_ini)
         section = "player"
         return conf.get(section, key)
