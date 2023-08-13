@@ -61,8 +61,6 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return {"error": "wall exists"}, 403
         # リーダーHP減算
         newhp = playview.p2hp - objcard1.attack
-        if (newhp <= 0):
-            playview.playdata.gamewin(sid)
         if (playview.playdata.player1.name == playview.p1name):
             card_db.putsession("playerstats",
                                "player_tid", playview.playdata.p2_player_tid,
@@ -75,6 +73,8 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         card_db.putsession(playview.playdata.card_table,
                            "cuid", objcard1.cuid,
                            "active", 0)
+        if (newhp <= 0):
+            playview.playdata.gamewin(sid)
     else:
         return {"error": "illegal card2"}, 403
 
