@@ -4,19 +4,25 @@ from class_playdata import Playdata
 import card_db
 from class_playview import Play_view
 import card_play_util
+import os
 
 
 def card_play_get(sid):
     playdata = Playdata(sid)
+    isdebug = os.path.isfile("debug.conf")
+    if (isdebug):
+        debug_code = '<h1><a href="../p1">(debug)Cardgame/p1</a></h1><h1><a href="../p2">(debug)Cardgame/p2</a></h1>'
+    else:
+        debug_code = ''
 
     if (playdata.stat == "lose"):
         return render_template(
-            'play_lose.html', title='Lose'
+            'play_lose.html', title='Lose', debug_code=debug_code
         )
 
     if (playdata.stat == "win"):
         return render_template(
-            'play_win.html', title='Win'
+            'play_win.html', title='Win', debug_code=debug_code
         )
 
     if (playdata.stat == "matching"):
