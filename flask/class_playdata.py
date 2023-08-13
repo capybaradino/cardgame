@@ -290,6 +290,7 @@ class Playdata:
         self.p2_player_tid = gamesession[2]
         if (self.p2_player_tid == "waiting"):
             self.stat = "matching"
+            self.card_table = gamesession[3]
             return
 
         self.p1_player_tid = gamesession[1]
@@ -337,7 +338,8 @@ class Playdata:
             result2 = "win"
         card_db.putusersession_gsid(sid, result1)
         sid2 = card_db.getsid_fromgsid(gsid)
-        card_db.putusersession_gsid(sid2, result2)
+        if (sid2 is not None):
+            card_db.putusersession_gsid(sid2, result2)
         return
 
     def gamewin(self, sid):
