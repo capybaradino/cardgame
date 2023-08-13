@@ -95,6 +95,8 @@ class Playdata:
         self.log = ""
         self.lastupdate = ""
         self.stat = ""
+        self.player1 = None
+        self.player2 = None
 
         # 既存ゲームがあるか確認
         self.gsid = card_db.getgsid_fromsid(sid)
@@ -325,6 +327,7 @@ class Playdata:
         return
 
     def cleargame(self, sid, iswin):
+        # 要求されたゲームの処理
         card_db.deletedecktable(self.card_table)
         card_db.deleteplayerstats(self.p1_player_tid)
         card_db.deleteplayerstats(self.p2_player_tid)
