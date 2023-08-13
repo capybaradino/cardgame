@@ -29,6 +29,7 @@ sudo ln -s /home/pi/cardgame/cardgame_api.service /etc/systemd/system/
 sudo systemctl daemon-reload  
 sudo systemctl enable cardgame  
 sudo systemctl enable cardgame_api  
+sudo cp /home/pi/cardgame/logrotate_cardgame.service /etc/logrotate.d/  
 
 ## Debug
 To skip user authentication, create file below in the same directory with main.py  
