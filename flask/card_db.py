@@ -161,10 +161,11 @@ def getplayerstats(player_tid):
     return session
 
 
-def deleteplayerstats(player_name):
+def deleteplayerstats(player_tid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("delete from playerstats where name = '" + player_name + "'")
+    cur.execute("delete from playerstats where player_tid = '" +
+                player_tid + "'")
     con.commit()
     con.close()
     return
