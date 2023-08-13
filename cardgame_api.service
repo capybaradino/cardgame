@@ -1,6 +1,7 @@
 [Unit]
 Description=uWSGI instance for cardgame
 After=syslog.target
+Requires=cardgame.service
 
 [Service]
 ExecStart=/usr/local/bin/uwsgi --ini /home/pi/cardgame/flask/app_api.ini
