@@ -1,0 +1,7 @@
+/home/pi/cardgame/*.log {
+	missingok
+	maxsize 1M
+	rotate 3
+	su pi www-data
+}
+
