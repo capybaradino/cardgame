@@ -2,12 +2,37 @@ import json
 import time
 import botini
 from botsub import Botsub
+import logging
 
 base_url = ""  # Flask REST APIのベースURL
 sid = ""
 
 
 def run():
+    # ログの設定
+    logging.basicConfig(
+        level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+
+    # ロガーの取得
+    logger = logging.getLogger(__name__)
+
+    # ファイルハンドラを追加
+    value = botini.getcardhome()
+    if value is not None:
+        file_handler = logging.FileHandler(f'{value}/cardbot.log')
+    else:
+        file_handler = logging.FileHandler('../cardbot.log')
+    file_handler.setLevel(logging.DEBUG)  # ログの出力レベルを設定
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s [%(levelname)s] %(message)s'))
+    logger.addHandler(file_handler)
+
+    # 標準出力ハンドラを追加
+    # console_handler = logging.StreamHandler()
+    # console_handler.setLevel(logging.INFO)  # ログの出力レベルを設定
+    # console_handler.setFormatter(
+    #     logging.Formatter('%(asctime)s [%(levelname)s] %(message)s'))
+    # logger.addHandler(console_handler)
 
     # iniファイル読み込み
     polling_interval_sec = int(botini.getdebugparam("polling_interval_sec"))
@@ -16,25 +41,25 @@ def run():
     base_url = botini.getdebugparam("base_url")
     sid = botini.getdebugparam("sid")
 
-    sub = Botsub(base_url, sid)
+    sub = Botsub(base_url, sid, logger)
 
     # 前回のゲームをクリア
-    print("[INFO] reset game")
+    logger.info("reset game")
     sub.surrender()
     sub.get_result()
 
     while True:
         # ゲームを開始
-        print("[INFO] start game")
         ret = sub.start_game()
         if (ret != 200):
             print("[ERROR] failed to start game")
             exit(1)
 
+        turn_state = ""
+        turn_state_counter = 0
         while True:
-            print("[INFO] sleep 5 sec")
+            # logger.info(f"sleep {polling_interval_sec} sec")
             time.sleep(polling_interval_sec)
-            print("[INFO] get status")
             ret, restext = sub.get_status()
             if (ret != 200):
                 print("[ERROR] failed to get state")
@@ -46,14 +71,20 @@ def run():
                 break
             else:
                 # 自動プレイ
-                print("[INFO] get view")
                 ret, restext = sub.get_view()
                 if (ret != 200):
-                    print("[ERROR] failed to get view")
+                    logger.error("failed to get view A")
                     break
                 data = json.loads(restext)
-                if (data["turn"] != "p1turn"):
-                    print("[INFO] turn = " + data["turn"])
+                current_turn = data["turn"]
+                if (current_turn != turn_state):
+                    turn_state = current_turn
+                    turn_state_counter = 0
+                else:
+                    turn_state_counter = turn_state_counter + 1
+                if (turn_state_counter < 3):
+                    logger.info("turn = " + data["turn"])
+                if (current_turn != "p1turn"):
                     continue
 
                 # 各種データを初期化
@@ -73,7 +104,7 @@ def run():
                     player2 = data["player2"]
                     p2board = player2["board"]
                     if (ret != 200):
-                        print("[ERROR] failed to get view")
+                        logger.error("failed to get view B")
                         break
                     # ハンド確認
                     if (remainhand):
@@ -133,17 +164,16 @@ def run():
                             # 攻撃
                             sub.play_attack(attack_card, attack_board)
                             continue
-                print("[INFO] turn end")
                 ret = sub.turn_end()
                 if (ret != 200):
-                    print("[ERROR] failed to turn end")
+                    logger.error("failed to turn end")
                     break
             continue
 
-        print("[INFO] get result")
+        logger.info("get result")
         ret = sub.get_result()
         if (ret != 200):
-            print("[ERROR] failed to get result")
+            logger.error("failed to get result")
             exit(1)
 
         # 解放
