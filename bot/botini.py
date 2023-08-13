@@ -1,6 +1,7 @@
 import configparser
 import os
 
+
 def getdebugparam(key):
     value = os.environ.get('CARD_HOME')
     conf_path = ""
