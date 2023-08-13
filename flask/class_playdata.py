@@ -343,6 +343,23 @@ class Playdata:
         sid2 = card_db.getsid_fromgsid(gsid)
         if (sid2 is not None):
             card_db.putusersession_gsid(sid2, result2)
+        # ゾンビセッションの整理
+        name = card_db.getnickname_fromsid(sid)
+        while True:
+            record = card_db.getrecord_fromsession("playerstats", "name", name)
+            if record is None:
+                break
+            player_tid = record[0]
+            record = card_db.getrecord_fromsession(
+                "gamesession", "p1_player_tid", player_tid)
+            if record is not None:
+                card_table = record[3]
+                other_player_tid = record[2]
+                gsid = record[0]
+                card_db.deletedecktable(card_table)
+                card_db.deleteplayerstats(other_player_tid)
+                card_db.deletegamesession(gsid)
+            card_db.deleteplayerstats(player_tid)
         return
 
     def gamewin(self, sid):
