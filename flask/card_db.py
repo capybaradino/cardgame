@@ -5,7 +5,7 @@ import uuid
 # utility
 def card_fetchone(cur):
     item = cur.fetchone()
-    if(item is not None):
+    if (item is not None):
         item = item[0]
     return item
 
@@ -16,7 +16,7 @@ def isexist_gsid(gsid):
     cur = con.cursor()
     cur.execute(
         "select gsid from gamesession where gsid = '" + gsid + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     else:
@@ -29,7 +29,7 @@ def isexist_player_tid(name):
     cur = con.cursor()
     cur.execute(
         "select player_tid from playerstats where player_tid = '" + name + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     else:
@@ -79,7 +79,7 @@ def getgamesession(gsid):
     cur = con.cursor()
     cur.execute("select * from gamesession where gsid = '" + gsid + "'")
     gamesession = cur.fetchall()
-    if(len(gamesession) != 0):
+    if (len(gamesession) != 0):
         gamesession = gamesession[0]
     else:
         gamesession = None
@@ -126,12 +126,12 @@ def getsid_fromgsid(gsid):
 
 
 def postgamesession(gsid, p1_player_table, p2_player_table,
-                     card_table, log, state, lastupdate):
+                    card_table, log, state, lastupdate):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
     cur.execute("insert into gamesession values (?,?,?,?,?,?,?)", (
         gsid, p1_player_table, p2_player_table,
-          card_table, log, state, lastupdate))
+        card_table, log, state, lastupdate))
     con.commit()
     con.close()
     return
@@ -150,9 +150,10 @@ def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension):
 def getplayerstats(player_tid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("select * from playerstats where player_tid = '" + player_tid + "'")
+    cur.execute(
+        "select * from playerstats where player_tid = '" + player_tid + "'")
     session = cur.fetchall()
-    if(len(session) != 0):
+    if (len(session) != 0):
         session = session[0]
     else:
         session = None
@@ -160,10 +161,10 @@ def getplayerstats(player_tid):
     return session
 
 
-def deleteplayerstats(player_tid):
+def deleteplayerstats(player_name):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("delete from playerstats where player_tid = '" + player_tid + "'")
+    cur.execute("delete from playerstats where name = '" + player_name + "'")
     con.commit()
     con.close()
     return
@@ -211,7 +212,7 @@ def postdeck(table_name, cid, loc):
     while True:
         # gsid生成
         cuid = str(uuid.uuid4())
-        if(isexist_cuid(table_name, cuid)):
+        if (isexist_cuid(table_name, cuid)):
             continue
         break
     query = f"INSERT INTO {table_name} VALUES (?,?,?,?,?,?,?)"
@@ -236,7 +237,7 @@ def isexist_cuid(table_name, cuid):
     cur = con.cursor()
     cur.execute(
         "select cuid from '" + table_name + "' where cid = '" + cuid + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     else:
@@ -247,7 +248,8 @@ def isexist_cuid(table_name, cuid):
 def getfirstcuid_fromdeck(table_name, name):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("select cuid from " + table_name + " where loc = '" + name + "'")
+    cur.execute("select cuid from " + table_name +
+                " where loc = '" + name + "'")
     cuid = card_fetchone(cur)
     con.close()
     return cuid
@@ -368,7 +370,7 @@ def isexist_cid(cid):
     cur = con.cursor()
     cur.execute(
         "select cid from card_basicdata where cid = '" + cid + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     else:
@@ -401,7 +403,7 @@ def deletefile_fromfilename(filename, sid):
     uid = getuid_fromsid(sid)
     cur.execute("select * from card_material where filename = '" +
                 filename + "' and owneruid = '" + uid + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     cur.execute("delete from card_material where filename = '" +
@@ -416,7 +418,7 @@ def deletefile_fromfilename_admin(filename):
     cur = con.cursor()
     cur.execute("select * from card_material where filename = '" +
                 filename + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     cur.execute("delete from card_material where filename = '" +
@@ -442,7 +444,7 @@ def isexist_filename(filename):
     cur = con.cursor()
     cur.execute(
         "select filename from card_material where filename = '" + filename + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     else:
@@ -454,7 +456,7 @@ def isexist_fid(fid):
     con = sqlite3.connect('game.db')
     cur = con.cursor()
     cur.execute("select filename from card_material where fid = '" + fid + "'")
-    if(card_fetchone(cur) is None):
+    if (card_fetchone(cur) is None):
         con.close()
         return False
     else:
