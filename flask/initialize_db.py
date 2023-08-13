@@ -74,7 +74,8 @@ def create_table(db_name, table_name):
                     sid TEXT PRIMARY KEY,
                     uid TEXT NOT NULL,
                     accessdate TEXT NOT NULL,
-                    gsid TEXT NOT NULL
+                    gsid TEXT NOT NULL,
+                    name TEXT NOT NULL
                 )
             """
         if (table_name == 'gamesession'):
