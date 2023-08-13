@@ -2,8 +2,13 @@ import configparser
 import os
 
 
-def getdebugparam(key):
+def getcardhome():
     value = os.environ.get('CARD_HOME')
+    return value
+
+
+def getdebugparam(key):
+    value = getcardhome()
     conf_path = ""
     if value is not None:
         conf_path = value + "/bot/bot.conf"
