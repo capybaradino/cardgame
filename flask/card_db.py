@@ -539,8 +539,8 @@ def getsid_fromsid(sid):
 def postusersession(sid, uid, datestr):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
-    cur.execute("insert into usersession values ('" +
-                sid + "','" + uid + "','" + datestr + "','" + "" + "')")
+    query = f"insert into usersession values (?,?,?,?,?)"
+    cur.execute(query, (sid, uid, datestr, "", getnickname_fromuid(uid)))
     con.commit()
     con.close()
     return
