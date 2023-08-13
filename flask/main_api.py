@@ -47,6 +47,8 @@ class Card_system(Resource):
             return {"error": "illegal session"}, 403
         if (command == "turnend"):
             return api_system.turnend(sid)
+        elif (command == "surrender"):
+            return api_system.surrender(sid)
         else:
             if (command == "newgame"):
                 return {"error": "gamesession exists"}, 403
