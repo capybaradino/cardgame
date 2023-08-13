@@ -2,6 +2,12 @@ from class_playdata import Playdata
 import card_db
 
 
+def surrender(sid):
+    playdata = Playdata(sid)
+    playdata.gameover(sid)
+    return {"info": "OK"}
+
+
 def turnend(sid):
     playdata = Playdata(sid)
     if (playdata.stat == "win" or playdata.stat == "lose"):
