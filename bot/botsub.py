@@ -46,6 +46,9 @@ class Botsub:
         print(response.text)
         return response.status_code
 
-    def end_game(self):
-        response = requests.post(f"{self.base_url}/end_game")
-        print(response.json()["message"])
+    def surrender(self):
+        print("[INFO] surrender start")
+        response = requests.post(
+            f"{self.base_url}/system/{self.sid}/surrender")
+        print(response.text)
+        print("[INFO] surrender end")
