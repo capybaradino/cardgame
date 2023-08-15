@@ -4,42 +4,92 @@ html {
     padding: 0;
 }
 
-.fullscreen-container {
+.top,
+.bottom {
     display: flex;
+    flex-direction: row;
     width: 100vw;
-    height: 100vh;
+    height: 20vh;
 }
 
-.column {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    /* 画面幅の50% */
-}
-
-.div1,
-.div2,
-.div3,
-.div4 {
-    flex: 1;
-    /* 等分する */
+.top1_settings,
+.top2_username,
+.top3_turndisp,
+.top4_p2status {
     border: 1px solid black;
     text-align: center;
     padding: 20px;
 }
 
-.div1 {
-    background-color: lightblue;
+.top1_settings {
+    width: 10.0vw;
 }
 
-.div2 {
-    background-color: lightgreen;
+.top2_username {
+    width: 30.0vw;
 }
 
-.div3 {
-    background-color: lightpink;
+.top3_turndisp {
+    width: 16.0vw;
 }
 
-.div4 {
-    background-color: lightyellow;
+.top4_p2status {
+    width: 42.0vw;
+}
+
+.bottom1_p1status,
+.bottom2_p1cards,
+.bottom3_settings {
+    border: 1px solid black;
+    text-align: center;
+    padding: 20px;
+}
+
+.bottom1_p1status {
+    width: 40.0vw;
+}
+
+.bottom2_p1cards {
+    width: 50.0vw;
+}
+
+.bottom3_settings {
+    width: 10.0vw;
+}
+
+.middle {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 60vh;
+}
+
+.middle1_p1leader,
+.middle2_p1board,
+.middle3_boarder,
+.middle4_p2board,
+.middle5_p2leader {
+    border: 1px solid black;
+    text-align: center;
+    padding: 20px;
+}
+
+.middle1_p1leader {
+    width: 14.3vw;
+}
+
+.middle2_p1board {
+    width: 28.5vw;
+}
+
+.middle3_boarder {
+    width: 14.3vw;
+}
+
+.middle4_p2board {
+    width: 28.5vw;
+}
+
+.middle5_p2leader {
+    width: 14.3vw;
 }
