@@ -1,30 +1,45 @@
-/* スタイルを定義 */
-#game-container {
+body,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+.fullscreen-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    /* 画面幅の50% */
+}
+
+.div1,
+.div2,
+.div3,
+.div4 {
+    flex: 1;
+    /* 等分する */
+    border: 1px solid black;
+    text-align: center;
     padding: 20px;
 }
 
-#player-hand,
-#opponent-field {
-    border: 1px solid black;
-    padding: 10px;
-    margin: 10px;
-    width: 40%;
-    height: 150px;
-    overflow: auto;
+.div1 {
+    background-color: lightblue;
 }
 
-#play-card-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 20px;
-    cursor: pointer;
+.div2 {
+    background-color: lightgreen;
+}
+
+.div3 {
+    background-color: lightpink;
+}
+
+.div4 {
+    background-color: lightyellow;
 }
