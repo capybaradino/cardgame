@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ドラゴンクエストライバルズ</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='styles.css' ) }}>
+</head>
+
+<body>
+    <div id="game-container">
+        <div id="player-hand">
+            <!-- ここにプレイヤーの手札カードを表示 -->
+        </div>
+        <div id="opponent-field">
+            <!-- ここに相手の場のカードを表示 -->
+        </div>
+        <button id="play-card-button">カードをプレイ</button>
+    </div>
+    <script src={{ url_for('static', filename='script.js' ) }}></script>
+</body>
+
+</html>
