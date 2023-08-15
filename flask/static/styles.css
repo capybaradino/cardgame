@@ -4,6 +4,10 @@ html {
     padding: 0;
 }
 
+div {
+    border: 0px solid black;
+}
+
 .top,
 .bottom {
     display: flex;
@@ -16,7 +20,6 @@ html {
 .top2_username,
 .top3_turndisp,
 .top4_p2status {
-    border: 1px solid black;
     text-align: center;
     padding: 20px;
 }
@@ -27,6 +30,48 @@ html {
 
 .top2_username {
     width: 30.0vw;
+}
+
+.username {
+    display: flex;
+    flex-direction: column;
+}
+
+.username_player {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+}
+
+.playername1_left {
+    width: 100%;
+    background-color: rgb(51, 65, 255);
+    color: white;
+    padding: 0px;
+    text-align: center;
+}
+
+.playername1_right {
+    width: 100%;
+
+}
+
+.username_vs {
+    color: rgb(158, 103, 0);
+    font-weight: bold;
+}
+
+.playername2_left {
+    width: 100%;
+}
+
+.playername2_right {
+    width: 100%;
+    background-color: rgb(255, 51, 51);
+    color: white;
+    padding: 0px;
+    text-align: center;
 }
 
 .top3_turndisp {
@@ -40,7 +85,6 @@ html {
 .bottom1_p1status,
 .bottom2_p1cards,
 .bottom3_settings {
-    border: 1px solid black;
     text-align: center;
     padding: 20px;
 }
@@ -69,7 +113,6 @@ html {
 .middle3_boarder,
 .middle4_p2board,
 .middle5_p2leader {
-    border: 1px solid black;
     text-align: center;
     padding: 20px;
 }
