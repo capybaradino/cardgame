@@ -4,6 +4,8 @@
 <head>
     <title>Card game</title>
     <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='styles.css' ) }}>
+    <script src={{ url_for('static', filename='script.js' ) }}></script>
+    <script>window.onload = fetchData;</script>
 </head>
 
 <body>
@@ -12,18 +14,38 @@
         <div class="top2_username">
             <div class="username">
                 <div class="username_player">
-                    <div class="playername1_left">Player1</div>
+                    <div class="playername1_left" , id="playername1_left">Player1</div>
                     <div class="playername1_right"></div>
                 </div>
                 <div class="username_vs">VS</div>
                 <div class="username_player">
                     <div class="playername2_left"></div>
-                    <div class="playername2_right">Player2</div>
+                    <div class="playername2_right" , id="playername2_right">Player2</div>
                 </div>
             </div>
         </div>
-        <div class="top3_turndisp">Turn display</div>
-        <div class="top4_p2status">Player2 status</div>
+        <div class="top3_turndisp">
+            <div class="turndisp_button1">
+                <div class="turndisp_button2">
+                    <div class="turndisp_button3">ターン終了</div>
+                </div>
+            </div>
+        </div>
+        <div class="top4_p2status">
+            <div class="p2stat_left">
+                <div class="p2stat_card">card</div>
+                <div class="p2stat_param">param</div>
+            </div>
+            <div class="p2stat_right">
+                <div class="p2stat_leader"></div>
+                <div class="p2stat_tensionbar">
+                    <div class="p2stat_tension"></div>
+                    <div class="p2stat_tension"></div>
+                    <div class="p2stat_tension"></div>
+                    <div class="p2stat_tension"></div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="middle">
         <div class="middle1_p1leader">Player1 leader

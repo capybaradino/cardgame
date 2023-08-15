@@ -5,7 +5,8 @@ html {
 }
 
 div {
-    border: 0px solid black;
+    border: 1px solid black;
+    font-weight: bold;
 }
 
 .top,
@@ -76,10 +77,106 @@ div {
 
 .top3_turndisp {
     width: 16.0vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+}
+
+.turndisp_button1 {
+    width: 160px;
+    height: 60px;
+    background-color: lightgray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.turndisp_button2 {
+    width: 150px;
+    height: 50px;
+    background-color: gray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.turndisp_button3 {
+    width: 140px;
+    height: 40px;
+    background-color: rgb(210, 235, 243);
+    /* 角の丸さを指定 */
+    border-radius: 25px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .top4_p2status {
     width: 42.0vw;
+    padding: 0px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+}
+
+.p2stat_left {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.p2stat_card {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p2stat_param {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p2stat_right {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p2stat_leader {
+    width: 80%;
+    height: 100%;
+}
+
+.p2stat_tensionbar {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.p2stat_tension {
+    width: 100%;
+    height: 25%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .bottom1_p1status,
