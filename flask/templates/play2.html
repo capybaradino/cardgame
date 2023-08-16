@@ -86,14 +86,15 @@
                 <div class="middle2_p1board">
                     <div class="p1board">
                         <div class="p1board_col">
-                            <div class="p1board_row"></div>
-                            <div class="p1board_row"></div>
-                            <div class="p1board_row"></div>
+                            <div class="p1board_row" id="p1board3" ondragover="f_dragover(event)"
+                                ondrop="f_drop(event)">3</div>
+                            <div class="p1board_row">4</div>
+                            <div class="p1board_row">5</div>
                         </div>
                         <div class="p1board_col">
-                            <div class="p1board_row"></div>
-                            <div class="p1board_row"></div>
-                            <div class="p1board_row"></div>
+                            <div class="p1board_row">1</div>
+                            <div class="p1board_row">2</div>
+                            <div class="p1board_row">3</div>
                         </div>
                     </div>
                 </div>
@@ -114,7 +115,7 @@
                                 <div class="p2stat_tension"></div>
                                 <div class="p2stat_tension"></div>
                             </div>
-                            <div class="p2stat_leader"></div>
+                            <div class="p1stat_leader"></div>
                         </div>
                         <div class="p1stat_param_main">
                             <div class="p2stat_param_main_upper">
@@ -138,7 +139,7 @@
                 </div>
                 <div class="bottom2_p1cards">
                     <div class="p1stat_card_child">
-                        <div class="p1stat_card_child" , id="p1card0"></div>
+                        <div class="p1stat_card_child" , id="p1card0"></div><!--画像格納用div-->
                         <span class="text-top-left">
                             <div class="p1stat_card_cost" , id="p1card0_cost">3</div>
                         </span>
@@ -151,7 +152,8 @@
                         <span class="text-center-bottom">
                             <div class="p1stat_card_name" , id="p1card0_name">Name</div>
                         </span>
-                        <div class="p1stat_card_child_hover"></div>
+                        <div class="p1stat_card_child_hover" id="p1card0d" draggable="true"
+                            ondragstart="f_dragstart(event)"></div>
                     </div>
                     <div class="p1stat_card_child" , id="p1card1"></div>
                     <div class="p1stat_card_child" , id="p1card2"></div>

@@ -273,6 +273,7 @@ div {
 .p2stat_leader {
     width: 80%;
     height: 100%;
+    background-color: brown;
 }
 
 .p2stat_tensionbar {
@@ -396,6 +397,7 @@ div {
 .p1stat_leader {
     width: 80%;
     height: 100%;
+    background-color: blue;
 }
 
 .p1stat_tensionbar {
