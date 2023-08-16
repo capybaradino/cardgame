@@ -35,6 +35,7 @@ class Play_view:
             # P2のハンドは枚数のみでスリーブ表示
             self.p2hand = []
             p2hands = p2.get_hand()
+            self.p2handnum = len(p2hands)
             i = 0
             while (i < 10):
                 if (i < len(p2hands)):
