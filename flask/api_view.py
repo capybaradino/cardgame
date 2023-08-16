@@ -21,7 +21,7 @@ def get(playview: Play_view):
     p1hand = []
     handinfo: Card_info
     for handinfo in playview.p1hand:
-        if(handinfo is not None):
+        if (handinfo is not None):
             hand = {}
             hand["cost"] = handinfo.cost
             hand["attack"] = handinfo.attack
@@ -36,10 +36,11 @@ def get(playview: Play_view):
     loc = 0
     boardinfo: Card_info
     for boardinfo in playview.p1board:
-        if(boardinfo is not None):
+        if (boardinfo is not None):
             board = {}
             board["location"] = loc
-            record = card_db.getrecord_fromsession(playview.playdata.card_table, "cuid", boardinfo.cuid)
+            record = card_db.getrecord_fromsession(
+                playview.playdata.card_table, "cuid", boardinfo.cuid)
             board["active"] = record[6]
             board["cost"] = boardinfo.cost
             board["attack"] = boardinfo.attack
@@ -68,7 +69,7 @@ def get(playview: Play_view):
     loc = 0
     boardinfo: Card_info
     for boardinfo in playview.p2board:
-        if(boardinfo is not None):
+        if (boardinfo is not None):
             board = {}
             board["location"] = loc
             board["cost"] = boardinfo.cost
@@ -85,14 +86,15 @@ def get(playview: Play_view):
 
     return data_dict
 
+
 sample = {
     "turn": "player1",
     "player1": {
         "name": "Red",
         "HP": 30,
         "decknum": 30,
-        "MP" : 1,
-        "maxMP" : 1,
+        "MP": 1,
+        "maxMP": 1,
         "tension": 0,
         "hand": [
             {
@@ -117,8 +119,8 @@ sample = {
         "name": "Green",
         "HP": 30,
         "decknum": 30,
-        "MP" : 1,
-        "maxMP" : 1,
+        "MP": 1,
+        "maxMP": 1,
         "tension": 0,
         "handnum": 3,
         "board": [
