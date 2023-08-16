@@ -47,15 +47,15 @@ div {
 .top3_turndisp,
 .top4_p2status {
     text-align: center;
-    padding: 20px;
+    padding: 0px;
 }
 
 .top1_settings {
-    width: 10.0vw;
+    width: 10.0%;
 }
 
 .top2_username {
-    width: 30.0vw;
+    width: 30.0%;
 }
 
 .username {
@@ -101,7 +101,7 @@ div {
 }
 
 .top3_turndisp {
-    width: 16.0vw;
+    width: 16.0%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -145,7 +145,7 @@ div {
 }
 
 .top4_p2status {
-    width: 42.0vw;
+    width: 42.0%;
     padding: 0px;
     display: flex;
     justify-content: space-around;
@@ -298,7 +298,7 @@ div {
 }
 
 .bottom1_p1status {
-    width: 40.0vw;
+    width: 30.0%;
 }
 
 .p1stat_param {
@@ -414,7 +414,7 @@ div {
 }
 
 .bottom2_p1cards {
-    width: 50.0vw;
+    width: 65.0%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -481,7 +481,7 @@ div {
 .p1stat_card_cost {
     background-color: blue;
     color: White;
-    width: 30px;
+    width: 20px;
     /* 角の丸さを指定 */
     border-radius: 30px;
     /* 上下中央寄せ */
@@ -546,7 +546,7 @@ div {
 /* カードの表示関係ここまで */
 
 .bottom3_settings {
-    width: 10.0vw;
+    width: 5.0%;
 }
 
 .middle {
@@ -581,21 +581,21 @@ div {
 }
 
 .middle1_p1leader {
-    width: 14.3vw;
+    width: 14.3%;
 }
 
 .middle2_p1board {
-    width: 28.5vw;
+    width: 28.5%;
 }
 
 .middle3_boarder {
-    width: 14.3vw;
+    width: 14.3%;
 }
 
 .middle4_p2board {
-    width: 28.5vw;
+    width: 28.5%;
 }
 
 .middle5_p2leader {
-    width: 14.3vw;
+    width: 14.3%;
 }
