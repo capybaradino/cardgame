@@ -6,6 +6,10 @@ async function fetchData() {
 
         // 共通キー情報
         const key_name = "name";
+        const key_hp = "HP";
+        const key_decknum = "decknum";
+        const key_mp = "MP";
+        const key_maxmp = "maxMP";
 
         // Player1関連情報
         {
@@ -13,23 +17,39 @@ async function fetchData() {
             const player1 = data[key_p1];
             const value = player1[key_name];
 
-            const divElement = document.getElementById('playername1_left');
-            divElement.textContent = value; // データを<div>要素に表示
+            setdivvalue('playername1_left', value);
         }
 
         // Player2関連情報
         {
             const key_p2 = "player2";
             const player2 = data[key_p2];
-            const value = player2[key_name];
-
-            const divElement = document.getElementById('playername2_right');
-            divElement.textContent = value; // データを<div>要素に表示        
+            var value;
+            value = player2[key_name];
+            setdivvalue('playername2_right', value);
+            // P2ステータス
+            value = player2[key_hp];
+            setdivvalue('p2stat_hp', value);
+            value = player2[key_decknum];
+            setdivvalue('p2stat_decknum', value);
+            value = player2[key_mp];
+            setdivvalue('p2stat_mp', value);
+            value = player2[key_maxmp];
+            setdivvalue('p2stat_maxmp', value);
+            // P2ハンド
+            const handnum = player2["handnum"];
+            for (let i = 0; i < handnum; i++) {
+                setdivvalue('p2card' + i, "Card")
+            }
         }
 
     } catch (error) {
         console.error('Get data was failed:', error);
     }
+}
+function setdivvalue(id, value) {
+    const divElement = document.getElementById(id);
+    divElement.textContent = value; // データを<div>要素に表示  
 }
 function getCookieValue(key) {
     // Cookieの値を取得
