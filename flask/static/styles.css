@@ -17,10 +17,15 @@ div {
 }
 
 .base {
+    height: 99vh;
+    width: 177vh;
+}
+
+.base2 {
     display: flex;
-    width: 99%;
-    height: 99%;
     flex-direction: column;
+    height: 100%;
+    width: 100%;
 }
 
 .top,
