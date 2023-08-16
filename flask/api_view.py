@@ -63,7 +63,8 @@ def get(playview: Play_view):
     player2["MP"] = playview.p2mp
     player2["maxMP"] = playview.p2maxmp
     player2["tension"] = playview.p2tension
-    # Playerはハンドは返さない
+    # Player2はハンドの中身は返さない
+    player2["handnum"] = playview.p2handnum
     # ボード
     p2board = []
     loc = 0
