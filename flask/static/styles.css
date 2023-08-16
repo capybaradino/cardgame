@@ -188,7 +188,7 @@ div {
 
 .p2stat_param_main_upper {
     width: 100%;
-    height: 55%;
+    height: 65%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -229,7 +229,24 @@ div {
 
 .p2stat_param_main_lower {
     width: 100%;
-    height: 40%;
+    height: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p2stat_deckicon,
+.p2stat_decknum,
+.p2stat_mpicon,
+.p2stat_mp_label,
+.p2stat_mp,
+.p2stat_mp_div,
+.p2stat_maxmp {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 .p2stat_right {
