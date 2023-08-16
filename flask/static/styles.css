@@ -410,6 +410,108 @@ div {
 
 .bottom2_p1cards {
     width: 50.0vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p1stat_card_child,
+.image-container {
+    width: 100%;
+    height: 100%;
+    /* 画像がはみ出ないように制御 */
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+}
+
+.p1stat_card_child img,
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    /* 余白を消すために追加 */
+    display: block;
+    /* 中央に配置 */
+    margin: auto;
+}
+
+.text-top-left,
+.text-bottom-left,
+.text-bottom-right,
+.text-center-bottom {
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.text-top-left {
+    top: 0;
+    left: 0;
+}
+
+.p1stat_card_cost {
+    background-color: blue;
+    color: White;
+    width: 30px;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+.p1stat_card_attack {
+    background-color: Red;
+    color: White;
+    width: 20px;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-bottom-right {
+    bottom: 0;
+    right: 0;
+}
+
+.p1stat_card_hp {
+    background-color: green;
+    color: White;
+    width: 20px;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-center-bottom {
+    bottom: 30%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    color: Black;
+}
+
+.p1stat_card_name {
+    background-color: rgba(255, 255, 255, 0.582);
+    color: rgb(0, 0, 0);
+    /* 角の丸さを指定 */
+    border-radius: 0px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
 }
 
 .bottom3_settings {
