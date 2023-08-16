@@ -18,6 +18,11 @@ def play2():
     return render_template('play2.html')
 
 
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('test.html')
+
+
 @app.route('/<debugp>')
 def debugp(debugp=None):
     if (debugp == "p1"):
