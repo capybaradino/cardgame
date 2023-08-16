@@ -58,7 +58,7 @@ async function fetchData() {
             // P2ハンド
             const handnum = player2["handnum"];
             for (let i = 0; i < handnum; i++) {
-                setdivvalue('p2card' + i, "Card")
+                setdivvalue('p2card' + i, "C")
             }
         }
 
