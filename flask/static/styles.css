@@ -188,7 +188,7 @@ div {
 
 .p2stat_param_main_upper {
     width: 100%;
-    height: 65%;
+    height: 60%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -249,6 +249,14 @@ div {
     align-items: flex-end;
 }
 
+.p2stat_deckicon {
+    background-color: burlywood;
+}
+
+.p2stat_mpicon {
+    background-color: lightskyblue;
+}
+
 .p2stat_right {
     width: 30%;
     height: 100%;
@@ -281,11 +289,123 @@ div {
 .bottom2_p1cards,
 .bottom3_settings {
     text-align: center;
-    padding: 20px;
+    padding: 0px;
 }
 
 .bottom1_p1status {
     width: 40.0vw;
+}
+
+.p1stat_param {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p1stat_param_left {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p1stat_param_main {
+    width: 70%;
+    height: 100%;
+}
+
+.p1stat_param_main_upper {
+    width: 100%;
+    height: 65%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p1stat_hp_label {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.p1stat_hp {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 24px;
+}
+
+.p1stat_herocard {
+    width: 30%;
+    height: 100%;
+}
+
+.p1stat_tensioncard {
+    width: 30%;
+    height: 100%;
+}
+
+.p1stat_param_main_hpbar {
+    width: 100%;
+    height: 5%;
+    background-color: greenyellow;
+}
+
+.p1stat_param_main_lower {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p1stat_deckicon,
+.p1stat_decknum,
+.p1stat_mpicon,
+.p1stat_mp_label,
+.p1stat_mp,
+.p1stat_mp_div,
+.p1stat_maxmp {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.p1stat_right {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.p1stat_leader {
+    width: 80%;
+    height: 100%;
+}
+
+.p1stat_tensionbar {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.p1stat_tension {
+    width: 100%;
+    height: 25%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .bottom2_p1cards {
