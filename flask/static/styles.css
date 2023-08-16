@@ -556,7 +556,23 @@ div {
 .middle4_p2board,
 .middle5_p2leader {
     text-align: center;
-    padding: 20px;
+    /* padding: 20px; */
+}
+
+.p1board {
+    display: flex;
+    height: 100%;
+}
+
+.p1board_col {
+    flex: 1;
+    /* padding: 10px; */
+    height: 100%;
+}
+
+.p1board_row {
+    height: 33%;
+    /* padding: 5px; */
 }
 
 .middle1_p1leader {
