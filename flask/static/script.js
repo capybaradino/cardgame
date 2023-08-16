@@ -15,9 +15,28 @@ async function fetchData() {
         {
             const key_p1 = "player1";
             const player1 = data[key_p1];
-            const value = player1[key_name];
-
+            var value;
+            value = player1[key_name];
             setdivvalue('playername1_left', value);
+            // P1ステータス
+            value = player1[key_hp];
+            setdivvalue('p1stat_hp', value);
+            value = player1[key_decknum];
+            setdivvalue('p1stat_decknum', value);
+            value = player1[key_mp];
+            setdivvalue('p1stat_mp', value);
+            value = player1[key_maxmp];
+            setdivvalue('p1stat_maxmp', value);
+            // P1ハンド
+            var hand = player1["hand"];
+            for (let i = 0; i < hand.length; i++) {
+                const item = hand[i];
+                const cost = item['cost'];
+                const attack = item['attack'];
+                const hp = item['hp'];
+                const graphic = item['graphic'];
+                setdivimage('p1card' + i, graphic);
+            }
         }
 
         // Player2関連情報
@@ -46,6 +65,12 @@ async function fetchData() {
     } catch (error) {
         console.error('Get data was failed:', error);
     }
+}
+function setdivimage(id, imageUrl) {
+    const imageDiv = document.getElementById(id);
+    const imageElement = document.createElement('img');
+    imageElement.src = imageUrl;
+    imageDiv.appendChild(imageElement);
 }
 function setdivvalue(id, value) {
     const divElement = document.getElementById(id);
