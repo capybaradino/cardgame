@@ -58,7 +58,12 @@ async function fetchData() {
                 const cost = item['cost'];
                 const attack = item['attack'];
                 const hp = item['hp'];
+                const name = item['name'];
                 const graphic = item['graphic'];
+                setdivvalue('p1card' + i + '_cost', cost);
+                setdivvalue('p1card' + i + '_attack', attack);
+                setdivvalue('p1card' + i + '_hp', hp);
+                setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
             }
         }
