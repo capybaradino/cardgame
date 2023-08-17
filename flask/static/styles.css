@@ -439,12 +439,13 @@ div {
     overflow: hidden;
     position: relative;
     display: inline-block;
+    background-color: aliceblue;
 }
 
 /* カードの拡大表示制御 */
 .p1stat_card_child:hover {
     /* マウスオーバー時に前面に表示 */
-    z-index: 1;
+    z-index: 10;
     /* z-indexを適用するために必要 */
     position: relative;
     /* 拡大の基準点を下端中央に設定 */
@@ -555,6 +556,7 @@ div {
     justify-content: center;
     align-items: center;
     font-size: 10px;
+    border: 0px;
 }
 
 /* カードの表示関係ここまで */
@@ -587,11 +589,22 @@ div {
     flex: 1;
     /* padding: 10px; */
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .p1board_row {
     height: 33%;
+    width: 100%;
     /* padding: 5px; */
+    /* 子要素を水平方向の中央に配置する */
+    display: flex;
+    justify-content: center;
+}
+
+.p1board_row2 {
+    height: 100%;
+    width: 80%;
 }
 
 .middle1_p1leader {

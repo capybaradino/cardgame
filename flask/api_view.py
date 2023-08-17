@@ -28,6 +28,7 @@ def get(playview: Play_view):
             hand["attack_org"] = handinfo.attack_org
             hand["hp"] = handinfo.hp
             hand["hp_org"] = handinfo.hp_org
+            hand["name"] = handinfo.name
             hand["graphic"] = "uploads/" + handinfo.filename
             p1hand.append(hand)
     player1["hand"] = p1hand
@@ -47,6 +48,7 @@ def get(playview: Play_view):
             board["attack_org"] = boardinfo.attack_org
             board["hp"] = boardinfo.hp
             board["hp_org"] = boardinfo.hp_org
+            board["name"] = boardinfo.name
             board["graphic"] = "uploads/" + boardinfo.filename
             p1board.append(board)
         loc = loc + 1
@@ -78,7 +80,8 @@ def get(playview: Play_view):
             board["attack_org"] = boardinfo.attack_org
             board["hp"] = boardinfo.hp
             board["hp_org"] = boardinfo.hp_org
-            board["graphic"] = boardinfo.filename
+            board["name"] = boardinfo.name
+            board["graphic"] = "uploads/" + boardinfo.filename
             p2board.append(board)
         loc = loc + 1
     player2["board"] = p2board
@@ -102,6 +105,7 @@ sample = {
                 "cost": 1,
                 "attack": 2,
                 "hp": 3,
+                "name": "hoge",
                 "graphic": "hogehoge.png"
             }
         ],
@@ -112,6 +116,7 @@ sample = {
                 "cost": 1,
                 "attack": 2,
                 "hp": 3,
+                "name": "hoge",
                 "graphic": "hogehoge.png"
             }
         ]
@@ -130,6 +135,7 @@ sample = {
                 "cost": 1,
                 "attack": 2,
                 "hp": 3,
+                "name": "hoge",
                 "graphic": "hogehoge.png"
             }
         ]

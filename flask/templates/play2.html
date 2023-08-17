@@ -89,7 +89,28 @@
                         <div class="p1board_col">
                             <div class="p1board_row" id="p1board3" ondragover="f_dragover(event)"
                                 ondrop="f_drop(event)">3</div>
-                            <div class="p1board_row">4</div>
+                            <div class="p1board_row" id="p1board4" ondragover="f_dragover(event)"
+                                ondrop="f_drop(event)">
+                                <div class="p1board_row2">
+                                    <div class="p1stat_card_child">
+                                        <div class="p1stat_card_child" , id="p1board0"></div><!--画像格納用div-->
+                                        <span class="text-top-left">
+                                            <div class="p1stat_card_cost" , id="p1board0_cost"></div>
+                                        </span>
+                                        <span class="text-bottom-left">
+                                            <div class="p1stat_card_attack" , id="p1board0_attack"></div>
+                                        </span>
+                                        <span class="text-bottom-right">
+                                            <div class="p1stat_card_hp" , id="p1board0_hp"></div>
+                                        </span>
+                                        <span class="text-center-bottom">
+                                            <div class="p1stat_card_name" , id="p1board0_name"></div>
+                                        </span>
+                                        <a class="p1stat_card_child_hover" id="p1board0d" draggable="true" href="#"
+                                            ondragstart="f_dragstart(event)"></a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="p1board_row">5</div>
                         </div>
                         <div class="p1board_col">
@@ -142,13 +163,13 @@
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card0"></div><!--画像格納用div-->
                         <span class="text-top-left">
-                            <div class="p1stat_card_cost" , id="p1card0_cost">3</div>
+                            <div class="p1stat_card_cost" , id="p1card0_cost"></div>
                         </span>
                         <span class="text-bottom-left">
-                            <div class="p1stat_card_attack" , id="p1card0_attack">3</div>
+                            <div class="p1stat_card_attack" , id="p1card0_attack"></div>
                         </span>
                         <span class="text-bottom-right">
-                            <div class="p1stat_card_hp" , id="p1card0_hp">3</div>
+                            <div class="p1stat_card_hp" , id="p1card0_hp"></div>
                         </span>
                         <span class="text-center-bottom">
                             <div class="p1stat_card_name" , id="p1card0_name">Name</div>
@@ -156,15 +177,159 @@
                         <a class="p1stat_card_child_hover" id="p1card0d" draggable="true" href="#"
                             ondragstart="f_dragstart(event)"></a>
                     </div>
-                    <div class="p1stat_card_child" , id="p1card1"></div>
-                    <div class="p1stat_card_child" , id="p1card2"></div>
-                    <div class="p1stat_card_child" , id="p1card3"></div>
-                    <div class="p1stat_card_child" , id="p1card4"></div>
-                    <div class="p1stat_card_child" , id="p1card5"></div>
-                    <div class="p1stat_card_child" , id="p1card6"></div>
-                    <div class="p1stat_card_child" , id="p1card7"></div>
-                    <div class="p1stat_card_child" , id="p1card8"></div>
-                    <div class="p1stat_card_child" , id="p1card9"></div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card1"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card1_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card1_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card1_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card1_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card1d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card2"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card2_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card2_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card2_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card2_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card2d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card3"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card3_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card3_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card3_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card3_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card3d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card4"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card4_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card4_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card4_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card4_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card4d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card5"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card5_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card5_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card5_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card5_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card5d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card6"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card6_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card6_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card6_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card6_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card6d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card7"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card7_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card7_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card7_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card7_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card7d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card8"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card8_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card8_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card8_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card8_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card8d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
+                    <div class="p1stat_card_child">
+                        <div class="p1stat_card_child" , id="p1card9"></div><!--画像格納用div-->
+                        <span class="text-top-left">
+                            <div class="p1stat_card_cost" , id="p1card9_cost"></div>
+                        </span>
+                        <span class="text-bottom-left">
+                            <div class="p1stat_card_attack" , id="p1card9_attack"></div>
+                        </span>
+                        <span class="text-bottom-right">
+                            <div class="p1stat_card_hp" , id="p1card9_hp"></div>
+                        </span>
+                        <span class="text-center-bottom">
+                            <div class="p1stat_card_name" , id="p1card9_name">Name</div>
+                        </span>
+                        <a class="p1stat_card_child_hover" id="p1card9d" draggable="true" href="#"
+                            ondragstart="f_dragstart(event)"></a>
+                    </div>
                 </div>
                 <div class="bottom3_settings">Setting icon</div>
             </div>
