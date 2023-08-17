@@ -16,9 +16,18 @@ div {
     font-weight: bold;
 }
 
-.base {
-    height: 99vh;
-    width: 177vh;
+@media (orientation: landscape) {
+    .base {
+        height: 85vh;
+        width: 177vh;
+    }
+}
+
+@media (orientation: portrait) {
+    .base {
+        height: 56vw;
+        width: 99vw;
+    }
 }
 
 .base2 {
@@ -463,6 +472,7 @@ div {
     left: 0;
     /* アニメーションの設定 */
     transition: transform 0.0s;
+    z-index: 2;
 }
 
 /* カードの情報表示制御 */
@@ -473,6 +483,8 @@ div {
     position: absolute;
     font-size: 16px;
     font-weight: bold;
+    user-select: none;
+    z-index: 1;
 }
 
 .text-top-left {
