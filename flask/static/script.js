@@ -8,8 +8,8 @@ function play_post(url) {
         if (xhr.readyState == 4) {
             var json = JSON.parse(result);
             document.cookie = "card_lastlog=" + JSON.stringify(json);
-            window.location.reload()
-            // fetchData();
+            // window.location.reload();
+            fetchData();
         } else {
         }
     }
@@ -79,6 +79,38 @@ function f_drop(event) {
 
 async function fetchData() {
     var sid = getCookieValue("card_sid");
+    // 画面初期化
+    {
+        setdivvalue('turndisp_button3', "INIT");
+        // P1ハンド
+        for (let i = 0; i < 10; i++) {
+            setdivvalue('p1card' + i + '_cost', "");
+            setdivvalue('p1card' + i + '_attack', "");
+            setdivvalue('p1card' + i + '_hp', "");
+            setdivvalue('p1card' + i + '_name', "");
+            removedivimage('p1card' + i, "");
+        }
+        // P1ボード
+        for (let i = 0; i < 6; i++) {
+            setdivvalue('p1board' + i + '_cost', "");
+            setdivvalue('p1board' + i + '_attack', "");
+            setdivvalue('p1board' + i + '_hp', "");
+            setdivvalue('p1board' + i + '_name', "");
+            removedivimage('p1board' + i, "");
+        }
+        // P2ハンド
+        for (let i = 0; i < 10; i++) {
+            setdivvalue('p2card' + i, "")
+        }
+        // P2ボード
+        for (let i = 0; i < 6; i++) {
+            setdivvalue('p2board' + i + '_cost', "");
+            setdivvalue('p2board' + i + '_attack', "");
+            setdivvalue('p2board' + i + '_hp', "");
+            setdivvalue('p2board' + i + '_name', "");
+            removedivimage('p2board' + i, "");
+        }
+    }
     try {
         const response = await fetch('/api/view/' + sid);
         const data = await response.json();
@@ -197,6 +229,13 @@ function setdivimage(id, imageUrl) {
     imageElement.src = imageUrl;
     imageDiv.appendChild(imageElement);
 }
+function removedivimage(id, imageUrl) {
+    const parentDiv = document.getElementById(id);
+    const images = parentDiv.querySelectorAll("img");
+    images.forEach(image => {
+        parentDiv.removeChild(image);
+    });
+}
 function setdivvalue(id, value) {
     const divElement = document.getElementById(id);
     divElement.textContent = value; // データを<div>要素に表示  
@@ -218,5 +257,6 @@ function getCookieValue(key) {
     return cookieValue;
 }
 function refreshPage() {
-    location.reload();
+    // location.reload();
+    fetchData();
 }
