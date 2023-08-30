@@ -52,7 +52,7 @@ async function fetchData() {
             value = player1[key_maxmp];
             setdivvalue('p1stat_maxmp', value);
             // P1ハンド
-            var hand = player1["hand"];
+            const hand = player1["hand"];
             for (let i = 0; i < hand.length; i++) {
                 const item = hand[i];
                 const cost = item['cost'];
@@ -65,6 +65,22 @@ async function fetchData() {
                 setdivvalue('p1card' + i + '_hp', hp);
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
+            }
+            // P1ボード
+            const board = player1["board"];
+            for (let j = 0; j < board.length; j++) {
+                const item = board[j];
+                const i = item['location'];
+                const cost = item['cost'];
+                const attack = item['attack'];
+                const hp = item['hp'];
+                const name = item['name'];
+                const graphic = item['graphic'];
+                setdivvalue('p1board' + i + '_cost', cost);
+                setdivvalue('p1board' + i + '_attack', attack);
+                setdivvalue('p1board' + i + '_hp', hp);
+                setdivvalue('p1board' + i + '_name', name);
+                setdivimage('p1board' + i, graphic);
             }
         }
 
