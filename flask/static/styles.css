@@ -624,6 +624,55 @@ div {
     /* padding: 20px; */
 }
 
+.middle1_p1leader,
+.middle5_p2leader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+}
+
+.p1leader_char1,
+.p2leader_char1 {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.p1leader_char2,
+.p2leader_char2 {
+    width: 90px;
+    height: 90px;
+    background-color: gray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.p1leader_char3,
+.p2leader_char3 {
+    width: 80px;
+    height: 80px;
+    background-color: rgb(210, 235, 243);
+    font-size: 16px;
+    font-weight: bold;
+    /* 角の丸さを指定 */
+    border-radius: 25px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .p1board,
 .p2board {
     display: flex;
