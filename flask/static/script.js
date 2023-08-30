@@ -81,7 +81,7 @@ async function fetchData() {
     var sid = getCookieValue("card_sid");
     // 画面初期化
     {
-        setdivvalue('turndisp_button3', "INIT");
+        setdivvalue('turndisp_button3', "");
         // P1ハンド
         for (let i = 0; i < 10; i++) {
             setdivvalue('p1card' + i + '_cost', "");
@@ -113,6 +113,9 @@ async function fetchData() {
     }
     try {
         const response = await fetch('/api/view/' + sid);
+        if (response.status != 200) {
+            location.reload();
+        }
         const data = await response.json();
 
         // 共通キー情報
