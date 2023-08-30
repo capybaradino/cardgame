@@ -580,12 +580,14 @@ div {
     /* padding: 20px; */
 }
 
-.p1board {
+.p1board,
+.p2board {
     display: flex;
     height: 100%;
 }
 
-.p1board_col {
+.p1board_col,
+.p2board_col {
     flex: 1;
     /* padding: 10px; */
     height: 100%;
@@ -593,7 +595,8 @@ div {
     flex-direction: column;
 }
 
-.p1board_row {
+.p1board_row,
+.p2board_row {
     height: 33%;
     width: 100%;
     /* padding: 5px; */
@@ -602,7 +605,8 @@ div {
     justify-content: center;
 }
 
-.p1board_row2 {
+.p1board_row2,
+.p2board_row2 {
     height: 100%;
     width: 80%;
 }
