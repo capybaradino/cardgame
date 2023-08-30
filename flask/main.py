@@ -15,7 +15,16 @@ app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
 
 @app.route('/play2', methods=['GET'])
 def play2():
-    return render_template('play2.html')
+    sid = request.cookies.get("card_sid", None)
+    sid = card_user.card_checksession(sid)
+    if (sid is None):
+        return abort(401)
+    email = request.cookies.get("card-email")
+    sid = card_user.card_getsession(sid, email)
+    if (sid is None):
+        return redirect(url_for("index"))
+    else:
+        return card_play.card_play_get2(sid)
 
 
 @app.route('/test', methods=['GET'])
