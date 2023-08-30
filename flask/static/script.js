@@ -1,21 +1,75 @@
-/***** ドラッグ開始時の処理 *****/
+// API処理
+function play_post(url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", url, true);
+    xhr.onload = function () {
+        var result = xhr.responseText;
+        // if (xhr.readyState == 4 && xhr.status == "200") {
+        if (xhr.readyState == 4) {
+            var json = JSON.parse(result);
+            document.cookie = "card_lastlog=" + JSON.stringify(json);
+            window.location.reload()
+        } else {
+        }
+    }
+    xhr.send(null);
+}
+function disp_lastlog() {
+    var lastlog = getCookieValue("card_lastlog");
+    if (lastlog) {
+        document.getElementById("lastlog").textContent = lastlog;
+    } else {
+        document.getElementById("lastlog").textContent = "-";
+    }
+}
+function system_turnend() {
+    var sid = getCookieValue("card_sid");
+    var url = "/api/system/" + sid + "/turnend";
+    play_post(url);
+}
+function play_left(src, dst) {
+    var sid = getCookieValue("card_sid");
+    var url = "/api/play/" + sid + "/" + src + "/" + dst;
+    // url = "/api/play/hogehoge/card1/card2"
+    play_post(url);
+}
+function play_attack(src, dst) {
+    var sid = getCookieValue("card_sid");
+    var url = "/api/play/" + sid + "/" + src + "/" + dst;
+    play_post(url);
+}
+
+// /***** ドラッグ開始時の処理 *****/
 function f_dragstart(event) {
     //ドラッグするデータのid名をDataTransferオブジェクトにセット
     event.dataTransfer.setData("text", event.target.id);
 }
 
-/***** ドラッグ要素がドロップ要素に重なっている間の処理 *****/
+// /***** ドラッグ要素がドロップ要素に重なっている間の処理 *****/
 function f_dragover(event) {
     //dragoverイベントをキャンセルして、ドロップ先の要素がドロップを受け付けるようにする
     event.preventDefault();
 }
 
-/***** ドロップ時の処理 *****/
+// /***** ドロップ時の処理 *****/
 function f_drop(event) {
     //ドラッグされたデータのid名をDataTransferオブジェクトから取得
-    var id_name = event.dataTransfer.getData("text");
+    var id_name_src = event.dataTransfer.getData("text");
+    //ドロップ先のid名を取得
+    var id_name_dst = event.target.id;
+    //API発行
+    if (id_name_src.startsWith("hand_")) {
+        if (id_name_dst.startsWith("leftboard_")) {
+            play_left(id_name_src, id_name_dst);
+        }
+    }
+    if (id_name_src.startsWith("leftboard_")) {
+        if (id_name_dst.startsWith("rightboard_")) {
+            play_attack(id_name_src, id_name_dst);
+        }
+    }
     //id名からドラッグされた要素を取得
-    var drag_elm = document.getElementById(id_name);
+    // var drag_elm = document.getElementById(id_name);
     //ドロップ先にドラッグされた要素を追加
     // event.currentTarget.appendChild(drag_elm);
     //エラー回避のため、ドロップ処理の最後にdropイベントをキャンセルしておく
@@ -105,6 +159,23 @@ async function fetchData() {
             for (let i = 0; i < handnum; i++) {
                 setdivvalue('p2card' + i, "C")
             }
+            // P2ボード
+            const board = player2["board"];
+            for (let j = 0; j < board.length; j++) {
+                const item = board[j];
+                const i = item['location'];
+                const cost = item['cost'];
+                const attack = item['attack'];
+                const hp = item['hp'];
+                const name = item['name'];
+                const graphic = item['graphic'];
+                setdivvalue('p2board' + i + '_cost', cost);
+                setdivvalue('p2board' + i + '_attack', attack);
+                setdivvalue('p2board' + i + '_hp', hp);
+                setdivvalue('p2board' + i + '_name', name);
+                setdivimage('p2board' + i, graphic);
+            }
+
         }
 
     } catch (error) {
