@@ -61,6 +61,48 @@ div {
 
 .top1_settings {
     width: 10.0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+}
+
+.reload_button1 {
+    width: 80px;
+    height: 60px;
+    background-color: lightgray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reload_button2 {
+    width: 750px;
+    height: 50px;
+    background-color: gray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reload_button3 {
+    width: 70px;
+    height: 40px;
+    background-color: rgb(210, 235, 243);
+    font-size: 16px;
+    font-weight: bold;
+    /* 角の丸さを指定 */
+    border-radius: 25px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .top2_username {
@@ -145,6 +187,8 @@ div {
     width: 140px;
     height: 40px;
     background-color: rgb(210, 235, 243);
+    font-size: 16px;
+    font-weight: bold;
     /* 角の丸さを指定 */
     border-radius: 25px;
     /* 上下中央寄せ */

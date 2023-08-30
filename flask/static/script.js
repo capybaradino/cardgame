@@ -9,6 +9,7 @@ function play_post(url) {
             var json = JSON.parse(result);
             document.cookie = "card_lastlog=" + JSON.stringify(json);
             window.location.reload()
+            // fetchData();
         } else {
         }
     }
@@ -88,6 +89,15 @@ async function fetchData() {
         const key_decknum = "decknum";
         const key_mp = "MP";
         const key_maxmp = "maxMP";
+
+        // ターン情報
+        const key_turn = "turn";
+        const turn = data[key_turn];
+        if (turn == "p1turn") {
+            setdivvalue('turndisp_button3', "Turn end");
+        } else {
+            setdivvalue('turndisp_button3', "Enemy turn");
+        }
 
         // Player1関連情報
         {
@@ -175,7 +185,6 @@ async function fetchData() {
                 setdivvalue('p2board' + i + '_name', name);
                 setdivimage('p2board' + i, graphic);
             }
-
         }
 
     } catch (error) {
@@ -207,4 +216,7 @@ function getCookieValue(key) {
         }
     }
     return cookieValue;
+}
+function refreshPage() {
+    location.reload();
 }
