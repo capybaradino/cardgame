@@ -9,3 +9,4 @@ uwsgi_api.log
 bot/bot.conf
 flask/game.ini
 cardbot.log
+flask/tmp/*
