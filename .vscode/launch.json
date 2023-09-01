@@ -27,6 +27,14 @@
             "cwd": "${workspaceRoot}/bot",
             "program": "botmain.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "initialize_card.py",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/flask",
+            "program": "initialize_card.py",
+            "console": "integratedTerminal"
         }
     ]
 }
