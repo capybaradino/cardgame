@@ -28,6 +28,8 @@ def card_getsession(sid, email):
 
 
 def card_postsession(uid):
+    # Delete existing session
+    card_db.deleteusersession(uid)
     while True:
         sid = str(uuid.uuid4())
         sid_chk = card_db.getsid_fromsid(sid)
@@ -43,7 +45,9 @@ def card_putsession(sid, uid):
     nowstr = card_util.card_getdatestrnow()
     sid_chk = card_db.getsid_fromsid(sid)
     if (sid_chk is None):
-        card_db.postusersession(sid, uid, nowstr)
+        # card_db.postusersession(sid, uid, nowstr)
+        # TODO エラーケース
+        return
     else:
         card_db.putusersession(sid, nowstr)
     return
