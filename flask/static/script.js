@@ -55,6 +55,13 @@ function bottomSetting() {
     }
 }
 
+function changeColor(id, color) {
+    // 背景色を変更する要素を取得
+    var divElement = document.getElementById(id);
+    // 新しい背景色を設定
+    divElement.style.backgroundColor = color;
+}
+
 // /***** ドラッグ開始時の処理 *****/
 function f_dragstart(event) {
     //ドラッグするデータのid名をDataTransferオブジェクトにセット
@@ -203,6 +210,31 @@ async function fetchData() {
                 setdivvalue('p1board' + i + '_name', name);
                 setdivimage('p1board' + i, graphic);
             }
+            // P1テンション
+            const tension = player1["tension"];
+            for (let i = 0; i < 3; i++) {
+                if (i < tension) {
+                    changeColor("p1tension" + i, "purple")
+                } else {
+                    changeColor("p1tension" + i, "white")
+                }
+            }
+            if (tension < 3) {
+                const i = "tension"
+                const graphic = "uploads/system/tension.png"
+                const cost = 1;
+                const attack = "";
+                const hp = "";
+                const name = "tension";
+                setdivvalue('p1card' + i + '_cost', cost);
+                setdivvalue('p1card' + i + '_attack', attack);
+                setdivvalue('p1card' + i + '_hp', hp);
+                setdivvalue('p1card' + i + '_name', name);
+                setdivimage('p1card' + i, graphic);
+                changeColor("p1tension" + "3", "white")
+            } else {
+                changeColor("p1tension" + "3", "red")
+            }
         }
 
         // Player2関連情報
@@ -242,6 +274,31 @@ async function fetchData() {
                 setdivvalue('p2board' + i + '_hp', hp);
                 setdivvalue('p2board' + i + '_name', name);
                 setdivimage('p2board' + i, graphic);
+            }
+            // P2テンション
+            const tension = player2["tension"];
+            for (let i = 0; i < 3; i++) {
+                if (i < tension) {
+                    changeColor("p2tension" + i, "purple")
+                } else {
+                    changeColor("p2tension" + i, "white")
+                }
+            }
+            if (tension < 3) {
+                const i = "tension"
+                const graphic = "uploads/system/tension.png"
+                const cost = 1;
+                const attack = "";
+                const hp = "";
+                const name = "tension";
+                setdivvalue('p2card' + i + '_cost', cost);
+                setdivvalue('p2card' + i + '_attack', attack);
+                setdivvalue('p2card' + i + '_hp', hp);
+                setdivvalue('p2card' + i + '_name', name);
+                setdivimage('p2card' + i, graphic);
+                changeColor("p2tension" + "3", "white")
+            } else {
+                changeColor("p2tension" + "3", "red")
             }
         }
 

@@ -487,6 +487,7 @@ div {
 /* カードの表示関係ここから */
 .p1stat_card_child,
 .p1board_card_child,
+.p2stat_card_child,
 .p2board_card_child {
     width: 100%;
     height: 100%;
@@ -506,7 +507,7 @@ div {
     /* 拡大の基準点を下端中央に設定 */
     transform-origin: bottom center;
     /* 上方向に移動しながら拡大 */
-    transform: translateY(0%) scale(2.0);
+    transform: translateY(0%) scale(1.8);
 }
 
 /* カードの拡大表示制御 */
@@ -522,6 +523,18 @@ div {
     @media only screen and (min-width: 1024px) {
         transform: translateY(0%) scale(1.5);
     }
+}
+
+/* カードの拡大表示制御 */
+.p2stat_card_child:hover {
+    /* マウスオーバー時に前面に表示 */
+    z-index: 10;
+    /* z-indexを適用するために必要 */
+    position: relative;
+    /* 拡大の基準点を下端中央に設定 */
+    transform-origin: bottom center;
+    /* 上方向に移動しながら拡大 */
+    transform: translateY(80%) scale(1.8);
 }
 
 /* カードの拡大表示制御 */
