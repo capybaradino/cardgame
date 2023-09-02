@@ -216,6 +216,11 @@ class Playdata:
                 self.p1_player_tid, self.player1.name, self.player1.job,
                 self.player1.hp, self.player1.mp, self.player1.maxmp, self.player1.tension)
         elif (matchinggame):
+            if (self.state == "p1turn"):
+                tension = 2
+            else:
+                tension = 0
+
             self.player2 = Player(
                 self.p2_player_tid,
                 card_db.getnickname_fromsid(sid),
@@ -223,7 +228,7 @@ class Playdata:
                 p2hp,
                 p2mp,
                 p2mp,
-                2,
+                tension,
                 self.card_table
             )
             card_db.postplayerstats(
@@ -282,6 +287,8 @@ class Playdata:
             else:
                 # self.player2.start_turn()
                 self.state = "p2turn"
+                card_db.putsession("playerstats", "name",
+                                   self.player1.name, "tension", 2)
 
             # ゲームセッション登録
             self.lastupdate = card_util.card_getdatestrnow()
