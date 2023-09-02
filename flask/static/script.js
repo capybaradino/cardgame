@@ -29,6 +29,11 @@ function system_turnend() {
     var url = "/api/system/" + sid + "/turnend";
     play_post(url);
 }
+function system_surrender() {
+    var sid = getCookieValue("card_sid");
+    var url = "/api/system/" + sid + "/surrender";
+    play_post(url);
+}
 function play_left(src, dst) {
     var sid = getCookieValue("card_sid");
     var url = "/api/play/" + sid + "/" + src + "/" + dst;
@@ -39,6 +44,15 @@ function play_attack(src, dst) {
     var sid = getCookieValue("card_sid");
     var url = "/api/play/" + sid + "/" + src + "/" + dst;
     play_post(url);
+}
+
+function bottomSetting() {
+    if (confirm("Surrender?")) {
+        // ユーザーがOKボタンをクリックした場合の処理
+        system_surrender();
+    } else {
+        // ユーザーがキャンセルボタンをクリックした場合の処理
+    }
 }
 
 // /***** ドラッグ開始時の処理 *****/
