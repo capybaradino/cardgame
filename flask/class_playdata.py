@@ -205,7 +205,7 @@ class Playdata:
             self.player1 = Player(
                 self.p1_player_tid,
                 card_db.getnickname_fromsid(sid),
-                "kensi",
+                "wiz",  # TODO 職業固定
                 p1hp,
                 p1mp,
                 p1mp,
@@ -219,7 +219,7 @@ class Playdata:
             self.player2 = Player(
                 self.p2_player_tid,
                 card_db.getnickname_fromsid(sid),
-                "kensi",
+                "wiz",
                 p2hp,
                 p2mp,
                 p2mp,
@@ -235,16 +235,27 @@ class Playdata:
             card_db.createdecktable(self.card_table)
 
         if (newgame or matchinggame):
-            cids = card_db.getallcids()
-            num_cids = len(cids)
             # デッキ登録(TODO)
             if (newgame):
                 playername = self.player1.name
             else:
                 playername = self.player2.name
+
+            # TODO デッキ固定
+            deck_name = "gamecard_2018haru_3_aguzesi"
+            cids = card_db.getcids_fromdeck(deck_name)
+            num_cids = len(cids)
+            if (num_cids != 30):
+                # TODO エラーケース
+                return
+            # 0から29までの数値を含むリストを作成
+            numbers = list(range(30))
+            # リストをランダムに並べ替える
+            random.shuffle(numbers)
             i = 0
             while (i < 30):
-                tcid = cids[random.randrange(num_cids)][0]
+                j = numbers[i]
+                tcid = cids[j][0]
                 card_db.postdeck(self.card_table, tcid, playername)
                 i = i + 1
 

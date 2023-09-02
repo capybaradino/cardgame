@@ -65,6 +65,18 @@ def getallcids():
     return cids
 
 
+def getcids_fromdeck(deck_name):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    query = f"""
+        SELECT cid FROM {deck_name}
+    """
+    cur.execute(query)
+    cids = cur.fetchall()
+    con.close()
+    return cids
+
+
 def deletegamesession(gsid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()

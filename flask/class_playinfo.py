@@ -1,4 +1,5 @@
 import card_db
+import re
 
 
 class Card_info:
@@ -8,20 +9,30 @@ class Card_info:
         self.locnum = locnum
         self.dhp = dhp
         self.dattack = dattack
-        if(self.cid is not None):
+        if (self.cid is not None):
             record = card_db.getrecord_fromgame("card_basicdata", "cid", cid)
             self.name = record[2]
             self.cost = record[5]
             self.category = record[6]
-            self.attack_org = record[9]
-            self.hp_org = record[10]
-            self.attack = record[9] + self.dattack
-            self.hp = record[10] + self.dhp
+            if record[9] == "":
+                self.attack_org = -1
+            else:
+                self.attack_org = record[9]
+            if record[10] == "":
+                self.hp_org = -1
+            else:
+                self.hp_org = record[10]
+            self.attack = self.attack_org + self.dattack
+            self.hp = self.hp_org + self.dhp
             self.effect = record[11]
             self.flavor = record[12]
-            self.filename = card_db.getfilename_fromcid(self.cid)
+            pattern_session = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            fid = card_db.getfid_fromcid(cid)
+            if re.match(pattern_session, fid):
+                self.filename = card_db.getfilename_fromcid(self.cid)
+            else:
+                self.filename = fid
 
     @classmethod
     def empty(cls):
         return cls(None, None, None, None, None)
-
