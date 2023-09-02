@@ -567,6 +567,16 @@ def putusersession_gsid(sid, gsid):
     return
 
 
+def deleteusersession(uid):
+    con = sqlite3.connect('session.db')
+    cur = con.cursor()
+    query = f"DELETE from usersession WHERE uid = ?"
+    cur.execute(query, uid)
+    con.commit()
+    con.close()
+    return
+
+
 def getnickname_fromemail(email):
     con = sqlite3.connect('user.db')
     cur = con.cursor()
