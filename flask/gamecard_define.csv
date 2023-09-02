@@ -12,7 +12,7 @@
 ベビーパンサー	babypanther	cheer
 ミミック	mimic	ondead:enemy_1drow_any
 はぐれメタル	haguremetal	sokko,metalbody
-メラゾーマ	merazo-ma	any_3dmg
+メラゾーマ	merazo-ma	any_5dmg
 亡者のひとだま	moujaghost	antieffect
 シルビア	silvia	onplay:each_tension+3
 バアルゼブブ	baaruzebubu	onplay:enemy_3dmg_leader
