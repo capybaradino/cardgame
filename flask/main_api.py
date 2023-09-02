@@ -2,6 +2,7 @@ import json
 from flask import Flask
 from api_play import api_play_hand
 from api_attack import api_unit_attack
+from api_spell import api_spell
 import api_system
 import api_view
 import debug
@@ -11,6 +12,7 @@ import card_db
 import re
 from class_playview import Play_view
 from class_playdata import Playdata
+from class_playinfo import Card_info
 app = Flask(__name__)
 api = Api(app)
 
@@ -122,8 +124,21 @@ class Card_play(Resource):
         pattern_hand = r'^hand_[0-9]$'
         pattern_leftboard = r'leftboard_[0-5]'
         if re.match(pattern_hand, card1):
-            # ハンドからカードをプレイ
-            return api_play_hand(playview, card1, card2)
+            # カードの種別を確認
+            pattern = r'[0-9]'
+            number = int(re.findall(pattern, card1)[0])
+            hands = playview.p1hand
+            objcard1: Card_info
+            objcard1 = hands[number]
+            if (objcard1 is None):
+                return {"error": "illegal card1 number"}, 403
+            if (objcard1.category == "unit"):
+                # ハンドからカードをプレイ
+                return api_play_hand(playview, card1, card2)
+            elif (objcard1.category == "spell"):
+                return api_spell(sid, playview, card1, card2)
+            else:
+                return {"error": "illegal card1 category"}, 403
         elif re.match(pattern_leftboard, card1):
             # ユニットで攻撃
             return api_unit_attack(sid, playview, card1, card2)

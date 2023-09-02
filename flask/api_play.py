@@ -13,7 +13,6 @@ def api_play_hand(playview, card1, card2):
     objcard1 = hands[number]
     if (objcard1 is None):
         return {"error": "illegal card1 number"}
-    # TODO ユニット以外の対応
 
     # ユニットの展開先確認
     pattern_p1board = r'leftboard_[0-5]'
