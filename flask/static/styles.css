@@ -664,6 +664,10 @@ div {
 
 .bottom3_settings {
     width: 5.0%;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .middle {
@@ -785,4 +789,42 @@ div {
 
 .middle5_p2leader {
     width: 14.3%;
+}
+
+.setting_button1 {
+    width: 40px;
+    height: 60px;
+    background-color: lightgray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.setting_button2 {
+    width: 30px;
+    height: 50px;
+    background-color: gray;
+    /* 角の丸さを指定 */
+    border-radius: 30px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.setting_button3 {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(210, 235, 243);
+    font-size: 16px;
+    font-weight: bold;
+    /* 角の丸さを指定 */
+    border-radius: 25px;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
