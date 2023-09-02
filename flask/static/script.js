@@ -7,7 +7,8 @@ function play_post(url) {
         // if (xhr.readyState == 4 && xhr.status == "200") {
         if (xhr.readyState == 4) {
             var json = JSON.parse(result);
-            document.cookie = "card_lastlog=" + JSON.stringify(json);
+            // document.cookie = "card_lastlog=" + JSON.stringify(json);
+            document.getElementById("middle3_boarder").textContent = JSON.stringify(json);
             // window.location.reload();
             fetchData();
         } else {
@@ -62,6 +63,9 @@ function f_drop(event) {
     if (id_name_src.startsWith("hand_")) {
         if (id_name_dst.startsWith("leftboard_")) {
             play_left(id_name_src, id_name_dst);
+        }
+        if (id_name_dst.startsWith("rightboard_")) {
+            play_attack(id_name_src, id_name_dst);
         }
     }
     if (id_name_src.startsWith("leftboard_")) {
@@ -162,8 +166,10 @@ async function fetchData() {
                 const name = item['name'];
                 const graphic = item['graphic'];
                 setdivvalue('p1card' + i + '_cost', cost);
-                setdivvalue('p1card' + i + '_attack', attack);
-                setdivvalue('p1card' + i + '_hp', hp);
+                if (attack >= 0) {
+                    setdivvalue('p1card' + i + '_attack', attack);
+                    setdivvalue('p1card' + i + '_hp', hp);
+                }
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
             }
