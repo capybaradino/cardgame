@@ -224,7 +224,8 @@ async function fetchData() {
             // P2ハンド
             const handnum = player2["handnum"];
             for (let i = 0; i < handnum; i++) {
-                setdivvalue('p2card' + i, "C")
+                // setdivvalue('p2card' + i, "C")
+                setdivimage('p2card' + i, "uploads/system/sleeve.png");
             }
             // P2ボード
             const board = player2["board"];
