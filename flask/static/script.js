@@ -114,7 +114,9 @@ async function fetchData() {
     try {
         const response = await fetch('/api/view/' + sid);
         if (response.status != 200) {
-            location.reload();
+            if (response.status != 500) {
+                location.reload();
+            }
         }
         const data = await response.json();
 
