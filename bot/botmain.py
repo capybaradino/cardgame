@@ -113,8 +113,10 @@ def run():
                         play_hand = -1
                         for card in hand:
                             if (card["cost"] <= mp):
-                                play_hand = i
-                                break
+                                # TODO 特技カード使用
+                                if (card["category"] == "unit"):
+                                    play_hand = i
+                                    break
                             i = i + 1
                         if (play_hand < 0):
                             # ハンドから出せるユニットがいない

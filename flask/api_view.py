@@ -30,6 +30,7 @@ def get(playview: Play_view):
             hand["hp_org"] = handinfo.hp_org
             hand["name"] = handinfo.name
             hand["graphic"] = "uploads/" + handinfo.filename
+            hand["category"] = handinfo.category
             p1hand.append(hand)
     player1["hand"] = p1hand
     # ボード
