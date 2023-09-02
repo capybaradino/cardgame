@@ -136,6 +136,12 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
+@app.route('/uploads/<uploads_sub>/<filename>')
+# ファイルを表示する
+def uploaded_file_sub(uploads_sub, filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], uploads_sub + "/" + filename)
+
+
 @app.route('/chkheaders/')
 def chkheaders():
     sid = request.cookies.get("card_sid", None)
