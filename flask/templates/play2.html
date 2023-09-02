@@ -61,7 +61,24 @@
                                     <div class="p2stat_hp_label">HP</div>
                                     <div class="p2stat_hp" , id="p2stat_hp">hp</div>
                                     <div class="p2stat_herocard">Hero</div>
-                                    <div class="p2stat_tensioncard">Tension</div>
+                                    <div class="p2stat_tensioncard">
+                                        <div class="p2stat_card_child">
+                                            <div class="p2stat_card_child" , id="p2cardtension"></div><!--画像格納用div-->
+                                            <span class="text-top-left">
+                                                <div class="p1stat_card_cost" , id="p2cardtension_cost"></div>
+                                            </span>
+                                            <span class="text-bottom-left">
+                                                <div class="p1stat_card_attack" , id="p2cardtension_attack"></div>
+                                            </span>
+                                            <span class="text-bottom-right">
+                                                <div class="p1stat_card_hp" , id="p2cardtension_hp"></div>
+                                            </span>
+                                            <span class="text-center-bottom">
+                                                <div class="p1stat_card_name" , id="p2cardtension_name">Name</div>
+                                            </span>
+                                            <a class="p1stat_card_child_hover"></a>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="p2stat_param_main_hpbar"></div>
                                 <div class="p2stat_param_main_lower">
@@ -79,10 +96,10 @@
                     <div class="p2stat_right">
                         <div class="p2stat_leader"></div>
                         <div class="p2stat_tensionbar">
-                            <div class="p2stat_tension"></div>
-                            <div class="p2stat_tension"></div>
-                            <div class="p2stat_tension"></div>f_dragover
-                            <div class="p2stat_tension"></div>
+                            <div class="p2stat_tension" id="p2tension3"></div>
+                            <div class="p2stat_tension" id="p2tension2"></div>
+                            <div class="p2stat_tension" id="p2tension1"></div>
+                            <div class="p2stat_tension" id="p2tension0"></div>
                         </div>
                     </div>
                 </div>
@@ -379,16 +396,34 @@
                     <div class="p1stat_param">
                         <div class="p1stat_param_left">
                             <div class="p2stat_tensionbar">
-                                <div class="p2stat_tension"></div>
-                                <div class="p2stat_tension"></div>
-                                <div class="p2stat_tension"></div>
-                                <div class="p2stat_tension"></div>
+                                <div class="p2stat_tension" id="p1tension3"></div>
+                                <div class="p2stat_tension" id="p1tension2"></div>
+                                <div class="p2stat_tension" id="p1tension1"></div>
+                                <div class="p2stat_tension" id="p1tension0"></div>
                             </div>
                             <div class="p1stat_leader"></div>
                         </div>
                         <div class="p1stat_param_main">
                             <div class="p2stat_param_main_upper">
-                                <div class="p2stat_tensioncard">Tension</div>
+                                <div class="p2stat_tensioncard">
+                                    <div class="p1stat_card_child">
+                                        <div class="p1stat_card_child" , id="p1cardtension"></div><!--画像格納用div-->
+                                        <span class="text-top-left">
+                                            <div class="p1stat_card_cost" , id="p1cardtension_cost"></div>
+                                        </span>
+                                        <span class="text-bottom-left">
+                                            <div class="p1stat_card_attack" , id="p1cardtension_attack"></div>
+                                        </span>
+                                        <span class="text-bottom-right">
+                                            <div class="p1stat_card_hp" , id="p1cardtension_hp"></div>
+                                        </span>
+                                        <span class="text-center-bottom">
+                                            <div class="p1stat_card_name" , id="p1cardtension_name">Name</div>
+                                        </span>
+                                        <a class="p1stat_card_child_hover" id="hand_10" draggable="true" href="#"
+                                            ondragstart="f_dragstart(event)"></a>
+                                    </div>
+                                </div>
                                 <div class="p2stat_herocard">Hero</div>
                                 <div class="p2stat_hp_label">HP</div>
                                 <div class="p2stat_hp" , id="p1stat_hp">hp</div>
