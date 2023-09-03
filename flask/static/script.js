@@ -108,7 +108,7 @@ async function fetchData() {
     {
         setdivvalue('turndisp_button3', "");
         // P1ハンド
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 11; i++) {
             setdivvalue('p1card' + i + '_cost', "");
             setdivvalue('p1card' + i + '_attack', "");
             setdivvalue('p1card' + i + '_hp', "");
@@ -124,7 +124,7 @@ async function fetchData() {
             removedivimage('p1board' + i, "");
         }
         // P2ハンド
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 11; i++) {
             setdivvalue('p2card' + i, "")
         }
         // P2ボード
@@ -220,7 +220,7 @@ async function fetchData() {
                 }
             }
             if (tension < 3) {
-                const i = "tension"
+                const i = 10
                 const graphic = "uploads/system/tension.png"
                 const cost = 1;
                 const attack = "";
@@ -233,6 +233,17 @@ async function fetchData() {
                 setdivimage('p1card' + i, graphic);
                 changeColor("p1tension" + "3", "white")
             } else {
+                const i = 10
+                const graphic = "uploads/test/merami.png"  // TODO graphic
+                const cost = "";
+                const attack = "";
+                const hp = "";
+                const name = "guren fireball";
+                setdivvalue('p1card' + i + '_cost', cost);
+                setdivvalue('p1card' + i + '_attack', attack);
+                setdivvalue('p1card' + i + '_hp', hp);
+                setdivvalue('p1card' + i + '_name', name);
+                setdivimage('p1card' + i, graphic);
                 changeColor("p1tension" + "3", "red")
             }
         }
@@ -285,7 +296,7 @@ async function fetchData() {
                 }
             }
             if (tension < 3) {
-                const i = "tension"
+                const i = 10
                 const graphic = "uploads/system/tension.png"
                 const cost = 1;
                 const attack = "";
@@ -298,6 +309,17 @@ async function fetchData() {
                 setdivimage('p2card' + i, graphic);
                 changeColor("p2tension" + "3", "white")
             } else {
+                const i = 10
+                const graphic = "uploads/test/merami.png"  // TODO graphic
+                const cost = "";
+                const attack = "";
+                const hp = "";
+                const name = "guren fireball";
+                setdivvalue('p2card' + i + '_cost', cost);
+                setdivvalue('p2card' + i + '_attack', attack);
+                setdivvalue('p2card' + i + '_hp', hp);
+                setdivvalue('p2card' + i + '_name', name);
+                setdivimage('p2card' + i, graphic);
                 changeColor("p2tension" + "3", "red")
             }
         }
