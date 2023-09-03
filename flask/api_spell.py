@@ -14,6 +14,14 @@ def api_spell(sid, playview: Play_view, card1, card2):
     if (objcard1 is None):
         return {"error": "illegal card1 number"}, 403
 
+    # MP減算
+    remainingmp = playview.p1mp - objcard1.cost
+    if (remainingmp < 0):
+        return {"error": "MP short"}
+    card_db.putsession("playerstats",
+                       "name", playview.p1name,
+                       "mp", remainingmp)
+
     # TODO 多種特技の内容対応
     effect_array = objcard1.effect.split(",")
     # 特技の対象確認
