@@ -3,6 +3,7 @@ from flask import Flask
 from api_play import api_play_hand
 from api_attack import api_unit_attack
 from api_spell import api_spell
+from api_tension import api_tension
 import api_system
 import api_view
 import debug
@@ -123,6 +124,7 @@ class Card_play(Resource):
 
         pattern_hand = r'^hand_[0-9]$'
         pattern_leftboard = r'leftboard_[0-5]'
+        pattern_tension = r'^hand_10$'
         if re.match(pattern_hand, card1):
             # カードの種別を確認
             pattern = r'[0-9]'
@@ -142,6 +144,9 @@ class Card_play(Resource):
         elif re.match(pattern_leftboard, card1):
             # ユニットで攻撃
             return api_unit_attack(sid, playview, card1, card2)
+        elif re.match(pattern_tension, card1):
+            # テンションアップ
+            return api_tension(sid, playview, card1, card2)
         else:
             return {"error": "illegal card1"}, 403
 
