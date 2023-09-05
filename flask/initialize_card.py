@@ -124,6 +124,39 @@ if __name__ == "__main__":
 
     if opt == '1':
         print("[INFO] Create card basic data start.")
+
+        # SQLite3データベースに接続
+        conn = sqlite3.connect('game.db')
+        cursor = conn.cursor()
+        # 削除したいテーブルの名前を指定
+        table_name = 'card_basicdata'
+        # テーブルを削除するSQLクエリを実行
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+        # テーブルの作成
+        query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    cid TEXT PRIMARY KEY,
+                    fid TEXT NOT NULL,
+                    cardname TEXT NOT NULL,
+                    leader TEXT NOT NULL,
+                    cardpack TEXT NOT NULL,
+                    cost INTEGER,
+                    category TEXT NOT NULL,
+                    rarity TEXT NOT NULL,
+                    type TEXT,
+                    attack INTEGER,
+                    hp INTEGER,
+                    effect TEXT,
+                    flavor TEXT
+                )
+            """
+        cursor.execute(query)
+        # 変更をコミットしてデータベースを更新
+        conn.commit()
+        # データベースとの接続を閉じる
+        conn.close()
+
+        print("[INFO] Create cards according to csv file")
         with open('gamecard_define.csv', 'r') as file:
             reader = csv.reader(file, delimiter='\t')  # タブ区切りのCSVとして読み込む
 
@@ -165,12 +198,49 @@ if __name__ == "__main__":
                             attack + "','" + hp + "','" + effect + "','" + flavor + "')")
                 con.commit()
                 con.close()
+
+        print("[INFO] Create tension card")
+        cid = "systemcid_tension"
+        fid = "system/tension.png"
+        cardname = "tension"
+        leader = "common"
+        cardpack = "00basic"
+        cost = "1"
+        category = "tension"
+        rarity = "common"
+        type = ""
+        attack = ""
+        hp = ""
+        effect = ""
+        flavor = ""
+
+        con = sqlite3.connect('game.db')
+        cur = con.cursor()
+        cur.execute("insert into card_basicdata values ('" + cid + "','" +
+                    fid + "','" + cardname + "','" + leader + "','" + cardpack + "','" +
+                    cost + "','" + category + "','" + rarity + "','" + type + "','" +
+                    attack + "','" + hp + "','" + effect + "','" + flavor + "')")
+        con.commit()
+        con.close()
         print("[INFO] Create card basic data end.")
 
     if opt == '2':
         print("[INFO] Create deck data start.")
         # TODO デッキ名
         deck_name = "gamecard_2018haru_3_aguzesi"
+
+        # SQLite3データベースに接続
+        conn = sqlite3.connect('game.db')
+        cursor = conn.cursor()
+        # 削除したいテーブルの名前を指定
+        table_name = deck_name
+        # テーブルを削除するSQLクエリを実行
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+        # 変更をコミットしてデータベースを更新
+        conn.commit()
+        # データベースとの接続を閉じる
+        conn.close()
+
         # テーブル作成
         db_name = "game.db"
         table_name = deck_name
