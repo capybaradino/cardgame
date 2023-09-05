@@ -10,6 +10,13 @@ def api_tension(sid, playview: Play_view, card1, card2):
     tension = playview.p1tension
     if (tension < 3):
         # テンションアップ
+        # テンションカードアクティブ確認
+        record = card_db.getrecord_fromsession(
+            playview.playdata.card_table, "loc", playview.p1name+"_tension")
+        cuid = record[2]
+        active = record[6]
+        if (active == 0):
+            return {"error": "Tension not active"}
         # MP減算
         remainingmp = playview.p1mp - 1
         if (remainingmp < 0):
@@ -21,6 +28,10 @@ def api_tension(sid, playview: Play_view, card1, card2):
         card_db.putsession("playerstats",
                            "name", playview.p1name,
                            "tension", tension)
+        # テンションカードを非アクティブ化
+        card_db.putsession(playview.playdata.card_table,
+                           "cuid", cuid,
+                           "active", 0)
     else:
         # テンションスキル発動
         # TODO wizのみ対応

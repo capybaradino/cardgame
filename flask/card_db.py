@@ -232,7 +232,7 @@ def postdeck(table_name, cid, loc):
     cursor.execute(query, (cid, loc, cuid, -1, 0, 0, 0))
     con.commit()
     con.close()
-    return
+    return cuid
 
 
 def putdeck(table_name, cuid, loc):

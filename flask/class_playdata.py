@@ -33,6 +33,8 @@ class Player:
                            self.player_tid, 'maxmp', self.maxmp)
         card_db.putsession(self.card_table, "loc",
                            self.name+"_board", "active", 1)
+        card_db.putsession(self.card_table, "loc",
+                           self.name+"_tension", "active", 1)
         return
 
     def draw_card(self):
@@ -263,6 +265,11 @@ class Playdata:
                 tcid = cids[j][0]
                 card_db.postdeck(self.card_table, tcid, playername)
                 i = i + 1
+
+            # テンションカード登録
+            tcid = "systemcid_tension"
+            cuid = card_db.postdeck(self.card_table, tcid, playername)
+            card_db.putdeck(self.card_table, cuid, playername + "_tension")
 
         if (newgame):
             # Player1ハンド
