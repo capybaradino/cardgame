@@ -12,6 +12,28 @@ def delete_file(file_path):
         print(f"ファイル '{file_path}' の削除中にエラーが発生しました: {e}")
 
 
+def drop_table(database_name, table_name):
+    try:
+        # SQLite3データベースに接続
+        conn = sqlite3.connect(database_name)
+        cursor = conn.cursor()
+
+        # テーブルを削除するSQLクエリを実行
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+
+        # 変更をコミットしてデータベースを更新
+        conn.commit()
+        return True  # テーブルの削除が成功した場合にTrueを返す
+
+    except sqlite3.Error as e:
+        print(f"テーブルの削除中にエラーが発生しました: {e}")
+        return False  # テーブルの削除が失敗した場合にFalseを返す
+
+    finally:
+        # データベースとの接続を閉じる
+        conn.close()
+
+
 def create_database(db_name):
     try:
         # データベースに接続（存在しない場合は新規作成される）
@@ -111,9 +133,38 @@ def create_table(db_name, table_name):
         print(f"テーブルの作成中にエラーが発生しました: {e}")
 
 
+def drop_tables_with_prefix(database_name, prefix):
+    try:
+        # SQLite3データベースに接続
+        conn = sqlite3.connect(database_name)
+        cursor = conn.cursor()
+
+        # データベース内のテーブル一覧を取得
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+
+        # テーブル名が指定の接頭辞で始まる場合、それらのテーブルを削除
+        for table in tables:
+            table_name = table[0]
+            if table_name.startswith(prefix):
+                cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+
+        # 変更をコミットしてデータベースを更新
+        conn.commit()
+        return True  # テーブルの削除が成功した場合にTrueを返す
+
+    except sqlite3.Error as e:
+        print(f"テーブルの削除中にエラーが発生しました: {e}")
+        return False  # テーブルの削除が失敗した場合にFalseを返す
+
+    finally:
+        # データベースとの接続を閉じる
+        conn.close()
+
+
 # main start
 print("[INFO] Select db to initialize.")
-print("       1:game.db 2:user.db 3:session.db A:ALL C:Cancel")
+print("       1:game.db 2:user.db 3:session.db 4:sesstable(not user) 5:sesstable(user) A:ALL C:Cancel")
 str = input()
 
 if (str == 'C'):
@@ -150,5 +201,25 @@ if (str == '3' or str == 'A'):
     create_table(dbfile_path, table_name)
     table_name = 'playerstats'
     create_table(dbfile_path, table_name)
+
+# session.db(not user)
+if (str == '4' or str == 'A'):
+    dbfile_path = 'session.db'
+    table_name = 'gamesession'
+    drop_table(dbfile_path, table_name)
+    create_table(dbfile_path, table_name)
+    table_name = 'playerstats'
+    drop_table(dbfile_path, table_name)
+    create_table(dbfile_path, table_name)
+    # 残存カード管理テーブルの削除
+    drop_tables_with_prefix(dbfile_path, "c_")
+
+# session.db(user)
+if (str == '5' or str == 'A'):
+    dbfile_path = 'session.db'
+    table_name = 'usersession'
+    drop_table(dbfile_path, table_name)
+    create_table(dbfile_path, table_name)
+
 
 print("[INFO] Initialize db end.")
