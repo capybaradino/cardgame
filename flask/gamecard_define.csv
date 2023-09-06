@@ -1,5 +1,5 @@
 カード名	ゲーム上の取り込み名	効果
-メラゴースト	meraghost	onplay:any-1dmg
+メラゴースト	meraghost	onplay:any_1dmg
 モーモン	mo-mon	
 おばけキャンドル	obakecandle	ondead:enemy_1dmg_random
 プチアーノン	petite-anon	onattack:self_attack+1
