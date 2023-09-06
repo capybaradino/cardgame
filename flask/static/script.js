@@ -34,11 +34,32 @@ function system_surrender() {
     var url = "/api/system/" + sid + "/surrender";
     play_post(url);
 }
+var temp_url = "";
 function play_left(src, dst) {
     var sid = getCookieValue("card_sid");
     var url = "/api/play/" + sid + "/" + src + "/" + dst;
-    // url = "/api/play/hogehoge/card1/card2"
-    play_post(url);
+    var effect = "";
+    if (src != "hand_10") {
+        // 召喚時効果チェック
+        var numbersArray = src.match(/\d+/g);
+        var hand_no = numbersArray[0];
+        var data = fetchdata;
+        const key_p1 = "player1";
+        const player1 = data[key_p1];
+        const hand = player1["hand"];
+        const item = hand[hand_no];
+        effect = item["effect"];
+    } else {
+        effect = ""
+    }
+    if (effect.startsWith("onplay")) {
+        // 3枚目の選択に進む
+        temp_url = url;
+        document.getElementById("middle3_boarder").textContent = "Select target.";
+    } else {
+        // url = "/api/play/hogehoge/card1/card2"
+        play_post(url);
+    }
 }
 function play_attack(src, dst) {
     var sid = getCookieValue("card_sid");
@@ -60,6 +81,14 @@ function changeColor(id, color) {
     var divElement = document.getElementById(id);
     // 新しい背景色を設定
     divElement.style.backgroundColor = color;
+}
+
+function f_onclick(event) {
+    if (temp_url != "") {
+        var id_name_dst = event.target.id;
+        var url = temp_url + "/" + id_name_dst;
+        play_post(url);
+    }
 }
 
 // /***** ドラッグ開始時の処理 *****/
@@ -102,6 +131,8 @@ function f_drop(event) {
     event.preventDefault();
 }
 
+var fetchdata;
+
 async function fetchData() {
     var sid = getCookieValue("card_sid");
     // 画面初期化
@@ -135,6 +166,8 @@ async function fetchData() {
             setdivvalue('p2board' + i + '_name', "");
             removedivimage('p2board' + i, "");
         }
+        // 変数初期化
+        temp_url = "";
     }
     try {
         const response = await fetch('/api/view/' + sid);
@@ -144,6 +177,7 @@ async function fetchData() {
             }
         }
         const data = await response.json();
+        fetchdata = data;
 
         // 共通キー情報
         const key_name = "name";

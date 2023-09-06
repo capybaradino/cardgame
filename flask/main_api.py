@@ -136,7 +136,7 @@ class Card_play(Resource):
                 return {"error": "illegal card1 number"}, 403
             if (objcard1.category == "unit"):
                 # ハンドからカードをプレイ
-                return api_play_hand(playview, card1, card2)
+                return api_play_hand(sid, playview, card1, card2, None)
             elif (objcard1.category == "spell"):
                 return api_spell(sid, playview, card1, card2)
             else:
@@ -146,6 +146,59 @@ class Card_play(Resource):
             return api_unit_attack(sid, playview, card1, card2)
         elif re.match(pattern_tension, card1):
             # テンションアップ
+            return api_tension(sid, playview, card1, card2)
+        else:
+            return {"error": "illegal card1"}, 403
+
+
+@api.route('/play/<sid>/<card1>/<card2>/<card3>')
+class Card_play2(Resource):
+    def post(self, sid, card1, card2, card3):
+        sid = card_user.card_checksession(sid)
+        if (sid is None):
+            return {"error": "illegal session"}, 403
+        if (card1 is None):
+            return {"error": "card1 is null"}, 403
+        if (card2 is None):
+            return {"error": "card2 is null"}, 403
+
+        # 既存ゲームがあるか確認
+        gsid = card_db.getgsid_fromsid(sid)
+        if (gsid == ""):
+            return {"error": "gamesession is null"}
+        playview = Play_view(sid)
+
+        # Player1(自分のターン)か確認
+        if (playview.turnstate != "p1turn"):
+            return {"error": "not in your turn"}, 403
+
+        pattern_hand = r'^hand_[0-9]$'
+        pattern_leftboard = r'leftboard_[0-5]'
+        pattern_tension = r'^hand_10$'
+        if re.match(pattern_hand, card1):
+            # カードの種別を確認
+            pattern = r'[0-9]'
+            number = int(re.findall(pattern, card1)[0])
+            hands = playview.p1hand
+            objcard1: Card_info
+            objcard1 = hands[number]
+            if (objcard1 is None):
+                return {"error": "illegal card1 number"}, 403
+            if (objcard1.category == "unit"):
+                # ハンドからカードをプレイ
+                return api_play_hand(sid, playview, card1, card2, card3)
+            elif (objcard1.category == "spell"):
+                # TODO ３枚目対応
+                return api_spell(sid, playview, card1, card2)
+            else:
+                return {"error": "illegal card1 category"}, 403
+        elif re.match(pattern_leftboard, card1):
+            # ユニットで攻撃
+            # TODO ３枚目対応
+            return api_unit_attack(sid, playview, card1, card2)
+        elif re.match(pattern_tension, card1):
+            # テンションアップ
+            # TODO ３枚目対応
             return api_tension(sid, playview, card1, card2)
         else:
             return {"error": "illegal card1"}, 403

@@ -2,9 +2,10 @@ import re
 
 from class_playinfo import Card_info
 import card_db
+from api_common_dmg import api_common_dmg
 
 
-def api_play_hand(playview, card1, card2):
+def api_play_hand(sid, playview, card1, card2, card3):
     # ハンドからカードをプレイ
     pattern = r'[0-9]'
     number = int(re.findall(pattern, card1)[0])
@@ -28,6 +29,23 @@ def api_play_hand(playview, card1, card2):
         remainingmp = playview.p1mp - objcard1.cost
         if (remainingmp < 0):
             return {"error": "MP short"}
+
+        # 召喚時効果の確認
+        ret = "OK"
+        effect_array = objcard1.effect.split(",")
+        for effect in effect_array:
+            if effect.startswith("onplay"):
+                # TODO 召喚時効果のバリエーション実装
+                if "dmg" in effect:
+                    if card3 is None:
+                        return {"error": "Specify 3rd card"}, 403
+                    else:
+                        ret, scode = api_common_dmg(
+                            sid, playview, effect, card3)
+
+        if (ret != "OK"):
+            return ret, scode
+
         card_db.putsession("playerstats",
                            "name", playview.p1name,
                            "mp", remainingmp)
@@ -39,6 +57,6 @@ def api_play_hand(playview, card1, card2):
                            "cuid", objcard1.cuid,
                            "locnum", number)
     else:
-        return {"error": "illegal card2"}
+        return {"error": "illegal card2"}, 403
 
     return {"info": "OK"}
