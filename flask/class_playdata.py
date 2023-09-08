@@ -24,7 +24,7 @@ class Player:
 
     def start_turn(self):
         self.draw_card()
-        if (self.maxmp < 11):
+        if (self.maxmp < 10):
             self.maxmp = self.maxmp + 1
         self.mp = self.maxmp
         card_db.putsession('playerstats', 'player_tid',
