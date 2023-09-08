@@ -37,11 +37,12 @@ def api_play_hand(sid, playview, card1, card2, card3):
             if effect.startswith("onplay"):
                 # TODO 召喚時効果のバリエーション実装
                 if "dmg" in effect:
-                    if card3 is None:
-                        return {"error": "Specify 3rd card"}, 403
-                    else:
-                        ret, scode = api_common_dmg(
-                            sid, playview, effect, card3)
+                    if not "leader" in effect:
+                        if card3 is None:
+                            return {"error": "Specify 3rd card"}, 403
+                        else:
+                            ret, scode = api_common_dmg(
+                                sid, playview, effect, card3)
 
         if (ret != "OK"):
             return ret, scode
