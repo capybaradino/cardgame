@@ -2,7 +2,7 @@ import re
 
 from class_playinfo import Card_info
 import card_db
-from api_common_dmg import api_common_dmg
+from api_common_dmg import api_common_dmg, api_common_attack
 
 
 def api_play_hand(sid, playview, card1, card2, card3):
@@ -42,6 +42,13 @@ def api_play_hand(sid, playview, card1, card2, card3):
                             return {"error": "Specify 3rd card"}, 403
                         else:
                             ret, scode = api_common_dmg(
+                                sid, playview, effect, card3)
+                if "attack" in effect:
+                    if "unit" in effect:
+                        if card3 is None:
+                            return {"error": "Specify 3rd card"}, 403
+                        else:
+                            ret, scode = api_common_attack(
                                 sid, playview, effect, card3)
 
         if (ret != "OK"):
