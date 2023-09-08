@@ -3,6 +3,7 @@ import time
 import botini
 from botsub import Botsub
 import logging
+import botutil
 
 base_url = ""  # Flask REST APIのベースURL
 sid = ""
@@ -138,7 +139,22 @@ def run():
                             remainhand = False
                         if (remainhand):
                             # プレイ
-                            sub.play_card(play_hand, play_board)
+                            # エフェクトの確認
+                            isplay = 0
+                            effect_array = hand[play_hand]["effect"].split(",")
+                            for effect in effect_array:
+                                if effect.startswith("onplay"):
+                                    # TODO 召喚時効果のバリエーション実装
+                                    if "dmg" in effect:
+                                        # 攻撃対象の選択
+                                        attack_board = botutil.search_rightboard(
+                                            p2board)
+                                        if (attack_board >= 0):
+                                            sub.play_card_and_attack(
+                                                play_hand, play_board, attack_board)
+                                            isplay = 1
+                            if (isplay == 0):
+                                sub.play_card(play_hand, play_board)
                             continue
                     if (remainact):
                         # 行動するユニットを選択
@@ -149,19 +165,6 @@ def run():
                         # 対象ユニットがいない
                         if (attack_card < 0):
                             remainact = False
-                        # 相手の盤面を検索
-                        attack_board = -1
-                        for card in p2board:
-                            # 前衛を優先して攻撃
-                            if (card["location"] < 3):
-                                attack_board = card["location"]
-                        if (attack_board < 0):
-                            for card in p2board:
-                                # 前衛がいない場合は後衛を攻撃
-                                attack_board = card["location"]
-                        # 対象盤面がいない場合はリーダーを攻撃
-                        if (attack_board < 0):
-                            attack_board = 10
                         if (remainact):
                             # 攻撃
                             sub.play_attack(attack_card, attack_board)

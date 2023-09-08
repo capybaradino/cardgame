@@ -45,6 +45,15 @@ class Botsub:
         self.logger.info("play card end")
         return response.status_code
 
+    def play_card_and_attack(self, handno, boardno, attackno):
+        self.logger.info(
+            f"play card with effect onplay start handno={handno}, boardno={boardno}, attackno={attackno}")
+        response = requests.post(
+            f"{self.base_url}/play/{self.sid}/hand_{handno}/leftboard_{boardno}/rightboard_{attackno}")
+        self.logger.info(response.text.replace('\n', '').replace(' ', ''))
+        self.logger.info("play card end")
+        return response.status_code
+
     def play_attack(self, cardno, boardno):
         self.logger.info(
             f"play attack start cardno={cardno}, boardno={boardno}")
