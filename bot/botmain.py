@@ -166,9 +166,12 @@ def run():
                         if (attack_card < 0):
                             remainact = False
                         if (remainact):
-                            # 攻撃
-                            sub.play_attack(attack_card, attack_board)
-                            continue
+                            # 攻撃対象の選択
+                            attack_board = botutil.search_rightboard(p2board)
+                            if (remainact & attack_board >= 0):
+                                # 攻撃
+                                sub.play_attack(attack_card, attack_board)
+                                continue
                 ret = sub.turn_end()
                 if (ret != 200):
                     logger.error("failed to turn end")
