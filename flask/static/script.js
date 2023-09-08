@@ -38,7 +38,7 @@ var temp_url = "";
 function play_left(src, dst) {
     var sid = getCookieValue("card_sid");
     var url = "/api/play/" + sid + "/" + src + "/" + dst;
-    var effect = "";
+    var effect_array = [];
     if (src != "hand_10") {
         // 召喚時効果チェック
         var numbersArray = src.match(/\d+/g);
@@ -48,15 +48,24 @@ function play_left(src, dst) {
         const player1 = data[key_p1];
         const hand = player1["hand"];
         const item = hand[hand_no];
-        effect = item["effect"];
-    } else {
-        effect = ""
+        effect_array = item["effect"].split(",");
     }
-    if (effect.startsWith("onplay")) {
-        // 3枚目の選択に進む
-        temp_url = url;
-        document.getElementById("middle3_boarder").textContent = "Select target.";
-    } else {
+    var onplay = false;
+    for (var i = 0; i < effect_array.length; i++) {
+        effect = effect_array[i];
+        if (effect.startsWith("onplay")) {
+            // TODO 他の召喚時効果対応
+            if (effect.includes("dmg")) {
+                if (!effect.includes("leader")) {
+                    // 3枚目の選択に進む
+                    temp_url = url;
+                    document.getElementById("middle3_boarder").textContent = "Select target.";
+                    onplay = true;
+                }
+            }
+        }
+    }
+    if (onplay == false) {
         // url = "/api/play/hogehoge/card1/card2"
         play_post(url);
     }
