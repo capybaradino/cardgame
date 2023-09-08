@@ -13,3 +13,17 @@ def search_rightboard(p2board):
     if (attack_board < 0):
         attack_board = 10
     return attack_board
+
+
+def search_leftboard(p1board):
+    # 自分の盤面を検索
+    attack_board = -1
+    for card in p1board:
+        # 前衛を優先して効果適用
+        if (card["location"] < 3):
+            attack_board = card["location"]
+    if (attack_board < 0):
+        for card in p1board:
+            # 前衛がいない場合は後衛を選択
+            attack_board = card["location"]
+    return attack_board

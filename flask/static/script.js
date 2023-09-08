@@ -63,6 +63,12 @@ function play_left(src, dst) {
                     onplay = true;
                 }
             }
+            if (effect.includes("attack")) {
+                // 3枚目の選択に進む
+                temp_url = url;
+                document.getElementById("middle3_boarder").textContent = "Select target.";
+                onplay = true;
+            }
         }
     }
     if (onplay == false) {

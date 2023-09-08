@@ -101,7 +101,7 @@ def run():
                     player1 = data["player1"]
                     mp = player1["MP"]
                     hand = player1["hand"]
-                    board = player1["board"]
+                    p1board = player1["board"]
                     player2 = data["player2"]
                     p2board = player2["board"]
                     if (ret != 200):
@@ -127,7 +127,7 @@ def run():
                         play_board = -1
                         while (i < 6):
                             empty = True
-                            for card in board:
+                            for card in p1board:
                                 if (card["location"] == i):
                                     empty = False
                             if (empty):
@@ -150,8 +150,16 @@ def run():
                                         attack_board = botutil.search_rightboard(
                                             p2board)
                                         if (attack_board >= 0):
-                                            sub.play_card_and_attack(
+                                            sub.play_card_and_dmg(
                                                 play_hand, play_board, attack_board)
+                                            isplay = 1
+                                    if "attack" in effect:
+                                        # 効果対象の選択
+                                        effect_board = botutil.search_leftboard(
+                                            p1board)
+                                        if (effect_board >= 0):
+                                            sub.play_card_and_attack(
+                                                play_hand, play_board, effect_board)
                                             isplay = 1
                             if (isplay == 0):
                                 sub.play_card(play_hand, play_board)
@@ -159,7 +167,7 @@ def run():
                     if (remainact):
                         # 行動するユニットを選択
                         attack_card = -1
-                        for card in board:
+                        for card in p1board:
                             if (card["active"] > 0):
                                 attack_card = card["location"]
                         # 対象ユニットがいない
