@@ -196,7 +196,15 @@ def createdecktable(table_name):
             locnum INTEGER,
             dhp INTEGER NOT NULL,
             dattack INTEGER NOT NULL,
-            active INTEGER NOT NULL
+            active INTEGER NOT NULL,
+            turnend_effect TEXT,
+            turnend_effect_ontime TEXT,
+            rsv3 TEXT,
+            rsv4 TEXT,
+            rsv5 TEXT,
+            rsv6 TEXT,
+            rsv7 TEXT,
+            rsv8 TEXT
         )
     """
     cursor.execute(query)
@@ -228,8 +236,9 @@ def postdeck(table_name, cid, loc):
         if (isexist_cuid(table_name, cuid)):
             continue
         break
-    query = f"INSERT INTO {table_name} VALUES (?,?,?,?,?,?,?)"
-    cursor.execute(query, (cid, loc, cuid, -1, 0, 0, 0))
+    query = f"INSERT INTO {table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    cursor.execute(query, (cid, loc, cuid, -1, 0, 0,
+                   0, "", "", "", "", "", "", "", ""))
     con.commit()
     con.close()
     return cuid
@@ -275,6 +284,24 @@ def getcards_fromdeck(table_name, name):
     cards = cur.fetchall()
     con.close()
     return cards
+
+
+def getrecords_fromsession(table_name, key_name, key):
+    # データベースに接続
+    conn = sqlite3.connect('session.db')
+    cursor = conn.cursor()
+
+    # レコードを取得するSQL文を実行
+    query = f"SELECT * FROM {table_name} WHERE {key_name} = ?"
+    cursor.execute(query, (key,))
+
+    # レコードを取得
+    records = cursor.fetchall()
+
+    # 接続を閉じる
+    conn.close()
+
+    return records
 
 
 def getrecord_fromsession(table_name, key_name, key):
