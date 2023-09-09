@@ -2,7 +2,9 @@ import re
 
 from class_playinfo import Card_info
 import card_db
-from api_common_dmg import api_common_dmg, api_common_attack
+import api_common_dmg
+import api_common_status
+import api_common_tension
 
 
 def api_play_hand(sid, playview, card1, card2, card3):
@@ -41,15 +43,22 @@ def api_play_hand(sid, playview, card1, card2, card3):
                         if card3 is None:
                             return {"error": "Specify 3rd card"}, 403
                         else:
-                            ret, scode = api_common_dmg(
+                            ret, scode = api_common_dmg.api_common_dmg(
                                 sid, playview, effect, card3)
                 if "attack" in effect:
                     if "unit" in effect:
                         if card3 is None:
                             return {"error": "Specify 3rd card"}, 403
                         else:
-                            ret, scode = api_common_attack(
+                            ret, scode = api_common_status.api_common_attack(
                                 sid, playview, effect, card3)
+                if "each" in effect:
+                    if "tension" in effect:
+                        ret, scode = api_common_tension.api_common_tension(
+                            sid, playview, effect)
+                if "leader" in effect and "enemy" in effect:
+                    ret, scode = api_common_dmg.api_common_dmg(
+                        sid, playview, effect, "rightboard_10")
 
         if (ret != "OK"):
             return ret, scode
