@@ -116,8 +116,28 @@ def run():
                             if (card["cost"] <= mp):
                                 # TODO 特技カード使用
                                 if (card["category"] == "unit"):
-                                    play_hand = i
-                                    break
+                                    effect_array = card["effect"].split(",")
+                                    # 召喚時効果使用可否チェック
+                                    isplay = 1
+                                    for effect in effect_array:
+                                        if effect.startswith("onplay"):
+                                            # TODO 召喚時効果のバリエーション実装
+                                            if "dmg" in effect:
+                                                # 攻撃対象の選択
+                                                attack_board = botutil.search_rightboard(
+                                                    p2board)
+                                                if (attack_board < 0):
+                                                    isplay = 0
+                                            if "attack" in effect:
+                                                # 効果対象の選択
+                                                effect_board = botutil.search_leftboard(
+                                                    p1board)
+                                                if (attack_board < 0):
+                                                    isplay = 0
+
+                                    if (isplay == 1):
+                                        play_hand = i
+                                        break
                             i = i + 1
                         if (play_hand < 0):
                             # ハンドから出せるユニットがいない
@@ -160,7 +180,7 @@ def run():
                                         if (effect_board >= 0):
                                             sub.play_card_and_attack(
                                                 play_hand, play_board, effect_board)
-                                            isplay = 1
+                                        isplay = 1
                             if (isplay == 0):
                                 sub.play_card(play_hand, play_board)
                             continue
