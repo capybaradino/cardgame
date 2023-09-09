@@ -2,6 +2,7 @@ import re
 from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
+import api_common_attack
 
 
 def api_unit_attack(sid, playview: Play_view, card1, card2):
@@ -32,6 +33,14 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         # ブロックの確認
         if (playview.isblocked(number)):
             return {"error": "card2 is blocked by other unit"}, 403
+        # 攻撃時効果
+        ret = "OK"
+        ret, scode, obj1_attack = api_common_attack.api_onattack_before(
+            sid, playview, objcard1)
+
+        if (ret != "OK"):
+            return ret, scode
+
         # ALL OK DB更新
         # 自ユニットHP減算
         dhp = objcard1.dhp - objcard2.attack
@@ -43,7 +52,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
                                "cuid", objcard1.cuid,
                                "loc", playview.p1name + "_cemetery")
         # 敵ユニットHP減算
-        dhp = objcard2.dhp - objcard1.attack
+        dhp = objcard2.dhp - obj1_attack
         card_db.putsession(playview.playdata.card_table,
                            "cuid", objcard2.cuid,
                            "dhp", dhp)
@@ -59,8 +68,16 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         # ウォールのチェック
         if (playview.iswall()):
             return {"error": "wall exists"}, 403
+        # 攻撃時効果
+        ret = "OK"
+        ret, scode, obj1_attack = api_common_attack.api_onattack_before(
+            sid, playview, objcard1)
+
+        if (ret != "OK"):
+            return ret, scode
+
         # リーダーHP減算
-        newhp = playview.p2hp - objcard1.attack
+        newhp = playview.p2hp - obj1_attack
         if (playview.playdata.player1.name == playview.p1name):
             card_db.putsession("playerstats",
                                "player_tid", playview.playdata.p2_player_tid,
