@@ -147,43 +147,18 @@ function f_drop(event) {
 }
 
 var fetchdata;
+var turn = "p2turn";
+var intervalId;
 
 async function fetchData() {
+    fetchData_impl();
+    intervalId = setInterval(function () {
+        fetchData_impl();
+    }, 1000);
+}
+
+async function fetchData_impl() {
     var sid = getCookieValue("card_sid");
-    // 画面初期化
-    {
-        setdivvalue('turndisp_button3', "");
-        // P1ハンド
-        for (let i = 0; i < 11; i++) {
-            setdivvalue('p1card' + i + '_cost', "");
-            setdivvalue('p1card' + i + '_attack', "");
-            setdivvalue('p1card' + i + '_hp', "");
-            setdivvalue('p1card' + i + '_name', "");
-            removedivimage('p1card' + i, "");
-        }
-        // P1ボード
-        for (let i = 0; i < 6; i++) {
-            setdivvalue('p1board' + i + '_cost', "");
-            setdivvalue('p1board' + i + '_attack', "");
-            setdivvalue('p1board' + i + '_hp', "");
-            setdivvalue('p1board' + i + '_name', "");
-            removedivimage('p1board' + i, "");
-        }
-        // P2ハンド
-        for (let i = 0; i < 11; i++) {
-            setdivvalue('p2card' + i, "")
-        }
-        // P2ボード
-        for (let i = 0; i < 6; i++) {
-            setdivvalue('p2board' + i + '_cost', "");
-            setdivvalue('p2board' + i + '_attack', "");
-            setdivvalue('p2board' + i + '_hp', "");
-            setdivvalue('p2board' + i + '_name', "");
-            removedivimage('p2board' + i, "");
-        }
-        // 変数初期化
-        temp_url = "";
-    }
     try {
         const response = await fetch('/api/view/' + sid);
         if (response.status != 200) {
@@ -194,6 +169,48 @@ async function fetchData() {
         const data = await response.json();
         fetchdata = data;
 
+        // ターン情報
+        const key_turn = "turn";
+        turn = data[key_turn];
+        if (turn == "p1turn") {
+            clearInterval(intervalId);
+        }
+
+        // 画面初期化
+        {
+            setdivvalue('turndisp_button3', "");
+            // P1ハンド
+            for (let i = 0; i < 11; i++) {
+                setdivvalue('p1card' + i + '_cost', "");
+                setdivvalue('p1card' + i + '_attack', "");
+                setdivvalue('p1card' + i + '_hp', "");
+                setdivvalue('p1card' + i + '_name', "");
+                removedivimage('p1card' + i, "");
+            }
+            // P1ボード
+            for (let i = 0; i < 6; i++) {
+                setdivvalue('p1board' + i + '_cost', "");
+                setdivvalue('p1board' + i + '_attack', "");
+                setdivvalue('p1board' + i + '_hp', "");
+                setdivvalue('p1board' + i + '_name', "");
+                removedivimage('p1board' + i, "");
+            }
+            // P2ハンド
+            for (let i = 0; i < 11; i++) {
+                setdivvalue('p2card' + i, "")
+            }
+            // P2ボード
+            for (let i = 0; i < 6; i++) {
+                setdivvalue('p2board' + i + '_cost', "");
+                setdivvalue('p2board' + i + '_attack', "");
+                setdivvalue('p2board' + i + '_hp', "");
+                setdivvalue('p2board' + i + '_name', "");
+                removedivimage('p2board' + i, "");
+            }
+            // 変数初期化
+            temp_url = "";
+        }
+
         // 共通キー情報
         const key_name = "name";
         const key_hp = "HP";
@@ -202,8 +219,6 @@ async function fetchData() {
         const key_maxmp = "maxMP";
 
         // ターン情報
-        const key_turn = "turn";
-        const turn = data[key_turn];
         if (turn == "p1turn") {
             setdivvalue('turndisp_button3', "Turn end");
         } else {
