@@ -38,6 +38,15 @@ def api_common_attack(sid, playview: Play_view, effect, card2):
             card_db.putsession(playview.playdata.card_table,
                                "cuid", objcard2.cuid,
                                "dattack", dattack)
+            # このターンだけの場合減算をセット
+            if ("thisturn" in effect):
+                record = card_db.getrecord_fromsession(
+                    playview.playdata.card_table, "cuid", objcard2.cuid)
+                turnend_effect_ontime = record[8]
+                turnend_effect_ontime = turnend_effect_ontime + ",attack-2"
+                card_db.putsession(playview.playdata.card_table,
+                                   "cuid", objcard2.cuid,
+                                   "turnend_effect_ontime", turnend_effect_ontime)
     else:
         return {"error": "unit don't exists in target card"}, 403
 

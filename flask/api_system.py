@@ -1,5 +1,6 @@
 from class_playdata import Playdata
 import card_db
+import card_turnend
 
 
 def surrender(sid):
@@ -16,12 +17,12 @@ def turnend(sid):
     if (playdata.state == "p1turn"):
         if (nickname != playdata.player1.name):
             return {"error": "illegal session or not your turn"}, 500
-        card_db.putgamesession(playdata.gsid, "state", "p2turn")
+        card_turnend.card_turnend(sid, "p1turn", nickname)
         nextp = playdata.player2
     else:
         if (nickname != playdata.player2.name):
             return {"error": "illegal session or not your turn"}, 500
-        card_db.putgamesession(playdata.gsid, "state", "p1turn")
+        card_turnend.card_turnend(sid, "p2turn", nickname)
         nextp = playdata.player1
     nextp.start_turn()
     return {"info": "OK"}
