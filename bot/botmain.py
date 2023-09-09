@@ -132,7 +132,7 @@ def run():
                                                 # 効果対象の選択
                                                 effect_board = botutil.search_leftboard(
                                                     p1board)
-                                                if (attack_board < 0):
+                                                if (effect_board < 0):
                                                     isplay = 0
 
                                     if (isplay == 1):
