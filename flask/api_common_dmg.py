@@ -11,7 +11,7 @@ def api_common_dmg(sid, playview: Play_view, effect, card2):
         pattern = r"(^.*)_.*"
         matches = re.search(pattern, effect)
         target = matches.group(1)
-        pattern = r"\d+"
+        pattern = r"[+-]?\d+"
         matches = re.search(pattern, effect)
         value = int(matches.group())
 
