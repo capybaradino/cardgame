@@ -5,9 +5,10 @@ import card_db
 import api_common_dmg
 import api_common_status
 import api_common_tension
+from class_playview import Play_view
 
 
-def api_play_hand(sid, playview, card1, card2, card3):
+def api_play_hand(sid, playview: Play_view, card1, card2, card3):
     # ハンドからカードをプレイ
     pattern = r'[0-9]'
     number = int(re.findall(pattern, card1)[0])
@@ -73,6 +74,11 @@ def api_play_hand(sid, playview, card1, card2, card3):
         card_db.putsession(playview.playdata.card_table,
                            "cuid", objcard1.cuid,
                            "locnum", number)
+        playview = Play_view(sid)
+        if (playview.p1hp <= 0):
+            playview.playdata.gameover(sid)
+        if (playview.p2hp <= 0):
+            playview.playdata.gamewin(sid)
     else:
         return {"error": "illegal card2"}, 403
 

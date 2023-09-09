@@ -53,8 +53,6 @@ def api_common_dmg(sid, playview: Play_view, effect, card2):
                 card_db.putsession("playerstats",
                                    "player_tid", playview.playdata.p1_player_tid,
                                    "hp", newhp)
-            if (newhp <= 0):
-                playview.playdata.gamewin(sid)
     else:
         return {"error": "unit don't exists in target card"}, 403
 
