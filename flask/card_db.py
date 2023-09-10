@@ -304,6 +304,24 @@ def getrecords_fromsession(table_name, key_name, key):
     return records
 
 
+def getrecords_fromsession2(table_name, key_name, key, key_name2, key2):
+    # データベースに接続
+    conn = sqlite3.connect('session.db')
+    cursor = conn.cursor()
+
+    # レコードを取得するSQL文を実行
+    query = f"SELECT * FROM {table_name} WHERE {key_name} = ? AND {key_name2} = ?"
+    cursor.execute(query, (key, key2))
+
+    # レコードを取得
+    records = cursor.fetchall()
+
+    # 接続を閉じる
+    conn.close()
+
+    return records
+
+
 def getrecord_fromsession(table_name, key_name, key):
     # データベースに接続
     conn = sqlite3.connect('session.db')
