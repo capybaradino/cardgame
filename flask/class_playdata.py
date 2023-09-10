@@ -45,6 +45,23 @@ class Player:
             card_db.putdeck(self.card_table, cuid, "drop")
         return
 
+    def draw_card_spell(self):
+        records = card_db.getrecords_fromsession(
+            self.card_table, "loc", self.name)
+        cuids = []
+        # 特技検索
+        for record in records:
+            cid = record[0]
+            cuid = record[2]
+            record2 = card_db.getrecord_fromgame("card_basicdata", "cid", cid)
+            category = record2[6]
+            if (category == "spell"):
+                cuids.append(cuid)
+        if (len(cuids) > 0):
+            cuid = cuids[random.randrange(len(cuids))]
+            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+        return
+
     def get_hand(self):
         records = card_db.getcards_fromdeck(
             self.card_table, self.name + "_hand")
