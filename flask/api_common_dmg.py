@@ -2,9 +2,10 @@ import re
 from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
+import api_common_common
 
 
-def api_common_dmg(sid, playview: Play_view, effect, card2):
+def api_common_dmg(sid, playview: Play_view, effect, card2, isRun):
     if "dmg" in effect:
         # HP変化系
         # TODO ターゲットフィルタ
@@ -34,25 +35,13 @@ def api_common_dmg(sid, playview: Play_view, effect, card2):
                 return {"error": "unit don't exists in target card"}, 403
             # ALL OK DB更新
             # 対象ユニットHP減算
-            dhp = objcard2.dhp - value
-            card_db.putsession(playview.playdata.card_table,
-                               "cuid", objcard2.cuid,
-                               "dhp", dhp)
-            if (objcard2.hp_org + dhp <= 0):
-                card_db.putsession(playview.playdata.card_table,
-                                   "cuid", objcard2.cuid,
-                                   "loc", playview.p2name + "_cemetery")
+            if isRun:
+                api_common_common.unit_hp_change(
+                    sid, playview, objcard2, value)
         elif re.match(pattern_p2leader, card2):
             # リーダーHP減算
-            newhp = playview.p2hp - value
-            if (playview.playdata.player1.name == playview.p1name):
-                card_db.putsession("playerstats",
-                                   "player_tid", playview.playdata.p2_player_tid,
-                                   "hp", newhp)
-            else:
-                card_db.putsession("playerstats",
-                                   "player_tid", playview.playdata.p1_player_tid,
-                                   "hp", newhp)
+            if isRun:
+                api_common_common.p2leader_hp_change(playview, value)
     else:
         return {"error": "unit don't exists in target card"}, 403
 

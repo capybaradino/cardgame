@@ -2,6 +2,7 @@ import re
 from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
+import api_common_common
 
 
 def api_tension(sid, playview: Play_view, card1, card2):
@@ -54,14 +55,7 @@ def api_tension(sid, playview: Play_view, card1, card2):
                 return {"error": "unit don't exists in card2"}, 403
             # ALL OK DB更新
             # 対象ユニットHP減算
-            dhp = objcard2.dhp - value
-            card_db.putsession(playview.playdata.card_table,
-                               "cuid", objcard2.cuid,
-                               "dhp", dhp)
-            if (objcard2.hp_org + dhp <= 0):
-                card_db.putsession(playview.playdata.card_table,
-                                   "cuid", objcard2.cuid,
-                                   "loc", playview.p2name + "_cemetery")
+            api_common_common.unit_hp_change(sid, playview, objcard2, value)
             # テンション初期化
             tension = 0
             card_db.putsession("playerstats",
