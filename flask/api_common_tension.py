@@ -4,7 +4,7 @@ from class_playinfo import Card_info
 import card_db
 
 
-def api_common_tension(sid, playview: Play_view, effect):
+def api_common_tension(sid, playview: Play_view, effect, isRun):
     if "tension" in effect:
         # TODO 片方のリーダー指定
         if "each" in effect:
@@ -15,16 +15,18 @@ def api_common_tension(sid, playview: Play_view, effect):
             newvalue = playview.p1tension + value
             if (newvalue > 3):
                 newvalue = 3
-            card_db.putsession("playerstats",
-                               "player_tid", playview.playdata.p1_player_tid,
-                               "tension", newvalue)
+            if isRun:
+                card_db.putsession("playerstats",
+                                   "player_tid", playview.playdata.p1_player_tid,
+                                   "tension", newvalue)
             value = int(matches.group())
             newvalue = playview.p2tension + value
             if (newvalue > 3):
                 newvalue = 3
-            card_db.putsession("playerstats",
-                               "player_tid", playview.playdata.p2_player_tid,
-                               "tension", newvalue)
+            if isRun:
+                card_db.putsession("playerstats",
+                                   "player_tid", playview.playdata.p2_player_tid,
+                                   "tension", newvalue)
     else:
         raise Exception
 
