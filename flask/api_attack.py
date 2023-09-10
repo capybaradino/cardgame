@@ -3,6 +3,7 @@ from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
 import api_common_attack
+import api_common_common
 
 
 def api_unit_attack(sid, playview: Play_view, card1, card2):
@@ -43,23 +44,10 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
 
         # ALL OK DB更新
         # 自ユニットHP減算
-        dhp = objcard1.dhp - objcard2.attack
-        card_db.putsession(playview.playdata.card_table,
-                           "cuid", objcard1.cuid,
-                           "dhp", dhp)
-        if (objcard1.hp_org + dhp <= 0):
-            card_db.putsession(playview.playdata.card_table,
-                               "cuid", objcard1.cuid,
-                               "loc", playview.p1name + "_cemetery")
+        api_common_common.unit_hp_change(
+            sid, playview, objcard1, objcard2.attack)
         # 敵ユニットHP減算
-        dhp = objcard2.dhp - obj1_attack
-        card_db.putsession(playview.playdata.card_table,
-                           "cuid", objcard2.cuid,
-                           "dhp", dhp)
-        if (objcard2.hp_org + dhp <= 0):
-            card_db.putsession(playview.playdata.card_table,
-                               "cuid", objcard2.cuid,
-                               "loc", playview.p2name + "_cemetery")
+        api_common_common.unit_hp_change(sid, playview, objcard2, obj1_attack)
         # 自ユニットを行動済みに変更
         card_db.putsession(playview.playdata.card_table,
                            "cuid", objcard1.cuid,
