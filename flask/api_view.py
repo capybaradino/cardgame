@@ -52,6 +52,8 @@ def get(playview: Play_view):
             board["hp_org"] = boardinfo.hp_org
             board["name"] = boardinfo.name
             board["graphic"] = "uploads/" + boardinfo.filename
+            board["category"] = boardinfo.category
+            board["effect"] = boardinfo.effect
             p1board.append(board)
         loc = loc + 1
     player1["board"] = p1board
@@ -84,6 +86,8 @@ def get(playview: Play_view):
             board["hp_org"] = boardinfo.hp_org
             board["name"] = boardinfo.name
             board["graphic"] = "uploads/" + boardinfo.filename
+            board["category"] = boardinfo.category
+            board["effect"] = boardinfo.effect
             p2board.append(board)
         loc = loc + 1
     player2["board"] = p2board
