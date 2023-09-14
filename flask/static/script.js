@@ -185,6 +185,7 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_attack', "");
                 setdivvalue('p1card' + i + '_hp', "");
                 setdivvalue('p1card' + i + '_name', "");
+                setdivvalue('p1card' + i + '_text', "");
                 removedivimage('p1card' + i, "");
             }
             // P1ボード
@@ -193,6 +194,7 @@ async function fetchData_impl() {
                 setdivvalue('p1board' + i + '_attack', "");
                 setdivvalue('p1board' + i + '_hp', "");
                 setdivvalue('p1board' + i + '_name', "");
+                setdivvalue('p1board' + i + '_text', "");
                 removedivimage('p1board' + i, "");
             }
             // P2ハンド
@@ -205,6 +207,7 @@ async function fetchData_impl() {
                 setdivvalue('p2board' + i + '_attack', "");
                 setdivvalue('p2board' + i + '_hp', "");
                 setdivvalue('p2board' + i + '_name', "");
+                setdivvalue('p2board' + i + '_text', "");
                 removedivimage('p2board' + i, "");
             }
             // 変数初期化
@@ -255,7 +258,11 @@ async function fetchData_impl() {
                     setdivvalue('p1card' + i + '_attack', attack);
                     setdivvalue('p1card' + i + '_hp', hp);
                 }
-                setdivvalue('p1card' + i + '_name', name);
+                setdivvalue('p1card' + i + '_name', "" + name + "");
+                const effect = item['effect'];
+                if (effect != "") {
+                    seteffecttext('p1card' + i + '_text', effect);
+                }
                 setdivimage('p1card' + i, graphic);
             }
             // P1ボード
@@ -272,6 +279,10 @@ async function fetchData_impl() {
                 setdivvalue('p1board' + i + '_attack', attack);
                 setdivvalue('p1board' + i + '_hp', hp);
                 setdivvalue('p1board' + i + '_name', name);
+                const effect = item['effect'];
+                if (effect != "") {
+                    seteffecttext('p1board' + i + '_text', effect);
+                }
                 setdivimage('p1board' + i, graphic);
             }
             // P1テンション
@@ -348,6 +359,10 @@ async function fetchData_impl() {
                 setdivvalue('p2board' + i + '_attack', attack);
                 setdivvalue('p2board' + i + '_hp', hp);
                 setdivvalue('p2board' + i + '_name', name);
+                const effect = item['effect'];
+                if (effect != "") {
+                    seteffecttext('p2board' + i + '_text', effect);
+                }
                 setdivimage('p2board' + i, graphic);
             }
             // P2テンション
@@ -391,6 +406,16 @@ async function fetchData_impl() {
     } catch (error) {
         console.error('Get data was failed:', error);
     }
+}
+function seteffecttext(id, effect) {
+    effect_text = effect.replace(",", '\n');
+    effect_text = effect_text.replace(":", ':\n');
+    check = effect_text.split("_");
+    if (check.length > 1) {
+        effect_text = effect_text.replace(check[0] + "_", check[0] + "\n");
+    }
+    setdivvalue(id, effect_text);
+    return effect_text;
 }
 function setdivimage(id, imageUrl) {
     const imageDiv = document.getElementById(id);

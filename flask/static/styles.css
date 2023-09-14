@@ -601,6 +601,7 @@ div {
 
 /* カードの情報表示制御 */
 .text-top-left,
+.text-top-right,
 .text-bottom-left,
 .text-bottom-right,
 .text-center-bottom {
@@ -614,6 +615,12 @@ div {
 .text-top-left {
     top: 0;
     left: 0;
+}
+
+.text-top-right {
+    top: 0;
+    right: 0;
+    width: 70%;
 }
 
 .p1stat_card_cost {
@@ -669,7 +676,8 @@ div {
     color: Black;
 }
 
-.p1stat_card_name {
+.p1stat_card_name,
+.p1stat_card_text {
     background-color: rgba(255, 255, 255, 0.582);
     color: rgb(0, 0, 0);
     /* 角の丸さを指定 */
@@ -677,9 +685,36 @@ div {
     /* 上下中央寄せ */
     display: flex;
     justify-content: center;
-    align-items: center;
     font-size: 10px;
     border: 0px;
+}
+
+
+.p1stat_card_name {
+    align-items: flex-start;
+
+    @media only screen and (min-width: 1024px) {
+        font-size: 0.7vw;
+    }
+
+    /* 行間をデフォルトのx倍に設定 */
+    line-height: 1.2;
+}
+
+.p1stat_card_text {
+    align-items: center;
+
+    @media only screen and (min-width: 1024px) {
+        font-size: 0.7vw;
+        /* 行間をデフォルトの1倍に設定 */
+        line-height: 1;
+    }
+
+    @media only screen and (max-width: 1023px) {
+        font-size: 1vw;
+        /* 行間をデフォルトの1倍に設定 */
+        line-height: 0.8;
+    }
 }
 
 /* カードの表示関係ここまで */
