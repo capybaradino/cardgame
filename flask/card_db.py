@@ -10,6 +10,27 @@ def card_fetchone(cur):
     return item
 
 
+def card_getcolumnno(db_name, table_name, column_name):
+    # SQLite3データベースに接続
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
+
+    # PRAGMAステートメントを使用してテーブルの情報を取得
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    columns_info = cursor.fetchall()
+
+    # 列の情報を調べて、指定した列名の列が何列目かを取得
+    column_index = None
+    for column_info in columns_info:
+        if column_info[1] == column_name:
+            column_index = column_info[0]  # 列の位置（1から始まる）を取得
+            break
+
+    # データベース接続を閉じる
+    conn.close()
+    return column_index
+
+
 # accesser
 def isexist_gsid(gsid):
     con = sqlite3.connect('session.db')
@@ -109,6 +130,20 @@ def putsession(table_name, key_name, key, column, value):
     return
 
 
+def appendsession(table_name, key_name, key, column, value):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    query = f"SELECT {column} FROM {table_name} WHERE {key_name} = ?"
+    cursor.execute(query, (key,))
+    text = card_fetchone(cursor)
+    text = text + "," + value
+    query = f"UPDATE {table_name} SET {column} = ? WHERE {key_name} = ?"
+    cursor.execute(query, (text, key))
+    con.commit()
+    con.close()
+    return
+
+
 def putgamesession(gsid, column, value):
     con = sqlite3.connect('session.db')
     cursor = con.cursor()
@@ -199,7 +234,7 @@ def createdecktable(table_name):
             active INTEGER NOT NULL,
             turnend_effect TEXT,
             turnend_effect_ontime TEXT,
-            rsv3 TEXT,
+            status TEXT,
             rsv4 TEXT,
             rsv5 TEXT,
             rsv6 TEXT,
