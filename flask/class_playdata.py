@@ -280,7 +280,15 @@ class Playdata:
             while (i < 30):
                 j = numbers[i]
                 tcid = cids[j][0]
-                card_db.postdeck(self.card_table, tcid, playername)
+                cuid = card_db.postdeck(self.card_table, tcid, playername)
+                card = Card_info(tcid, "", 0, 0, 0)
+                effect_array = card.effect.split(",")
+                static_effect_list = ["stealth"]
+                for effect in effect_array:
+                    for static_effect in static_effect_list:
+                        if (static_effect in effect):
+                            card_db.appendsession(
+                                self.card_table, "cuid", cuid, "status", static_effect)
                 i = i + 1
 
             # テンションカード登録
