@@ -235,7 +235,7 @@ def createdecktable(table_name):
             turnend_effect TEXT,
             turnend_effect_ontime TEXT,
             status TEXT,
-            rsv4 TEXT,
+            cardname TEXT,
             rsv5 TEXT,
             rsv6 TEXT,
             rsv7 TEXT,
@@ -263,6 +263,7 @@ def deletedecktable(table_name):
 
 
 def postdeck(table_name, cid, loc):
+    cardname = getcardname_fromcid(cid)
     con = sqlite3.connect('session.db')
     cursor = con.cursor()
     while True:
@@ -273,7 +274,7 @@ def postdeck(table_name, cid, loc):
         break
     query = f"INSERT INTO {table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     cursor.execute(query, (cid, loc, cuid, -1, 0, 0,
-                   0, "", "", "", "", "", "", "", ""))
+                   0, "", "", "", cardname, "", "", "", ""))
     con.commit()
     con.close()
     return cuid
