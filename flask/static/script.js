@@ -91,11 +91,23 @@ function bottomSetting() {
     }
 }
 
-function changeColor(id, color) {
+function changeBgColor(id, color) {
     // 背景色を変更する要素を取得
     var divElement = document.getElementById(id);
     // 新しい背景色を設定
     divElement.style.backgroundColor = color;
+}
+
+function changeBorderColor(id, color) {
+    var divElement = document.getElementById(id);
+    divElement.style.borderColor = color;
+    divElement.style.borderWidth = "5px";
+}
+
+function resetBorderColor(id) {
+    var divElement = document.getElementById(id);
+    divElement.style.borderColor = "black";
+    divElement.style.borderWidth = "1px";
 }
 
 function f_onclick(event) {
@@ -283,15 +295,21 @@ async function fetchData_impl() {
                 if (effect != "") {
                     seteffecttext('p1board' + i + '_text', effect);
                 }
+                const active = item['active'];
+                if (active == 1) {
+                    changeBorderColor('p1board' + i, "green");
+                } else {
+                    resetBorderColor('p1board' + i);
+                }
                 setdivimage('p1board' + i, graphic);
             }
             // P1テンション
             const tension = player1["tension"];
             for (let i = 0; i < 3; i++) {
                 if (i < tension) {
-                    changeColor("p1tension" + i, "purple")
+                    changeBgColor("p1tension" + i, "purple");
                 } else {
-                    changeColor("p1tension" + i, "white")
+                    changeBgColor("p1tension" + i, "white");
                 }
             }
             if (tension < 3) {
@@ -306,7 +324,7 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_hp', hp);
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
-                changeColor("p1tension" + "3", "white")
+                changeBgColor("p1tension" + "3", "white")
             } else {
                 const i = 10
                 const graphic = "uploads/test/merami.png"  // TODO graphic
@@ -319,7 +337,7 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_hp', hp);
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
-                changeColor("p1tension" + "3", "red")
+                changeBgColor("p1tension" + "3", "red")
             }
         }
 
@@ -369,9 +387,9 @@ async function fetchData_impl() {
             const tension = player2["tension"];
             for (let i = 0; i < 3; i++) {
                 if (i < tension) {
-                    changeColor("p2tension" + i, "purple")
+                    changeBgColor("p2tension" + i, "purple")
                 } else {
-                    changeColor("p2tension" + i, "white")
+                    changeBgColor("p2tension" + i, "white")
                 }
             }
             if (tension < 3) {
@@ -386,7 +404,7 @@ async function fetchData_impl() {
                 setdivvalue('p2card' + i + '_hp', hp);
                 setdivvalue('p2card' + i + '_name', name);
                 setdivimage('p2card' + i, graphic);
-                changeColor("p2tension" + "3", "white")
+                changeBgColor("p2tension" + "3", "white")
             } else {
                 const i = 10
                 const graphic = "uploads/test/merami.png"  // TODO graphic
@@ -399,7 +417,7 @@ async function fetchData_impl() {
                 setdivvalue('p2card' + i + '_hp', hp);
                 setdivvalue('p2card' + i + '_name', name);
                 setdivimage('p2card' + i, graphic);
-                changeColor("p2tension" + "3", "red")
+                changeBgColor("p2tension" + "3", "red")
             }
         }
 

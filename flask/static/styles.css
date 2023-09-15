@@ -496,6 +496,7 @@ div {
     position: relative;
     display: inline-block;
     background-color: aliceblue;
+    box-sizing: border-box;
 }
 
 /* カードの拡大表示制御 */
