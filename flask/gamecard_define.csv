@@ -1,7 +1,7 @@
 カード名	ゲーム上の取り込み名	効果
 メラゴースト	meraghost	onplay:any_1dmg
 モーモン	mo-mon	
-おばけキャンドル	obakecandle	ondead:enemy_1dmg_random
+おばけキャンドル	obake-candle	ondead:enemy_1dmg_random
 プチアーノン	petite-anon	onattack:self_attack+1
 ニードルマン	needleman	onattack:enemy_1drow_any
 マジックフライ	magicfly	ondead:self_1drow_spell
@@ -9,10 +9,10 @@
 たけやりへい	takeyari-soldier	onplay:unit_attack+2_thisturn
 ドロヌーバ	doronu-ba	stealth
 わたぼう	watabo	onturnend_each:active_1drow_any
-ベビーパンサー	babypanther	cheer
+ベビーパンサー	baby-panther	cheer
 ミミック	mimic	ondead:enemy_1drow_any
-はぐれメタル	haguremetal	sokko,metalbody
+はぐれメタル	hagure-metal	fast-break,metalbody
 メラゾーマ	merazo-ma	any_5dmg
-亡者のひとだま	moujaghost	antieffect
+亡者のひとだま	mouja-ghost	antieffect
 シルビア	silvia	onplay:each_tension+3
-バアルゼブブ	baaruzebubu	onplay:enemy_3dmg_leader
+バアルゼブブ	baaru-zebubu	onplay:enemy_3dmg_leader
