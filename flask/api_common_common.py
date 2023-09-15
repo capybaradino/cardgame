@@ -7,7 +7,7 @@ import api_common_util
 
 def unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value):
     # 対象ユニットHP減算
-    objcard2.refresh()
+    objcard2.refresh(playview.playdata.card_table)
     dhp = objcard2.dhp - value
     card_db.putsession(playview.playdata.card_table,
                        "cuid", objcard2.cuid,

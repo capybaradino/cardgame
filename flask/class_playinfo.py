@@ -10,9 +10,9 @@ class Card_info:
         self.dhp = dhp
         self.dattack = dattack
         if (self.cid is not None):
-            self.refresh()
+            self.update()
 
-    def refresh(self):
+    def update(self):
         record = card_db.getrecord_fromgame("card_basicdata", "cid", self.cid)
         self.name = record[2]
         self.cost = record[5]
@@ -35,6 +35,13 @@ class Card_info:
             self.filename = card_db.getfilename_fromcid(self.cid)
         else:
             self.filename = fid
+
+    def refresh(self, card_table: str):
+        record = card_db.getrecord_fromsession(card_table, "cuid", self.cuid)
+        self.locnum = record[3]
+        self.dhp = record[4]
+        self.dattack = record[5]
+        self.update()
 
     @classmethod
     def empty(cls):

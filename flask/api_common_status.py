@@ -4,6 +4,43 @@ from class_playinfo import Card_info
 import card_db
 
 
+def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info):
+    if "attack" in effect:
+        isRun = True
+        # ステータス変化系
+        # TODO ターゲットフィルタ
+        pattern = r"(^.*)_.*"
+        matches = re.search(pattern, effect)
+        target = matches.group(1)
+        pattern = r"[+-]?\d+"
+        matches = re.search(pattern, effect)
+        value = int(matches.group())
+
+        if (objcard2 is None):
+            return {"error": "unit don't exists in target card"}, 403
+        # ALL OK DB更新
+        # 対象ユニットステータス更新
+        dattack = objcard2.dattack + value
+        if isRun:
+            card_db.putsession(playview.playdata.card_table,
+                               "cuid", objcard2.cuid,
+                               "dattack", dattack)
+        # このターンだけの場合減算をセット
+        if ("thisturn" in effect):
+            record = card_db.getrecord_fromsession(
+                playview.playdata.card_table, "cuid", objcard2.cuid)
+            turnend_effect_ontime = record[8]
+            turnend_effect_ontime = turnend_effect_ontime + ",attack-2"
+            if isRun:
+                card_db.putsession(playview.playdata.card_table,
+                                   "cuid", objcard2.cuid,
+                                   "turnend_effect_ontime", turnend_effect_ontime)
+    else:
+        return {"error": "unit don't exists in target card"}, 403
+
+    return "OK", 200
+
+
 def api_common_attack(sid, playview: Play_view, effect, card2, isRun):
     if "attack" in effect:
         # ステータス変化系
