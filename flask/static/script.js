@@ -362,6 +362,7 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_hp', hp);
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
+                changeBorderColor('p1card' + i, "green");
                 changeBgColor("p1tension" + "3", "red")
             }
         }
