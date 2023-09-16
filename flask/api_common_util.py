@@ -1,6 +1,17 @@
 from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
+import re
+
+
+def getobjcard(playview, card2: str):
+    # ボードの確認
+    pattern = r'[0-5]'
+    number = int(re.findall(pattern, card2)[0])
+    boards = playview.p2board
+    objcard2: Card_info
+    objcard2 = boards[number]
+    return objcard2
 
 
 def get_self_or_enemy(playview: Play_view, objcard1: Card_info):
