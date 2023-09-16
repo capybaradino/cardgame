@@ -166,7 +166,7 @@ async function fetchData() {
     fetchData_impl();
     intervalId = setInterval(function () {
         fetchData_impl();
-    }, 1000);
+    }, 3000);
 }
 
 async function fetchData_impl() {
