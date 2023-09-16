@@ -41,6 +41,8 @@ class Botsub:
         self.logger.info(f"play card start handno={handno}, boardno={boardno}")
         response = requests.post(
             f"{self.base_url}/play/{self.sid}/hand_{handno}/leftboard_{boardno}")
+        if (response.status_code != 200):
+            raise Exception
         self.logger.info(response.text.replace('\n', '').replace(' ', ''))
         self.logger.info("play card end")
         return response.status_code
@@ -50,6 +52,8 @@ class Botsub:
             f"play card with damage onplay start handno={handno}, boardno={boardno}, attackno={attackno}")
         response = requests.post(
             f"{self.base_url}/play/{self.sid}/hand_{handno}/leftboard_{boardno}/rightboard_{attackno}")
+        if (response.status_code != 200):
+            raise Exception
         self.logger.info(response.text.replace('\n', '').replace(' ', ''))
         self.logger.info("play card end")
         return response.status_code
@@ -59,6 +63,8 @@ class Botsub:
             f"play card with attack change onplay start handno={handno}, boardno={boardno}, attackno={attackno}")
         response = requests.post(
             f"{self.base_url}/play/{self.sid}/hand_{handno}/leftboard_{boardno}/leftboard_{attackno}")
+        if (response.status_code != 200):
+            raise Exception
         self.logger.info(response.text.replace('\n', '').replace(' ', ''))
         self.logger.info("play card end")
         return response.status_code
@@ -68,6 +74,8 @@ class Botsub:
             f"play attack start cardno={cardno}, boardno={boardno}")
         response = requests.post(
             f"{self.base_url}/play/{self.sid}/leftboard_{cardno}/rightboard_{boardno}")
+        if (response.status_code != 200):
+            raise Exception
         self.logger.info(response.text.replace('\n', '').replace(' ', ''))
         self.logger.info("play attack end")
         return response.status_code
