@@ -88,9 +88,12 @@ class Play_view:
                 i = i + 1
 
     def isblockable(self, board: Card_info):
-        # TODO ステルス状態などのチェック
         if (board is not None):
-            return True
+            board.refresh(self.playdata.card_table)
+            if ("stealth" in board.status):
+                return False
+            else:
+                return True
         else:
             return False
 
