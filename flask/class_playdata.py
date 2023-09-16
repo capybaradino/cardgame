@@ -281,14 +281,8 @@ class Playdata:
                 j = numbers[i]
                 tcid = cids[j][0]
                 cuid = card_db.postdeck(self.card_table, tcid, playername)
-                card = Card_info(tcid, "", 0, 0, 0)
-                effect_array = card.effect.split(",")
-                static_effect_list = ["stealth"]
-                for effect in effect_array:
-                    for static_effect in static_effect_list:
-                        if (static_effect in effect):
-                            card_db.appendsession(
-                                self.card_table, "cuid", cuid, "status", static_effect)
+                self.set_static_status_effect(tcid, cuid)
+                self.set_static_turnend_effect(tcid, cuid)
                 i = i + 1
 
             # テンションカード登録
@@ -374,6 +368,26 @@ class Playdata:
             self.p2_player_stats[6],
             self.card_table
         )
+        return
+
+    def set_static_status_effect(self, tcid: str, cuid: str):
+        card = Card_info(tcid, "", 0, 0, 0)
+        effect_array = card.effect.split(",")
+        static_effect_list = ["stealth"]
+        for effect in effect_array:
+            for static_effect in static_effect_list:
+                if (static_effect in effect):
+                    card_db.appendsession(
+                        self.card_table, "cuid", cuid, "status", static_effect)
+        return
+
+    def set_static_turnend_effect(self, tcid: str, cuid: str):
+        card = Card_info(tcid, "", 0, 0, 0)
+        effect_array = card.effect.split(",")
+        for effect in effect_array:
+            if "onturnend" in effect:
+                card_db.appendsession(
+                    self.card_table, "cuid", cuid, "turnend_effect", effect)
         return
 
     def cleargame(self, sid, iswin):
