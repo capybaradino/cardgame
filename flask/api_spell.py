@@ -16,20 +16,6 @@ def api_spell(sid, playview: Play_view, card1, card2):
     if (objcard1 is None):
         return {"error": "illegal card1 number"}, 403
 
-    # 特技無効チェック
-    objcard2 = api_common_util.getobjcard(playview, card2)
-    if (card2 is not None):
-        if ("antieffect" in objcard2.status):
-            return {"error": "card2 has antieffect"}, 403
-
-    # MP減算
-    remainingmp = playview.p1mp - objcard1.cost
-    if (remainingmp < 0):
-        return {"error": "MP short"}
-    card_db.putsession("playerstats",
-                       "name", playview.p1name,
-                       "mp", remainingmp)
-
     # TODO 多種特技の内容対応
     effect_array = objcard1.effect.split(",")
     # 特技の対象確認
@@ -50,19 +36,22 @@ def api_spell(sid, playview: Play_view, card1, card2):
             pattern_p2leader = r'rightboard_10'  # リーダー
             if re.match(pattern_p2board, card2) or re.match(pattern_p1board, card2):
                 # TODO 対象制限の確認
-
-                # ボードの確認
-                pattern = r'[0-5]'
-                number = int(re.findall(pattern, card2)[0])
-                if re.match(pattern_p2board, card2):
-                    boards = playview.p2board
-                else:
-                    boards = playview.p1board
-                objcard2: Card_info
-                objcard2 = boards[number]
+                objcard2 = api_common_util.getobjcard(playview, card2)
                 if (objcard2 is None):
                     return {"error": "unit don't exists in card2"}, 403
+
+                # 特技無効チェック
+                if (card2 is not None):
+                    if ("antieffect" in objcard2.status):
+                        return {"error": "card2 has antieffect"}, 403
+
                 # ALL OK DB更新
+                # MP減算
+                remainingmp = playview.p1mp - objcard1.cost
+                if (remainingmp < 0):
+                    return {"error": "MP short"}
+                card_db.putsession("playerstats", "name",
+                                   playview.p1name, "mp", remainingmp)
                 # 対象ユニットHP減算
                 api_common_common.unit_hp_change(
                     sid, playview, objcard2, value)
@@ -70,7 +59,14 @@ def api_spell(sid, playview: Play_view, card1, card2):
                 card_db.putsession(playview.playdata.card_table,
                                    "cuid", objcard1.cuid,
                                    "loc", playview.p1name + "_cemetery")
+
             elif re.match(pattern_p2leader, card2):
+                # MP減算
+                remainingmp = playview.p1mp - objcard1.cost
+                if (remainingmp < 0):
+                    return {"error": "MP short"}
+                card_db.putsession("playerstats", "name",
+                                   playview.p1name, "mp", remainingmp)
                 # リーダーHP減算
                 newhp = playview.p2hp - value
                 if (playview.playdata.player1.name == playview.p1name):
