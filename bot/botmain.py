@@ -93,113 +93,121 @@ def run():
                 remainact = True
                 while (remainhand or remainact):
                     # TODO 暴走したときの対策
-                    time.sleep(command_interval_sec)
-                    ret, restext = sub.get_view()
-                    if (ret != 200):
-                        break
-                    data = json.loads(restext)
-                    player1 = data["player1"]
-                    mp = player1["MP"]
-                    hand = player1["hand"]
-                    p1board = player1["board"]
-                    player2 = data["player2"]
-                    p2board = player2["board"]
-                    if (ret != 200):
-                        logger.error("failed to get view B")
-                        break
-                    # ハンド確認
-                    if (remainhand):
-                        # ハンドを探す
-                        i = 0
-                        play_hand = -1
-                        for card in hand:
-                            if (card["cost"] <= mp):
-                                # TODO 特技カード使用
-                                if (card["category"] == "unit"):
-                                    effect_array = card["effect"].split(",")
-                                    # 召喚時効果使用可否チェック
-                                    isplay = 1
-                                    for effect in effect_array:
-                                        if effect.startswith("onplay"):
-                                            # TODO 召喚時効果のバリエーション実装
-                                            if "dmg" in effect:
-                                                # 攻撃対象の選択
-                                                attack_board = botutil.search_rightboard(
-                                                    p2board)
-                                                if (attack_board < 0):
-                                                    isplay = 0
-                                            if "attack" in effect:
-                                                # 効果対象の選択
-                                                effect_board = botutil.search_leftboard(
-                                                    p1board)
-                                                if (effect_board < 0):
-                                                    isplay = 0
-
-                                    if (isplay == 1):
-                                        play_hand = i
-                                        break
-                            i = i + 1
-                        if (play_hand < 0):
-                            # ハンドから出せるユニットがいない
-                            remainhand = False
-                        # 空き盤面を探す
-                        i = 0
-                        play_board = -1
-                        while (i < 6):
-                            empty = True
-                            for card in p1board:
-                                if (card["location"] == i):
-                                    empty = False
-                            if (empty):
-                                play_board = i
-                                break
-                            i = i + 1
-                        if (play_board < 0):
-                            # 盤面が空いていない
-                            remainhand = False
+                    try:
+                        time.sleep(command_interval_sec)
+                        ret, restext = sub.get_view()
+                        if (ret != 200):
+                            break
+                        data = json.loads(restext)
+                        player1 = data["player1"]
+                        mp = player1["MP"]
+                        hand = player1["hand"]
+                        p1board = player1["board"]
+                        player2 = data["player2"]
+                        p2board = player2["board"]
+                        if (ret != 200):
+                            logger.error("failed to get view B")
+                            break
+                        # ハンド確認
                         if (remainhand):
-                            # プレイ
-                            # エフェクトの確認
-                            isplay = 0
-                            effect_array = hand[play_hand]["effect"].split(",")
-                            for effect in effect_array:
-                                if effect.startswith("onplay"):
-                                    # TODO 召喚時効果のバリエーション実装
-                                    if "dmg" in effect:
-                                        # 攻撃対象の選択
-                                        attack_board = botutil.search_rightboard(
-                                            p2board)
-                                        if (attack_board >= 0):
-                                            sub.play_card_and_dmg(
-                                                play_hand, play_board, attack_board)
-                                            isplay = 1
-                                    if "attack" in effect:
-                                        # 効果対象の選択
-                                        effect_board = botutil.search_leftboard(
-                                            p1board)
-                                        if (effect_board >= 0):
-                                            sub.play_card_and_attack(
-                                                play_hand, play_board, effect_board)
+                            # ハンドを探す
+                            i = 0
+                            play_hand = -1
+                            for card in hand:
+                                if (card["cost"] <= mp):
+                                    # TODO 特技カード使用
+                                    if (card["category"] == "unit"):
+                                        effect_array = card["effect"].split(
+                                            ",")
+                                        # 召喚時効果使用可否チェック
                                         isplay = 1
-                            if (isplay == 0):
-                                sub.play_card(play_hand, play_board)
-                            continue
-                    if (remainact):
-                        # 行動するユニットを選択
-                        attack_card = -1
-                        for card in p1board:
-                            if (card["active"] > 0):
-                                attack_card = card["location"]
-                        # 対象ユニットがいない
-                        if (attack_card < 0):
-                            remainact = False
-                        if (remainact):
-                            # 攻撃対象の選択
-                            attack_board = botutil.search_rightboard(p2board)
-                            if (remainact & attack_board >= 0):
-                                # 攻撃
-                                sub.play_attack(attack_card, attack_board)
+                                        for effect in effect_array:
+                                            if effect.startswith("onplay"):
+                                                # TODO 召喚時効果のバリエーション実装
+                                                if "dmg" in effect:
+                                                    # 攻撃対象の選択
+                                                    attack_board = botutil.search_rightboard(
+                                                        p2board)
+                                                    if (attack_board < 0):
+                                                        isplay = 0
+                                                if "attack" in effect:
+                                                    # 効果対象の選択
+                                                    effect_board = botutil.search_leftboard(
+                                                        p1board)
+                                                    if (effect_board < 0):
+                                                        isplay = 0
+
+                                        if (isplay == 1):
+                                            play_hand = i
+                                            break
+                                i = i + 1
+                            if (play_hand < 0):
+                                # ハンドから出せるユニットがいない
+                                remainhand = False
+                            # 空き盤面を探す
+                            i = 0
+                            play_board = -1
+                            while (i < 6):
+                                empty = True
+                                for card in p1board:
+                                    if (card["location"] == i):
+                                        empty = False
+                                if (empty):
+                                    play_board = i
+                                    break
+                                i = i + 1
+                            if (play_board < 0):
+                                # 盤面が空いていない
+                                remainhand = False
+                            if (remainhand):
+                                # プレイ
+                                # エフェクトの確認
+                                isplay = 0
+                                effect_array = hand[play_hand]["effect"].split(
+                                    ",")
+                                for effect in effect_array:
+                                    if effect.startswith("onplay"):
+                                        # TODO 召喚時効果のバリエーション実装
+                                        if "dmg" in effect:
+                                            # 攻撃対象の選択
+                                            attack_board = botutil.search_rightboard(
+                                                p2board)
+                                            if (attack_board >= 0):
+                                                sub.play_card_and_dmg(
+                                                    play_hand, play_board, attack_board)
+                                                isplay = 1
+                                        if "attack" in effect:
+                                            # 効果対象の選択
+                                            effect_board = botutil.search_leftboard(
+                                                p1board)
+                                            if (effect_board >= 0):
+                                                sub.play_card_and_attack(
+                                                    play_hand, play_board, effect_board)
+                                            isplay = 1
+                                if (isplay == 0):
+                                    sub.play_card(play_hand, play_board)
                                 continue
+                        if (remainact):
+                            # 行動するユニットを選択
+                            attack_card = -1
+                            for card in p1board:
+                                if (card["active"] > 0):
+                                    attack_card = card["location"]
+                            # 対象ユニットがいない
+                            if (attack_card < 0):
+                                remainact = False
+                            if (remainact):
+                                # 攻撃対象の選択
+                                attack_board = botutil.search_rightboard(
+                                    p2board)
+                                if (remainact & attack_board >= 0):
+                                    # 攻撃
+                                    sub.play_attack(attack_card, attack_board)
+                                    continue
+                    except Exception as e:
+                        logger(f"Internal error occurred: {e}")
+                        sub.surrender()
+                        break
                 ret = sub.turn_end()
                 if (ret != 200):
                     logger.error("failed to turn end")
