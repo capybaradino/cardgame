@@ -199,6 +199,7 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_name', "");
                 setdivvalue('p1card' + i + '_text', "");
                 removedivimage('p1card' + i, "");
+                resetBorderColor('p1card' + i);
             }
             // P1ボード
             for (let i = 0; i < 6; i++) {
@@ -283,6 +284,9 @@ async function fetchData_impl() {
                 if (effect != "") {
                     seteffecttext('p1card' + i + '_text', effect);
                 }
+                if (player1[key_mp] >= cost) {
+                    changeBorderColor('p1card' + i, "green");
+                }
                 setdivimage('p1card' + i, graphic);
             }
             // P1ボード
@@ -341,7 +345,9 @@ async function fetchData_impl() {
                 setdivimage('p1card' + i, graphic);
                 const active = player1['tension_active'];
                 if (active == 1) {
-                    changeBorderColor('p1card' + i, "green");
+                    if (player1[key_mp] >= cost) {
+                        changeBorderColor('p1card' + i, "green");
+                    }
                 }
                 changeBgColor("p1tension" + "3", "white")
             } else {
