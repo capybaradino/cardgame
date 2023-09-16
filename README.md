@@ -46,6 +46,7 @@ email2 = user2@example.com
 p1hp = 5
 p2hp = 5
 senkou = 1
+topcard = merami
 ```
 
 ## Contribution
