@@ -4,11 +4,16 @@ import card_db
 import re
 
 
-def getobjcard(playview, card2: str):
+def getobjcard(playview_in: Play_view, card2: str):
+    # refresh
+    playview = Play_view(playview_in.sid)
     # ボードの確認
     pattern = r'[0-5]'
     number = int(re.findall(pattern, card2)[0])
-    boards = playview.p2board
+    if (card2.startswith("left")):
+        boards = playview.p1board
+    else:
+        boards = playview.p2board
     objcard2: Card_info
     objcard2 = boards[number]
     return objcard2
