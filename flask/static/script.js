@@ -208,10 +208,16 @@ async function fetchData_impl() {
                 setdivvalue('p1board' + i + '_name', "");
                 setdivvalue('p1board' + i + '_text', "");
                 removedivimage('p1board' + i, "");
+                resetBorderColor('p1board' + i);
+                changeBgColor('p1board' + i, "aliceblue");
+            }
+            // P1テンション
+            {
+                resetBorderColor('p1card10');
             }
             // P2ハンド
             for (let i = 0; i < 11; i++) {
-                setdivvalue('p2card' + i, "")
+                setdivvalue('p2card' + i, "");
             }
             // P2ボード
             for (let i = 0; i < 6; i++) {
@@ -221,6 +227,8 @@ async function fetchData_impl() {
                 setdivvalue('p2board' + i + '_name', "");
                 setdivvalue('p2board' + i + '_text', "");
                 removedivimage('p2board' + i, "");
+                resetBorderColor('p2board' + i);
+                changeBgColor('p2board' + i, "aliceblue");
             }
             // 変数初期化
             temp_url = "";
@@ -291,15 +299,22 @@ async function fetchData_impl() {
                 setdivvalue('p1board' + i + '_attack', attack);
                 setdivvalue('p1board' + i + '_hp', hp);
                 setdivvalue('p1board' + i + '_name', name);
-                const effect = item['effect'];
+                effect = item['effect'];
                 if (effect != "") {
                     seteffecttext('p1board' + i + '_text', effect);
                 }
                 const active = item['active'];
                 if (active == 1) {
                     changeBorderColor('p1board' + i, "green");
+                }
+                const status = item['status'];
+                if (status.includes("stealth")) {
+                    changeBgColor('p1board' + i, "gray");
                 } else {
-                    resetBorderColor('p1board' + i);
+                    if (effect.includes("stealth")) {
+                        effect = effect.replace("stealth", "-stealth");
+                        seteffecttext('p1board' + i + '_text', effect);
+                    }
                 }
                 setdivimage('p1board' + i, graphic);
             }
@@ -324,6 +339,10 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_hp', hp);
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
+                const active = player1['tension_active'];
+                if (active == 1) {
+                    changeBorderColor('p1card' + i, "green");
+                }
                 changeBgColor("p1tension" + "3", "white")
             } else {
                 const i = 10
@@ -380,6 +399,15 @@ async function fetchData_impl() {
                 const effect = item['effect'];
                 if (effect != "") {
                     seteffecttext('p2board' + i + '_text', effect);
+                }
+                const status = item['status'];
+                if (status.includes("stealth")) {
+                    changeBgColor('p2board' + i, "gray");
+                } else {
+                    if (effect.includes("stealth")) {
+                        effect.replace("stealth", "-stalth");
+                        seteffecttext('p2board' + i + '_text', effect);
+                    }
                 }
                 setdivimage('p2board' + i, graphic);
             }
