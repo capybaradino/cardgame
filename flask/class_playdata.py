@@ -383,7 +383,7 @@ class Playdata:
     def set_static_status_effect(self, tcid: str, cuid: str):
         card = Card_info(tcid, "", 0, 0, 0)
         effect_array = card.effect.split(",")
-        static_effect_list = ["stealth"]
+        static_effect_list = ["stealth", "metalbody"]
         for effect in effect_array:
             for static_effect in static_effect_list:
                 if (static_effect in effect):
