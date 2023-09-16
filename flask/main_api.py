@@ -7,7 +7,7 @@ from api_tension import api_tension
 import api_system
 import api_view
 import debug
-from flask_restx import Resource, Api
+from flask_restx import Resource, Api, fields
 import card_user
 import card_db
 import re
@@ -82,8 +82,70 @@ class Card_system(Resource):
             return {"error": "illegal command"}, 403
 
 
+hand = api.model("hand", dict(
+    cost=fields.Integer("2"),
+    attack=fields.Integer("-1"),
+    attack_org=fields.Integer("-1"),
+    hp=fields.Integer("-1"),
+    hp_org=fields.Integer("-1"),
+    name=fields.String("merami"),
+    graphic=fields.String("uploads/test/merami.png"),
+    category=fields.String("spell"),
+    effect=fields.String("any_3dmg"),
+))
+
+
+board = api.model("board", dict(
+    location=fields.Integer("0"),
+    active=fields.Integer("0"),
+    cost=fields.Integer("2"),
+    attack=fields.Integer("1"),
+    attack_org=fields.Integer("1"),
+    hp=fields.Integer("1"),
+    hp_org=fields.Integer("1"),
+    name=fields.String("magicfly"),
+    graphic=fields.String("uploads/test/magicfly.png"),
+    category=fields.String("unit"),
+    effect=fields.String("ondead:self_1drow_spell"),
+    status=fields.String(""),
+))
+
+player1 = api.model("player1", dict(
+    name=fields.String("Skoog"),
+    HP=fields.Integer("9"),
+    decknum=fields.Integer("24"),
+    MP=fields.Integer("1"),
+    maxMP=fields.Integer("3"),
+    tension=fields.Integer("2"),
+    tension_active=fields.Integer("1"),
+    hand=fields.List(fields.Nested(hand)),
+    board=fields.List(fields.Nested(board)),
+))
+
+
+player2 = api.model("player2", dict(
+    name=fields.String("Jenkins"),
+    HP=fields.Integer("10"),
+    decknum=fields.Integer("23"),
+    MP=fields.Integer("3"),
+    maxMP=fields.Integer("4"),
+    tension=fields.Integer("1"),
+    handnum=fields.Integer("3"),
+    board=fields.List(fields.Nested(board)),
+))
+
+view_model = api.model('view', dict(
+    turn=fields.String("p2turn"),
+    player1=fields.Nested(player1),
+    player2=fields.Nested(player2)
+))
+
+
 @api.route('/view/<sid>')
+@api.doc(params={"sid": "Session ID"})
 class Card_view(Resource):
+    @api.response(200, 'Success', view_model)
+    @api.response(403, 'Forbidden (See response message)')
     def get(self, sid):
         sid = card_user.card_checksession(sid)
         if (sid is None):
@@ -104,7 +166,9 @@ class Card_view(Resource):
 
 
 @api.route('/play/<sid>/<card1>/<card2>')
+@api.doc(params={"sid": "Session ID", "card1": "A card location name you want to play.", "card2": "A location where the card1 want to play to."})
 class Card_play(Resource):
+    @api.doc(responses={403: 'Not Authorized'})
     def post(self, sid, card1, card2):
         sid = card_user.card_checksession(sid)
         if (sid is None):
