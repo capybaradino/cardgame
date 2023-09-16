@@ -265,6 +265,16 @@ class Playdata:
             else:
                 playername = self.player2.name
 
+            # デバッグ用：任意のカードをデッキトップに配置
+            ret = debug.getdebugparam("topcard")
+            if (ret is not None and ret != ""):
+                record = card_db.getrecord_fromgame(
+                    "card_basicdata", "cardname", ret)
+                tcid = record[0]
+                cuid = card_db.postdeck(self.card_table, tcid, playername)
+                self.set_static_status_effect(tcid, cuid)
+                self.set_static_turnend_effect(tcid, cuid)
+
             # TODO デッキ固定
             deck_name = "gamecard_2018haru_3_aguzesi"
             cids = card_db.getcids_fromdeck(deck_name)
