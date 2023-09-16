@@ -41,6 +41,7 @@ class Card_info:
         self.locnum = record[3]
         self.dhp = record[4]
         self.dattack = record[5]
+        self.status = record[9]
         self.update()
 
     @classmethod

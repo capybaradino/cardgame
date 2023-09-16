@@ -17,6 +17,11 @@ def get(playview: Play_view):
     player1["MP"] = playview.p1mp
     player1["maxMP"] = playview.p1maxmp
     player1["tension"] = playview.p1tension
+    # テンションカードアクティブ確認
+    record = card_db.getrecord_fromsession(
+        playview.playdata.card_table, "loc", playview.p1name+"_tension")
+    active = record[6]
+    player1["tension_active"] = active
     # ハンド
     p1hand = []
     handinfo: Card_info
@@ -54,6 +59,7 @@ def get(playview: Play_view):
             board["graphic"] = "uploads/" + boardinfo.filename
             board["category"] = boardinfo.category
             board["effect"] = boardinfo.effect
+            board["status"] = record[9]
             p1board.append(board)
         loc = loc + 1
     player1["board"] = p1board
@@ -79,6 +85,8 @@ def get(playview: Play_view):
         if (boardinfo is not None):
             board = {}
             board["location"] = loc
+            record = card_db.getrecord_fromsession(
+                playview.playdata.card_table, "cuid", boardinfo.cuid)
             board["cost"] = boardinfo.cost
             board["attack"] = boardinfo.attack
             board["attack_org"] = boardinfo.attack_org
@@ -88,6 +96,7 @@ def get(playview: Play_view):
             board["graphic"] = "uploads/" + boardinfo.filename
             board["category"] = boardinfo.category
             board["effect"] = boardinfo.effect
+            board["status"] = record[9]
             p2board.append(board)
         loc = loc + 1
     player2["board"] = p2board

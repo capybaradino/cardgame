@@ -34,9 +34,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         # ブロックの確認
         if (playview.isblocked(number)):
             return {"error": "card2 is blocked by other unit"}, 403
+        # ステルスの確認
+        objcard2.refresh(playview.playdata.card_table)
+        if ("stealth" in objcard2.status):
+            return {"error": "card2 has stealth"}, 403
         # 攻撃時効果
         ret = "OK"
-        ret, scode = api_common_attack.api_onattack_before(
+        ret, scode = api_common_attack.api_onattack(
             sid, playview, objcard1)
         objcard1.refresh(playview.playdata.card_table)
 
@@ -60,7 +64,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return {"error": "wall exists"}, 403
         # 攻撃時効果
         ret = "OK"
-        ret, scode = api_common_attack.api_onattack_before(
+        ret, scode = api_common_attack.api_onattack(
             sid, playview, objcard1)
         objcard1.refresh(playview.playdata.card_table)
 
