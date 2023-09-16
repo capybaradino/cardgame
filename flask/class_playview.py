@@ -5,6 +5,7 @@ from class_playinfo import Card_info
 
 class Play_view:
     def __init__(self, sid):
+        self.sid = sid
         playdata = Playdata(sid)
         self.playdata = playdata
         nickname = card_db.getnickname_fromsid(sid)

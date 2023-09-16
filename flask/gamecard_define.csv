@@ -9,7 +9,7 @@
 たけやりへい	takeyari-soldier	onplay:unit_attack+2_thisturn
 ドロヌーバ	doronu-ba	stealth
 わたぼう	watabo	onturnend_each:active_1drow_any
-ベビーパンサー	baby-panther	cheer
+ベビーパンサー	baby-panther	onplay:self_tension+1
 ミミック	mimic	ondead:enemy_1drow_any
 はぐれメタル	hagure-metal	fast-break,metalbody
 メラゾーマ	merazo-ma	any_5dmg
