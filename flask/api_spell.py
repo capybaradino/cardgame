@@ -3,6 +3,7 @@ from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
 import api_common_common
+import api_common_util
 
 
 def api_spell(sid, playview: Play_view, card1, card2):
@@ -14,6 +15,12 @@ def api_spell(sid, playview: Play_view, card1, card2):
     objcard1 = hands[number]
     if (objcard1 is None):
         return {"error": "illegal card1 number"}, 403
+
+    # 特技無効チェック
+    objcard2 = api_common_util.getobjcard(playview, card2)
+    if (card2 is not None):
+        if ("antieffect" in objcard2.status):
+            return {"error": "card2 has antieffect"}, 403
 
     # MP減算
     remainingmp = playview.p1mp - objcard1.cost
