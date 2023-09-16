@@ -8,7 +8,7 @@ import api_common_tension
 from class_playview import Play_view
 
 
-def onplay_effect(sid, playview, effect, card3, isRun):
+def onplay_effect(sid, playview: Play_view, effect, card3, isRun):
     # TODO 召喚時効果のバリエーション実装
     if "dmg" in effect:
         if not "leader" in effect:

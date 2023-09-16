@@ -3,6 +3,7 @@ from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
 import api_common_common
+import api_common_util
 
 
 def api_common_dmg(sid, playview: Play_view, effect, card2, isRun):
@@ -25,12 +26,7 @@ def api_common_dmg(sid, playview: Play_view, effect, card2, isRun):
         if re.match(pattern_p2board, card2):
             # TODO 対象制限の確認
 
-            # ボードの確認
-            pattern = r'[0-5]'
-            number = int(re.findall(pattern, card2)[0])
-            boards = playview.p2board
-            objcard2: Card_info
-            objcard2 = boards[number]
+            objcard2 = api_common_util.getobjcard(playview, card2)
             if (objcard2 is None):
                 return {"error": "unit don't exists in target card"}, 403
             # ALL OK DB更新
