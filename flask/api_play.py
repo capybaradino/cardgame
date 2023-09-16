@@ -27,6 +27,9 @@ def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
     if "tension" in effect:
         ret, scode = api_common_tension.api_common_tension(
             sid, playview, effect, card2, isRun)
+    if "active" in effect:
+        ret, scode = api_common_status.api_common_active(
+            sid, playview, effect, card2, isRun)
     if "leader" in effect and "enemy" in effect:
         ret, scode = api_common_dmg.api_common_dmg(
             sid, playview, effect, "rightboard_10", isRun)

@@ -2,6 +2,26 @@ import re
 from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
+import api_common_util
+
+
+def api_common_active(sid, playview: Play_view, effect, card2, isRun):
+    if "active" in effect:
+        # 事前チェックは不要
+        if not isRun:
+            return "OK", 200
+        objcard2 = api_common_util.getobjcard(playview, card2)
+        board_self, board_enemy, player_self, player_enemy = api_common_util.get_self_or_enemy(
+            playview, objcard2)
+        if "self" in effect:
+            if isRun:
+                card_db.putsession(playview.playdata.card_table,
+                                   "cuid", objcard2.cuid,
+                                   "active", 1)
+    else:
+        raise Exception
+
+    return "OK", 200
 
 
 def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info):
