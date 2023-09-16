@@ -20,7 +20,9 @@ def getobjcard(playview_in: Play_view, card2: str):
     return objcard2
 
 
-def get_self_or_enemy(playview: Play_view, objcard1: Card_info):
+def get_self_or_enemy(playview_in: Play_view, objcard1: Card_info):
+    # refresh
+    playview = Play_view(playview_in.sid)
     record = card_db.getrecord_fromsession(
         playview.playdata.card_table, "cuid", objcard1.cuid)
     loc: str
