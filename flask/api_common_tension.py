@@ -2,30 +2,35 @@ import re
 from class_playview import Play_view
 from class_playinfo import Card_info
 import card_db
+import api_common_util
 
 
-def api_common_tension(sid, playview: Play_view, effect, isRun):
+def api_common_tension(sid, playview: Play_view, effect, card2: str, isRun):
     if "tension" in effect:
-        # TODO 片方のリーダー指定
-        if "each" in effect:
-            # 両リーダーテンション変化
-            pattern = r"[+-]?\d+"
-            matches = re.search(pattern, effect)
-            value = int(matches.group())
+        # 事前チェックは不要
+        if not isRun:
+            return "OK", 200
+        pattern = r"[+-]?\d+"
+        matches = re.search(pattern, effect)
+        value = int(matches.group())
+        objcard2 = api_common_util.getobjcard(playview, card2)
+        board_self, board_enemy, player_self, player_enemy = api_common_util.get_self_or_enemy(
+            playview, objcard2)
+        if "self" in effect or "each" in effect:
             newvalue = playview.p1tension + value
             if (newvalue > 3):
                 newvalue = 3
             if isRun:
                 card_db.putsession("playerstats",
-                                   "player_tid", playview.playdata.p1_player_tid,
+                                   "player_tid", player_self.player_tid,
                                    "tension", newvalue)
-            value = int(matches.group())
+        if "enemy" in effect or "each" in effect:
             newvalue = playview.p2tension + value
             if (newvalue > 3):
                 newvalue = 3
             if isRun:
                 card_db.putsession("playerstats",
-                                   "player_tid", playview.playdata.p2_player_tid,
+                                   "player_tid", player_enemy.player_tid,
                                    "tension", newvalue)
     else:
         raise Exception

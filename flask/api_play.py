@@ -8,7 +8,7 @@ import api_common_tension
 from class_playview import Play_view
 
 
-def onplay_effect(sid, playview: Play_view, effect, card3, isRun):
+def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
     # TODO 召喚時効果のバリエーション実装
     if "dmg" in effect:
         if not "leader" in effect:
@@ -24,10 +24,9 @@ def onplay_effect(sid, playview: Play_view, effect, card3, isRun):
             else:
                 ret, scode = api_common_status.api_common_attack(
                     sid, playview, effect, card3, isRun)
-    if "each" in effect:
-        if "tension" in effect:
-            ret, scode = api_common_tension.api_common_tension(
-                sid, playview, effect, isRun)
+    if "tension" in effect:
+        ret, scode = api_common_tension.api_common_tension(
+            sid, playview, effect, card2, isRun)
     if "leader" in effect and "enemy" in effect:
         ret, scode = api_common_dmg.api_common_dmg(
             sid, playview, effect, "rightboard_10", isRun)
@@ -65,7 +64,8 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         effect: str
         for effect in effect_array:
             if effect.startswith("onplay"):
-                ret, scode = onplay_effect(sid, playview, effect, card3, False)
+                ret, scode = onplay_effect(
+                    sid, playview, effect, card2, card3, False)
 
         if (ret != "OK"):
             return ret, scode
@@ -84,7 +84,8 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         # 召喚時効果の実行
         for effect in effect_array:
             if effect.startswith("onplay"):
-                ret, scode = onplay_effect(sid, playview, effect, card3, True)
+                ret, scode = onplay_effect(
+                    sid, playview, effect, card2, card3, True)
 
         playview = Play_view(sid)
         if (playview.p1hp <= 0):
