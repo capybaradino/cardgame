@@ -11,7 +11,7 @@
 わたぼう	watabo	onturnend_each:active_1drow_any
 ベビーパンサー	baby-panther	onplay:self_tension+1
 ミミック	mimic	ondead:enemy_1drow_any
-はぐれメタル	hagure-metal	fast-break,metalbody
+はぐれメタル	hagure-metal	onplay:self_active,metalbody
 メラゾーマ	merazo-ma	any_5dmg
 亡者のひとだま	mouja-ghost	antieffect
 シルビア	silvia	onplay:each_tension+3
