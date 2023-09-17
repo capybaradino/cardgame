@@ -8,7 +8,7 @@ function play_post(url) {
         if (xhr.readyState == 4) {
             var json = JSON.parse(result);
             // document.cookie = "card_lastlog=" + JSON.stringify(json);
-            document.getElementById("middle3_boarder").textContent = JSON.stringify(json);
+            document.getElementById("p1leader_log").textContent = JSON.stringify(json);
             // window.location.reload();
             fetchData();
         } else {
@@ -187,6 +187,23 @@ async function fetchData_impl() {
         if (turn == "p1turn") {
             clearInterval(intervalId);
         }
+
+        // ログ情報
+        const key_log = "log";
+        const log = data[key_log];
+        const logs = log.split(",");
+        var displog = "";
+        var start = logs.length - 8;
+        if (start < 0) {
+            start = 0;
+        }
+        for (let i = start; i < logs.length; i++) {
+            var line = logs[i];
+            line = line.replace("[", "<b>[");
+            line = line.replace("]", "]</b><br>");
+            displog += line + "<br>";
+        }
+        setdivvalue("middle3_boarder", displog)
 
         // 画面初期化
         {
@@ -485,7 +502,8 @@ function removedivimage(id, imageUrl) {
 }
 function setdivvalue(id, value) {
     const divElement = document.getElementById(id);
-    divElement.textContent = value; // データを<div>要素に表示  
+    // divElement.textContent = value; // データを<div>要素に表示  
+    divElement.innerHTML = value;
 }
 function getCookieValue(key) {
     // Cookieの値を取得
