@@ -256,7 +256,7 @@ div {
 
 .p2stat_param_main_upper {
     width: 100%;
-    height: 60%;
+    height: 55%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -297,7 +297,7 @@ div {
 
 .p2stat_param_main_lower {
     width: 100%;
-    height: 30%;
+    height: 40%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -747,9 +747,19 @@ div {
 .middle1_p1leader,
 .middle5_p2leader {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     padding: 0px;
+}
+
+.p1leader_char,
+.p2leader_char {
+    border: 0px;
+    height: 70%;
+    /* 上下中央寄せ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .p1leader_char1,
@@ -763,6 +773,12 @@ div {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.p1leader_log,
+.p2leader_log {
+    border: 0px;
+    font-size: 12px;
 }
 
 .p1leader_char2,
@@ -797,6 +813,7 @@ div {
     width: 100%;
     height: 100%;
     background-color: white;
+    text-align: left;
 }
 
 .p1board,
@@ -830,23 +847,19 @@ div {
     width: 80%;
 }
 
-.middle1_p1leader {
+.middle1_p1leader,
+.middle5_p2leader {
     width: 14.3%;
+    display: flex;
+    flex-direction: column;
 }
 
-.middle2_p1board {
-    width: 28.5%;
-}
-
-.middle3_boarder {
-    width: 14.3%;
-}
-
+.middle2_p1board,
 .middle4_p2board {
     width: 28.5%;
 }
 
-.middle5_p2leader {
+.middle3_boarder {
     width: 14.3%;
 }
 
