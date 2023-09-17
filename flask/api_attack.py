@@ -48,6 +48,10 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return ret, scode
 
         # ALL OK DB更新
+        card_db.appendlog(playview.playdata.card_table,
+                          "["+playview.p1name+"]attack:" + objcard1.name)
+        card_db.appendlog(playview.playdata.card_table,
+                          "target->" + objcard2.name)
         # 自ユニットHP減算
         api_common_common.unit_hp_change(
             sid, playview, objcard1, objcard2.attack)
@@ -71,6 +75,11 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         if (ret != "OK"):
             return ret, scode
 
+        # ALL OK DB更新
+        card_db.appendlog(playview.playdata.card_table,
+                          "["+playview.p1name+"]attack:" + objcard1.name)
+        card_db.appendlog(playview.playdata.card_table,
+                          "target->" + playview.p2name)
         # リーダーHP減算
         newhp = playview.p2hp - objcard1.attack
         if (playview.playdata.player1.name == playview.p1name):

@@ -74,6 +74,8 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
             return ret, scode
 
         # ALL OK DB更新
+        card_db.appendlog(playview.playdata.card_table,
+                          "["+playview.p1name+"]play:" + objcard1.name)
         card_db.putsession("playerstats",
                            "name", playview.p1name,
                            "mp", remainingmp)

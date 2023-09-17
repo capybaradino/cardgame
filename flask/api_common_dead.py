@@ -32,6 +32,8 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
                                 i = i + 1
                             number = random.randrange(len(index))
                             objcard2 = board_enemy[index[number]]
+                            card_db.appendlog(playview.playdata.card_table,
+                                              "effect->" + objcard2.name)
                             api_common_common.unit_hp_change(sid,
                                                              playview, objcard2, value)
             if "drow" in effect:
@@ -43,10 +45,14 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
                     while (i < value):
                         player_enemy.draw_card()
                         i = i + 1
+                        card_db.appendlog(playview.playdata.card_table,
+                                          "draw->" + player_enemy.name)
                 if "self" in effect:
                     i = 0
                     while (i < value):
                         player_self.draw_card_spell()
                         i = i + 1
+                        card_db.appendlog(playview.playdata.card_table,
+                                          "draw->" + player_self.name)
 
     return "OK", 200, new_attack

@@ -18,11 +18,15 @@ def turnend(sid):
         if (nickname != playdata.player1.name):
             return {"error": "illegal session or not your turn"}, 500
         card_turnend.card_turnend(sid, "p1turn", nickname)
+        card_db.appendlog(playdata.card_table, "=" +
+                          nickname + " end=")
         nextp = playdata.player2
     else:
         if (nickname != playdata.player2.name):
             return {"error": "illegal session or not your turn"}, 500
         card_turnend.card_turnend(sid, "p2turn", nickname)
+        card_db.appendlog(playdata.card_table, "=" +
+                          nickname + " end=")
         nextp = playdata.player1
     nextp.start_turn()
     return {"info": "OK"}
