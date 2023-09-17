@@ -166,7 +166,7 @@ async function fetchData() {
     fetchData_impl();
     intervalId = setInterval(function () {
         fetchData_impl();
-    }, 3000);
+    }, 1000);
 }
 
 async function fetchData_impl() {
@@ -208,46 +208,6 @@ async function fetchData_impl() {
         // 画面初期化
         {
             setdivvalue('turndisp_button3', "");
-            // P1ハンド
-            for (let i = 0; i < 11; i++) {
-                setdivvalue('p1card' + i + '_cost', "");
-                setdivvalue('p1card' + i + '_attack', "");
-                setdivvalue('p1card' + i + '_hp', "");
-                setdivvalue('p1card' + i + '_name', "");
-                setdivvalue('p1card' + i + '_text', "");
-                removedivimage('p1card' + i, "");
-                resetBorderColor('p1card' + i);
-            }
-            // P1ボード
-            for (let i = 0; i < 6; i++) {
-                setdivvalue('p1board' + i + '_cost', "");
-                setdivvalue('p1board' + i + '_attack', "");
-                setdivvalue('p1board' + i + '_hp', "");
-                setdivvalue('p1board' + i + '_name', "");
-                setdivvalue('p1board' + i + '_text', "");
-                removedivimage('p1board' + i, "");
-                resetBorderColor('p1board' + i);
-                changeBgColor('p1board' + i, "aliceblue");
-            }
-            // P1テンション
-            {
-                resetBorderColor('p1card10');
-            }
-            // P2ハンド
-            for (let i = 0; i < 11; i++) {
-                setdivvalue('p2card' + i, "");
-            }
-            // P2ボード
-            for (let i = 0; i < 6; i++) {
-                setdivvalue('p2board' + i + '_cost', "");
-                setdivvalue('p2board' + i + '_attack', "");
-                setdivvalue('p2board' + i + '_hp', "");
-                setdivvalue('p2board' + i + '_name', "");
-                setdivvalue('p2board' + i + '_text', "");
-                removedivimage('p2board' + i, "");
-                resetBorderColor('p2board' + i);
-                changeBgColor('p2board' + i, "aliceblue");
-            }
             // 変数初期化
             temp_url = "";
         }
@@ -303,42 +263,73 @@ async function fetchData_impl() {
                 }
                 if (player1[key_mp] >= cost) {
                     changeBorderColor('p1card' + i, "green");
+                } else {
+                    resetBorderColor('p1card' + i)
                 }
                 setdivimage('p1card' + i, graphic);
             }
+            for (let i = hand.length; i < 10; i++) {
+                setdivvalue('p1card' + i + '_cost', "");
+                setdivvalue('p1card' + i + '_attack', "");
+                setdivvalue('p1card' + i + '_hp', "");
+                setdivvalue('p1card' + i + '_name', "");
+                setdivvalue('p1card' + i + '_text', "");
+                removedivimage('p1card' + i, "");
+                resetBorderColor('p1card' + i);
+            }
             // P1ボード
             const board = player1["board"];
-            for (let j = 0; j < board.length; j++) {
-                const item = board[j];
-                const i = item['location'];
-                const cost = item['cost'];
-                const attack = item['attack'];
-                const hp = item['hp'];
-                const name = item['name'];
-                const graphic = item['graphic'];
-                setdivvalue('p1board' + i + '_cost', cost);
-                setdivvalue('p1board' + i + '_attack', attack);
-                setdivvalue('p1board' + i + '_hp', hp);
-                setdivvalue('p1board' + i + '_name', name);
-                effect = item['effect'];
-                if (effect != "") {
-                    seteffecttext('p1board' + i + '_text', effect);
-                }
-                const active = item['active'];
-                if (active == 1) {
-                    changeBorderColor('p1board' + i, "green");
-                }
-                const status = item['status'];
-                if (status.includes("stealth")) {
-                    changeBgColor('p1board' + i, "gray");
-                } else {
-                    if (effect.includes("stealth")) {
-                        effect = effect.replace("stealth", "-stealth");
+            for (let i = 0; i < 6; i++) {
+                flg = false;
+                for (let j = 0; j < board.length; j++) {
+                    const item = board[j];
+                    if (i != item['location']) {
+                        continue
+                    }
+                    flg = true;
+                    const cost = item['cost'];
+                    const attack = item['attack'];
+                    const hp = item['hp'];
+                    const name = item['name'];
+                    const graphic = item['graphic'];
+                    setdivvalue('p1board' + i + '_cost', cost);
+                    setdivvalue('p1board' + i + '_attack', attack);
+                    setdivvalue('p1board' + i + '_hp', hp);
+                    setdivvalue('p1board' + i + '_name', name);
+                    effect = item['effect'];
+                    if (effect != "") {
                         seteffecttext('p1board' + i + '_text', effect);
                     }
+                    const active = item['active'];
+                    if (active == 1) {
+                        changeBorderColor('p1board' + i, "green");
+                    } else {
+                        resetBorderColor('p1board' + i)
+                    }
+                    const status = item['status'];
+                    if (status.includes("stealth")) {
+                        changeBgColor('p1board' + i, "gray");
+                    } else {
+                        if (effect.includes("stealth")) {
+                            effect = effect.replace("stealth", "<s>stealth</s>");
+                            seteffecttext('p1board' + i + '_text', effect);
+                        }
+                        changeBgColor('p1board' + i, "aliceblue");
+                    }
+                    setdivimage('p1board' + i, graphic);
                 }
-                setdivimage('p1board' + i, graphic);
+                if (flg == false) {
+                    setdivvalue('p1board' + i + '_cost', "");
+                    setdivvalue('p1board' + i + '_attack', "");
+                    setdivvalue('p1board' + i + '_hp', "");
+                    setdivvalue('p1board' + i + '_name', "");
+                    setdivvalue('p1board' + i + '_text', "");
+                    removedivimage('p1board' + i, "");
+                    resetBorderColor('p1board' + i);
+                    changeBgColor('p1board' + i, "aliceblue");
+                }
             }
+
             // P1テンション
             const tension = player1["tension"];
             for (let i = 0; i < 3; i++) {
@@ -364,7 +355,11 @@ async function fetchData_impl() {
                 if (active == 1) {
                     if (player1[key_mp] >= cost) {
                         changeBorderColor('p1card' + i, "green");
+                    } else {
+                        resetBorderColor('p1card10');
                     }
+                } else {
+                    resetBorderColor('p1card10');
                 }
                 changeBgColor("p1tension" + "3", "white")
             } else {
@@ -406,34 +401,54 @@ async function fetchData_impl() {
                 // setdivvalue('p2card' + i, "C")
                 setdivimage('p2card' + i, "uploads/system/sleeve.png");
             }
+            for (let i = handnum; i < 10; i++) {
+                setdivvalue('p2card' + i, "");
+            }
             // P2ボード
             const board = player2["board"];
-            for (let j = 0; j < board.length; j++) {
-                const item = board[j];
-                const i = item['location'];
-                const cost = item['cost'];
-                const attack = item['attack'];
-                const hp = item['hp'];
-                const name = item['name'];
-                const graphic = item['graphic'];
-                setdivvalue('p2board' + i + '_cost', cost);
-                setdivvalue('p2board' + i + '_attack', attack);
-                setdivvalue('p2board' + i + '_hp', hp);
-                setdivvalue('p2board' + i + '_name', name);
-                const effect = item['effect'];
-                if (effect != "") {
-                    seteffecttext('p2board' + i + '_text', effect);
-                }
-                const status = item['status'];
-                if (status.includes("stealth")) {
-                    changeBgColor('p2board' + i, "gray");
-                } else {
-                    if (effect.includes("stealth")) {
-                        effect.replace("stealth", "-stalth");
+            for (let i = 0; i < 6; i++) {
+                flg = false
+                for (let j = 0; j < board.length; j++) {
+                    const item = board[j];
+                    if (i != item['location']) {
+                        continue
+                    }
+                    flg = true
+                    const cost = item['cost'];
+                    const attack = item['attack'];
+                    const hp = item['hp'];
+                    const name = item['name'];
+                    const graphic = item['graphic'];
+                    setdivvalue('p2board' + i + '_cost', cost);
+                    setdivvalue('p2board' + i + '_attack', attack);
+                    setdivvalue('p2board' + i + '_hp', hp);
+                    setdivvalue('p2board' + i + '_name', name);
+                    var effect = item['effect'];
+                    if (effect != "") {
                         seteffecttext('p2board' + i + '_text', effect);
                     }
+                    const status = item['status'];
+                    if (status.includes("stealth")) {
+                        changeBgColor('p2board' + i, "gray");
+                    } else {
+                        if (effect.includes("stealth")) {
+                            effect = effect.replace("stealth", "<s>stealth</s>");
+                            seteffecttext('p2board' + i + '_text', effect);
+                        }
+                        changeBgColor('p2board' + i, "aliceblue");
+                    }
+                    setdivimage('p2board' + i, graphic);
                 }
-                setdivimage('p2board' + i, graphic);
+                if (flg == false) {
+                    setdivvalue('p2board' + i + '_cost', "");
+                    setdivvalue('p2board' + i + '_attack', "");
+                    setdivvalue('p2board' + i + '_hp', "");
+                    setdivvalue('p2board' + i + '_name', "");
+                    setdivvalue('p2board' + i + '_text', "");
+                    removedivimage('p2board' + i, "");
+                    resetBorderColor('p2board' + i);
+                    changeBgColor('p2board' + i, "aliceblue");
+                }
             }
             // P2テンション
             const tension = player2["tension"];
@@ -478,20 +493,28 @@ async function fetchData_impl() {
     }
 }
 function seteffecttext(id, effect) {
-    effect_text = effect.replace(",", '\n');
-    effect_text = effect_text.replace(":", ':\n');
+    effect_text = effect.replace(",", '<br>');
+    effect_text = effect_text.replace(":", ':<br>');
     check = effect_text.split("_");
     if (check.length > 1) {
-        effect_text = effect_text.replace(check[0] + "_", check[0] + "\n");
+        effect_text = effect_text.replace(check[0] + "_", check[0] + "<br>");
     }
     setdivvalue(id, effect_text);
     return effect_text;
 }
 function setdivimage(id, imageUrl) {
     const imageDiv = document.getElementById(id);
-    const imageElement = document.createElement('img');
-    imageElement.src = imageUrl;
-    imageDiv.appendChild(imageElement);
+    const images = imageDiv.querySelectorAll("img");
+    var flg = false;
+    images.forEach(image => {
+        image.src = imageUrl;
+        flg = true;
+    });
+    if (flg == false) {
+        const imageElement = document.createElement('img');
+        imageElement.src = imageUrl;
+        imageDiv.appendChild(imageElement);
+    }
 }
 function removedivimage(id, imageUrl) {
     const parentDiv = document.getElementById(id);
