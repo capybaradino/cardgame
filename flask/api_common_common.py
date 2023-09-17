@@ -1,5 +1,6 @@
 from class_playview import Play_view
 from class_playinfo import Card_info
+from class_playdata import Player
 import card_db
 import api_common_dead
 import api_common_util
@@ -26,6 +27,15 @@ def unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value):
                           objcard2.name + " dead")
         # 死亡時効果発動
         api_common_dead.ondead(sid, playview, objcard2)
+    return
+
+
+def leader_hp_change(playview: Play_view, player: Player, value):
+    # リーダーHP減算
+    newhp = player.hp - value
+    card_db.putsession("playerstats",
+                       "player_tid", player.player_tid,
+                       "hp", newhp)
     return
 
 
