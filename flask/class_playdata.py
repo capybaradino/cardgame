@@ -274,6 +274,14 @@ class Playdata:
                 cuid = card_db.postdeck(self.card_table, tcid, playername)
                 self.set_static_status_effect(tcid, cuid)
                 self.set_static_turnend_effect(tcid, cuid)
+            ret = debug.getdebugparam("topcard2")
+            if (ret is not None and ret != ""):
+                record = card_db.getrecord_fromgame(
+                    "card_basicdata", "cardname", ret)
+                tcid = record[0]
+                cuid = card_db.postdeck(self.card_table, tcid, playername)
+                self.set_static_status_effect(tcid, cuid)
+                self.set_static_turnend_effect(tcid, cuid)
 
             # TODO デッキ固定
             deck_name = "gamecard_2018haru_3_aguzesi"
