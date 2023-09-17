@@ -21,21 +21,25 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
                 matches = re.search(pattern, effect)
                 value = int(matches.group())
                 if "enemy" in effect:
-                    if "random" in effect:
-                        if (len(board_enemy) > 0):
-                            # TODO リーダーにも飛ばす
-                            index = []
-                            i = 0
-                            for card in board_enemy:
-                                if card is not None:
-                                    index.append(i)
-                                i = i + 1
-                            number = random.randrange(len(index))
-                            objcard2 = board_enemy[index[number]]
-                            card_db.appendlog(playview.playdata.card_table,
-                                              "effect->" + objcard2.name)
-                            api_common_common.unit_hp_change(sid,
-                                                             playview, objcard2, value)
+                    index = []
+                    i = 0
+                    for card in board_enemy:
+                        if card is not None:
+                            index.append(i)
+                        i = i + 1
+                    leader = len(index)
+                    number = random.randrange(len(index) + 1)
+                    if (number == leader):
+                        card_db.appendlog(playview.playdata.card_table,
+                                          "effect->" + player_enemy.name)
+                        api_common_common.leader_hp_change(
+                            playview, player_enemy, value)
+                    else:
+                        objcard2 = board_enemy[index[number]]
+                        card_db.appendlog(playview.playdata.card_table,
+                                          "effect->" + objcard2.name)
+                        api_common_common.unit_hp_change(sid,
+                                                         playview, objcard2, value)
             if "drow" in effect:
                 pattern = r"[+-]?\d+"
                 matches = re.search(pattern, effect)
