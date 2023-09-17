@@ -90,6 +90,8 @@ def api_common_attack(sid, playview: Play_view, effect, card2, isRun):
             if (objcard2 is None):
                 return {"error": "unit don't exists in target card"}, 403
             # ALL OK DB更新
+            card_db.appendlog(playview.playdata.card_table,
+                              "effect->" + objcard2.name)
             # 対象ユニットステータス更新
             dattack = objcard2.dattack + value
             if isRun:

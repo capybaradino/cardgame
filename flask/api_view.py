@@ -7,6 +7,10 @@ def get(playview: Play_view):
     data_dict = {}
     # ターン
     data_dict["turn"] = playview.turnstate
+    # ログ
+    record = card_db.getrecord_fromsession(
+        "gamesession", "card_table", playview.playdata.card_table)
+    data_dict["log"] = record[4]
 
     # Player1
     player1 = {}
@@ -104,55 +108,3 @@ def get(playview: Play_view):
     data_dict["player2"] = player2
 
     return data_dict
-
-
-sample = {
-    "turn": "player1",
-    "player1": {
-        "name": "Red",
-        "HP": 30,
-        "decknum": 30,
-        "MP": 1,
-        "maxMP": 1,
-        "tension": 0,
-        "hand": [
-            {
-                "cost": 1,
-                "attack": 2,
-                "hp": 3,
-                "name": "hoge",
-                "graphic": "hogehoge.png"
-            }
-        ],
-        "board": [
-            {
-                "location": 0,
-                "active": 1,
-                "cost": 1,
-                "attack": 2,
-                "hp": 3,
-                "name": "hoge",
-                "graphic": "hogehoge.png"
-            }
-        ]
-    },
-    "player2": {
-        "name": "Green",
-        "HP": 30,
-        "decknum": 30,
-        "MP": 1,
-        "maxMP": 1,
-        "tension": 0,
-        "handnum": 3,
-        "board": [
-            {
-                "location": 0,
-                "cost": 1,
-                "attack": 2,
-                "hp": 3,
-                "name": "hoge",
-                "graphic": "hogehoge.png"
-            }
-        ]
-    }
-}

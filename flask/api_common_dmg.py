@@ -32,11 +32,15 @@ def api_common_dmg(sid, playview: Play_view, effect, card2, isRun):
             # ALL OK DB更新
             # 対象ユニットHP減算
             if isRun:
+                card_db.appendlog(playview.playdata.card_table,
+                                  "effect->" + objcard2.name)
                 api_common_common.unit_hp_change(
                     sid, playview, objcard2, value)
         elif re.match(pattern_p2leader, card2):
             # リーダーHP減算
             if isRun:
+                card_db.appendlog(playview.playdata.card_table,
+                                  "effect->" + playview.p2name)
                 api_common_common.p2leader_hp_change(playview, value)
     else:
         return {"error": "unit don't exists in target card"}, 403

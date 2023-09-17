@@ -130,6 +130,21 @@ def putsession(table_name, key_name, key, column, value):
     return
 
 
+def appendlog(card_table, value):
+    con = sqlite3.connect('session.db')
+    table_name = "gamesession"
+    cursor = con.cursor()
+    query = f"SELECT log FROM {table_name} WHERE card_table = ?"
+    cursor.execute(query, (card_table,))
+    text = card_fetchone(cursor)
+    text = text + "," + value
+    query = f"UPDATE {table_name} SET log = ? WHERE card_table = ?"
+    cursor.execute(query, (text, card_table))
+    con.commit()
+    con.close()
+    return
+
+
 def appendsession(table_name, key_name, key, column, value):
     con = sqlite3.connect('session.db')
     cursor = con.cursor()

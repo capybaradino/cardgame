@@ -16,7 +16,8 @@ def getobjcard(playview_in: Play_view, card2: str):
         boards = playview.p2board
     objcard2: Card_info
     objcard2 = boards[number]
-    objcard2.refresh(playview.playdata.card_table)
+    if (objcard2 is not None):
+        objcard2.refresh(playview.playdata.card_table)
     return objcard2
 
 
