@@ -33,6 +33,8 @@ def api_tension(sid, playview: Play_view, card1, card2):
         card_db.putsession(playview.playdata.card_table,
                            "cuid", cuid,
                            "active", 0)
+        card_db.appendlog(playview.playdata.card_table,
+                          "["+playview.p1name+"]tension up:")
     else:
         # テンションスキル発動
         # TODO wizのみ対応
@@ -54,6 +56,10 @@ def api_tension(sid, playview: Play_view, card1, card2):
             if (objcard2 is None):
                 return {"error": "unit don't exists in card2"}, 403
             # ALL OK DB更新
+            card_db.appendlog(playview.playdata.card_table,
+                              "["+playview.p1name+"]tension skill:")
+            card_db.appendlog(playview.playdata.card_table,
+                              "effect->" + objcard2.name)
             # 対象ユニットHP減算
             api_common_common.unit_hp_change(sid, playview, objcard2, value)
             # テンション初期化
@@ -62,6 +68,11 @@ def api_tension(sid, playview: Play_view, card1, card2):
                                "name", playview.p1name,
                                "tension", tension)
         elif re.match(pattern_p2leader, card2):
+            # ALL OK DB更新
+            card_db.appendlog(playview.playdata.card_table,
+                              "["+playview.p1name+"]tension skill:")
+            card_db.appendlog(playview.playdata.card_table,
+                              "effect->" + playview.p2name)
             # リーダーHP減算
             newhp = playview.p2hp - value
             if (playview.playdata.player1.name == playview.p1name):

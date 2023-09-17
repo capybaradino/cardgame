@@ -22,6 +22,8 @@ def unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value):
         card_db.putsession(playview.playdata.card_table,
                            "cuid", objcard2.cuid,
                            "loc", player_self.name + "_cemetery")
+        card_db.appendlog(playview.playdata.card_table,
+                          objcard2.name + " dead")
         # 死亡時効果発動
         api_common_dead.ondead(sid, playview, objcard2)
     return

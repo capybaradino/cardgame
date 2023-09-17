@@ -46,6 +46,10 @@ def api_spell(sid, playview: Play_view, card1, card2):
                         return {"error": "card2 has antieffect"}, 403
 
                 # ALL OK DB更新
+                card_db.appendlog(playview.playdata.card_table,
+                                  "["+playview.p1name+"]spell:" + objcard1.name)
+                card_db.appendlog(playview.playdata.card_table,
+                                  "target->" + objcard2.name)
                 # MP減算
                 remainingmp = playview.p1mp - objcard1.cost
                 if (remainingmp < 0):
@@ -67,6 +71,11 @@ def api_spell(sid, playview: Play_view, card1, card2):
                     return {"error": "MP short"}
                 card_db.putsession("playerstats", "name",
                                    playview.p1name, "mp", remainingmp)
+                # ALL OK DB更新
+                card_db.appendlog(playview.playdata.card_table,
+                                  "["+playview.p1name+"]spell:" + objcard1.name)
+                card_db.appendlog(playview.playdata.card_table,
+                                  "target->" + playview.p2name)
                 # リーダーHP減算
                 newhp = playview.p2hp - value
                 if (playview.playdata.player1.name == playview.p1name):
