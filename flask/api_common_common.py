@@ -24,7 +24,8 @@ def unit_hp_change_multi(sid, playview: Play_view, objcards, values):
                            "dhp", dhp)
     # 死亡確認
     for objcard2 in objcards:
-        if (objcard2.hp_org + dhp <= 0):
+        objcard2.refresh(playview.playdata.card_table)
+        if (objcard2.hp <= 0):
             board_self, board_enemy, player_self, player_enemy = api_common_util.get_self_or_enemy(
                 playview, objcard2)
             card_db.putsession(playview.playdata.card_table,
