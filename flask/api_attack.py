@@ -52,12 +52,14 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
                           "["+playview.p1name+"]attack:" + objcard1.name)
         card_db.appendlog(playview.playdata.card_table,
                           "target->" + objcard2.name)
-        # 自ユニットHP減算
-        api_common_common.unit_hp_change(
-            sid, playview, objcard1, objcard2.attack)
-        # 敵ユニットHP減算
-        api_common_common.unit_hp_change(
-            sid, playview, objcard2, objcard1.attack)
+        # HP減算ユニット登録(減算順)
+        objcards = []
+        objcards.append(objcard2)
+        objcards.append(objcard1)
+        values = []
+        values.append(objcard1.attack)
+        values.append(objcard2.attack)
+        api_common_common.unit_hp_change_multi(sid, playview, objcards, values)
         # 自ユニットを行動済みに変更
         card_db.putsession(playview.playdata.card_table,
                            "cuid", objcard1.cuid,

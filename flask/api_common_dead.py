@@ -16,6 +16,7 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
             board_self, board_enemy, player_self, player_enemy = api_common_util.get_self_or_enemy(
                 playview, objcard1)
             # TODO 死亡時効果のバリエーション実装
+            # TODO 死亡時効果が範囲の場合
             if "dmg" in effect:
                 pattern = r"[+-]?\d+"
                 matches = re.search(pattern, effect)
@@ -23,9 +24,12 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
                 if "enemy" in effect:
                     index = []
                     i = 0
+                    card: Card_info
                     for card in board_enemy:
                         if card is not None:
-                            index.append(i)
+                            # HP=0のユニットは除外
+                            if (card.hp + card.dhp > 0):
+                                index.append(i)
                         i = i + 1
                     leader = len(index)
                     number = random.randrange(len(index) + 1)
