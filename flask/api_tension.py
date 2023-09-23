@@ -55,6 +55,13 @@ def api_tension(sid, playview: Play_view, card1, card2):
             objcard2 = boards[number]
             if (objcard2 is None):
                 return {"error": "unit don't exists in card2"}, 403
+
+            # 特技無効チェック
+            if (card2 is not None):
+                objcard2.refresh(playview.playdata.card_table)
+                if ("antieffect" in objcard2.status):
+                    return {"error": "card2 has antieffect"}, 403
+
             # ALL OK DB更新
             card_db.appendlog(playview.playdata.card_table,
                               "["+playview.p1name+"]tension skill:")
