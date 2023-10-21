@@ -462,6 +462,16 @@ def getcardname_fromcid(cid):
     return cardname
 
 
+def getcid_fromcardname(cardname):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute(
+        "select cid from card_basicdata where cardname = '" + cardname + "'")
+    cardname = card_fetchone(cur)
+    con.close()
+    return cardname
+
+
 def postcard(cid, fid, cardname, leader, cardpack, cost, category, rarity, type, attack, hp, effect, flavor):
     con = sqlite3.connect('game.db')
     cur = con.cursor()

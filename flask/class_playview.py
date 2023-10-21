@@ -22,6 +22,8 @@ class Play_view:
                     self.turnstate = "p2turn"
                 else:
                     self.turnstate = "p1turn"
+            self.p1 = p1
+            self.p2 = p2
             # ヘッダ情報
             self.p1name = p1.name
             self.p2name = p2.name
