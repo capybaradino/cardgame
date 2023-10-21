@@ -219,12 +219,27 @@ class Playdata:
         p1mp = int(game.getparam("p1mp"))
         p2mp = int(game.getparam("p2mp"))
 
+        # TODO デッキ固定
+        deck_name: str
+        if (newgame):
+            deck_name = "gamecard_wiz_2018haru_3_aguzesi"
+        else:
+            deck_name = "gamecard_mnk_2018haru_2_butoka"
+
+        # 職業判定
+        if (deck_name.startswith("gamecard_wiz")):
+            job = "wiz"
+        elif (deck_name.startswith("gamecard_mnk")):
+            job = "mnk"
+        else:
+            raise Exception
+
         # ユーザ情報初期化
         if (newgame):
             self.player1 = Player(
                 self.p1_player_tid,
                 card_db.getnickname_fromsid(sid),
-                "wiz",  # TODO 職業固定
+                job,
                 p1hp,
                 p1mp,
                 p1mp,
@@ -243,7 +258,7 @@ class Playdata:
             self.player2 = Player(
                 self.p2_player_tid,
                 card_db.getnickname_fromsid(sid),
-                "wiz",
+                job,
                 p2hp,
                 p2mp,
                 p2mp,
@@ -283,11 +298,6 @@ class Playdata:
                 self.set_static_status_effect(tcid, cuid)
                 self.set_static_turnend_effect(tcid, cuid)
 
-            # TODO デッキ固定
-            if (newgame):
-                deck_name = "gamecard_2018haru_3_aguzesi"
-            else:
-                deck_name = "gamecard_2018haru_2_butoka"
             cids = card_db.getcids_fromdeck(deck_name)
             num_cids = len(cids)
             if (num_cids != 30):
