@@ -91,6 +91,8 @@ class Csvcard():
                         self.category = "unit"
                     elif row[CATEGORY] == "特技":
                         self.category = "spell"
+                    elif row[CATEGORY] == "特技(トークン)":
+                        self.category = "spell"
 
                     if row[RARITY] == "0":
                         self.rarity = "common"
