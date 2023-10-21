@@ -284,7 +284,10 @@ class Playdata:
                 self.set_static_turnend_effect(tcid, cuid)
 
             # TODO デッキ固定
-            deck_name = "gamecard_2018haru_3_aguzesi"
+            if (newgame):
+                deck_name = "gamecard_2018haru_3_aguzesi"
+            else:
+                deck_name = "gamecard_2018haru_2_butoka"
             cids = card_db.getcids_fromdeck(deck_name)
             num_cids = len(cids)
             if (num_cids != 30):

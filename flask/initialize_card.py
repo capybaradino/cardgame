@@ -64,6 +64,12 @@ class Csvcard():
                         self.leader = "common"
                     elif row[LEADER] == "魔法使い":
                         self.leader = "wiz"
+                    elif row[LEADER] == "武闘家":
+                        self.leader = "mnk"
+                    else:
+                        print("[ERROR] Leader " +
+                              row[LEADER] + " is not defined.")
+                        exit(1)
 
                     if row[CARD_PACK] == "00ベーシック":
                         self.cardpack = "00basic"
@@ -226,80 +232,84 @@ if __name__ == "__main__":
 
     if opt == '2':
         print("[INFO] Create deck data start.")
+
         # TODO デッキ名
-        deck_name = "gamecard_2018haru_3_aguzesi"
+        deck_names = []
+        deck_names.append("gamecard_2018haru_3_aguzesi")
+        deck_names.append("gamecard_2018haru_2_butoka")
 
-        # SQLite3データベースに接続
-        conn = sqlite3.connect('game.db')
-        cursor = conn.cursor()
-        # 削除したいテーブルの名前を指定
-        table_name = deck_name
-        # テーブルを削除するSQLクエリを実行
-        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
-        # 変更をコミットしてデータベースを更新
-        conn.commit()
-        # データベースとの接続を閉じる
-        conn.close()
+        for deck_name in deck_names:
+            # SQLite3データベースに接続
+            conn = sqlite3.connect('game.db')
+            cursor = conn.cursor()
+            # 削除したいテーブルの名前を指定
+            table_name = deck_name
+            # テーブルを削除するSQLクエリを実行
+            cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+            # 変更をコミットしてデータベースを更新
+            conn.commit()
+            # データベースとの接続を閉じる
+            conn.close()
 
-        # テーブル作成
-        db_name = "game.db"
-        table_name = deck_name
-        conn = sqlite3.connect(db_name)
-        cursor = conn.cursor()
+            # テーブル作成
+            db_name = "game.db"
+            table_name = deck_name
+            conn = sqlite3.connect(db_name)
+            cursor = conn.cursor()
 
-        # テーブルの作成
-        query = f"""
-            CREATE TABLE IF NOT EXISTS {table_name} (
-                cid TEXT NOT NULL,
-                cardname TEXT NOT NULL
-            )
-        """
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+            # テーブルの作成
+            query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    cid TEXT NOT NULL,
+                    cardname TEXT NOT NULL
+                )
+            """
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
 
-        with open(deck_name + '.csv', 'r') as file:
-            reader = csv.reader(file, delimiter='\t')  # タブ区切りのCSVとして読み込む
+            with open(deck_name + '.csv', 'r') as file:
+                reader = csv.reader(file, delimiter='\t')  # タブ区切りのCSVとして読み込む
 
-            i = 0
-            for row in reader:
-                print(row)
+                i = 0
+                for row in reader:
+                    print(row)
 
-                with open('gamecard_define.csv', 'r') as file:
-                    # タブ区切りのCSVとして読み込む
-                    reader2 = csv.reader(file, delimiter='\t')
+                    with open('gamecard_define.csv', 'r') as file:
+                        # タブ区切りのCSVとして読み込む
+                        reader2 = csv.reader(file, delimiter='\t')
 
-                    row2 = next(reader2)
-                    # print(row)
-                    flg = 0
-                    for row2 in reader2:
-                        if row2[0] == row[0]:
-                            cardname = row2[1]
-                            flg = 1
-                            break
-                    if flg == 0:
-                        print("[ERROR] Card " + row[0] + " not found.")
+                        row2 = next(reader2)
+                        # print(row)
+                        flg = 0
+                        for row2 in reader2:
+                            if row2[0] == row[0]:
+                                cardname = row2[1]
+                                flg = 1
+                                break
+                        if flg == 0:
+                            print("[ERROR] Card " + row[0] + " not found.")
+                            exit(1)
+
+                    con = sqlite3.connect(db_name)
+                    cur = con.cursor()
+                    query = f"""
+                        SELECT cid FROM card_basicdata WHERE cardname = '{cardname}'
+                    """
+                    cur.execute(query)
+                    cid = card_fetchone(cur)
+                    if (cid is None):
+                        con.close()
+                        print("[ERROR] Card " + cardname + " not found.")
                         exit(1)
-
-                con = sqlite3.connect(db_name)
-                cur = con.cursor()
-                query = f"""
-                    SELECT cid FROM card_basicdata WHERE cardname = '{cardname}'
-                """
-                cur.execute(query)
-                cid = card_fetchone(cur)
-                if (cid is None):
                     con.close()
-                    print("[ERROR] Card " + cardname + " not found.")
-                    exit(1)
-                con.close()
 
-                con = sqlite3.connect(db_name)
-                cur = con.cursor()
-                query = f"""
-                    INSERT INTO {table_name} values (?, ?)
-                """
-                cur.execute(query, (cid, cardname))
-                con.commit()
-                con.close()
+                    con = sqlite3.connect(db_name)
+                    cur = con.cursor()
+                    query = f"""
+                        INSERT INTO {table_name} values (?, ?)
+                    """
+                    cur.execute(query, (cid, cardname))
+                    con.commit()
+                    con.close()
         print("[INFO] Create deck data end.")
