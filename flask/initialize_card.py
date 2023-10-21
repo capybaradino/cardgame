@@ -235,8 +235,8 @@ if __name__ == "__main__":
 
         # TODO デッキ名
         deck_names = []
-        deck_names.append("gamecard_2018haru_3_aguzesi")
-        deck_names.append("gamecard_2018haru_2_butoka")
+        deck_names.append("gamecard_wiz_2018haru_3_aguzesi")
+        deck_names.append("gamecard_mnk_2018haru_2_butoka")
 
         for deck_name in deck_names:
             # SQLite3データベースに接続
