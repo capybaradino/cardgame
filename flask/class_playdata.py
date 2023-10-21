@@ -45,6 +45,22 @@ class Player:
             card_db.putdeck(self.card_table, cuid, "drop")
         return
 
+    def draw_bujutsucard(self):
+        number = random.randrange(3)
+        if (number == 0):
+            cid = card_db.getcid_fromcardname("bujutsu_meditation")
+        elif (number == 1):
+            cid = card_db.getcid_fromcardname("bujutsu_jump-kick")
+        else:
+            cid = card_db.getcid_fromcardname("bujutsu_straight-punch")
+
+        cuid = card_db.postdeck(self.card_table, cid, self.name)
+        if (len(self.get_hand()) < 10):
+            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+        else:
+            card_db.putdeck(self.card_table, cuid, "drop")
+        return
+
     def draw_card_spell(self):
         records = card_db.getrecords_fromsession(
             self.card_table, "loc", self.name)
