@@ -305,6 +305,16 @@ def putdeck(table_name, cuid, loc):
     return
 
 
+def putdeck_locnum(table_name, cuid, loc):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    query = f"UPDATE {table_name} SET locnum = ? WHERE cuid = ?"
+    cursor.execute(query, (loc, cuid))
+    con.commit()
+    con.close()
+    return
+
+
 def isexist_cuid(table_name, cuid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
