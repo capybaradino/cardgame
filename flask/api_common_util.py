@@ -4,6 +4,27 @@ import card_db
 import re
 
 
+def getobjcard_oppsite(playview_in: Play_view, card2: str):
+    # refresh
+    playview = Play_view(playview_in.sid)
+    # ボードの確認
+    pattern = r'[0-5]'
+    number = int(re.findall(pattern, card2)[0])
+    if (number < 3):
+        number2 = number + 3
+    else:
+        number2 = number - 3
+    if (card2.startswith("left")):
+        boards = playview.p1board
+    else:
+        boards = playview.p2board
+    objcard2: Card_info
+    objcard2 = boards[number2]
+    if (objcard2 is not None):
+        objcard2.refresh(playview.playdata.card_table)
+    return objcard2, number, number2
+
+
 def getobjcard(playview_in: Play_view, card2: str):
     # refresh
     playview = Play_view(playview_in.sid)
