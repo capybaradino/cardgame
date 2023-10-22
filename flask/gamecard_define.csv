@@ -34,6 +34,6 @@
 キングレオ	king-leo	
 ネルゲル	nelgel	
 シドー	sydow	
-精神統一	bujutsu_meditation	
-飛びげり	bujutsu_jump-kick	
-ストレートパンチ	bujutsu_straight-punch	
+精神統一	bujutsu_meditation	self_1drow
+飛びげり	bujutsu_jump-kick	switch
+ストレートパンチ	bujutsu_straight-punch	any_1dmg
