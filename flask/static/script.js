@@ -512,7 +512,7 @@ async function fetchData_impl() {
                 setdivvalue('p2card' + i + '_hp', hp);
                 setdivvalue('p2card' + i + '_name', name);
                 setdivimage('p2card' + i, graphic);
-                changeBgColor("p2tension" + "3", "white")
+                changeBgColor("p2tension" + "3", "red")
             }
         }
 
