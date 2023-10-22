@@ -21,6 +21,12 @@ def api_spell(sid, playview: Play_view, card1, card2):
     # 特技の対象確認
     for effect in effect_array:
         if "self_1drow" in effect:
+            # MP減算
+            remainingmp = playview.p1mp - objcard1.cost
+            if (remainingmp < 0):
+                return {"error": "MP short"}
+            card_db.putsession("playerstats", "name",
+                               playview.p1name, "mp", remainingmp)
             playview.p1.draw_card()
             card_db.appendlog(playview.playdata.card_table,
                               "["+playview.p1name+"]spell:" + objcard1.name)
@@ -34,6 +40,12 @@ def api_spell(sid, playview: Play_view, card1, card2):
                 objcard2 = api_common_util.getobjcard(playview, card2)
                 if (objcard2 is None):
                     return {"error": "unit don't exists in card2"}, 403
+                # MP減算
+                remainingmp = playview.p1mp - objcard1.cost
+                if (remainingmp < 0):
+                    return {"error": "MP short"}
+                card_db.putsession("playerstats", "name",
+                                   playview.p1name, "mp", remainingmp)
                 # ALL OK DB更新
                 card_db.appendlog(playview.playdata.card_table,
                                   "["+playview.p1name+"]spell:" + objcard1.name)
@@ -76,17 +88,17 @@ def api_spell(sid, playview: Play_view, card1, card2):
                     if ("antieffect" in objcard2.status):
                         return {"error": "card2 has antieffect"}, 403
 
-                # ALL OK DB更新
-                card_db.appendlog(playview.playdata.card_table,
-                                  "["+playview.p1name+"]spell:" + objcard1.name)
-                card_db.appendlog(playview.playdata.card_table,
-                                  "target->" + objcard2.name)
                 # MP減算
                 remainingmp = playview.p1mp - objcard1.cost
                 if (remainingmp < 0):
                     return {"error": "MP short"}
                 card_db.putsession("playerstats", "name",
                                    playview.p1name, "mp", remainingmp)
+                # ALL OK DB更新
+                card_db.appendlog(playview.playdata.card_table,
+                                  "["+playview.p1name+"]spell:" + objcard1.name)
+                card_db.appendlog(playview.playdata.card_table,
+                                  "target->" + objcard2.name)
                 # 対象ユニットHP減算
                 api_common_common.unit_hp_change(
                     sid, playview, objcard2, value)
