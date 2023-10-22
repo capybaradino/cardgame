@@ -260,6 +260,8 @@ async function fetchData_impl() {
                 const effect = item['effect'];
                 if (effect != "") {
                     seteffecttext('p1card' + i + '_text', effect);
+                } else {
+                    seteffecttext('p1card' + i + '_text', "");
                 }
                 if (player1[key_mp] >= cost) {
                     changeBorderColor('p1card' + i, "green");
@@ -299,6 +301,8 @@ async function fetchData_impl() {
                     effect = item['effect'];
                     if (effect != "") {
                         seteffecttext('p1board' + i + '_text', effect);
+                    } else {
+                        seteffecttext('p1card' + i + '_text', "");
                     }
                     const active = item['active'];
                     if (active == 1) {
