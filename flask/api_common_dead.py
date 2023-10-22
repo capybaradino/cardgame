@@ -5,6 +5,7 @@ from class_playinfo import Card_info
 import card_db
 import api_common_common
 import api_common_util
+import api_common_tension
 
 
 def ondead(sid, playview: Play_view, objcard1: Card_info):
@@ -17,6 +18,9 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
                 playview, objcard1)
             # TODO 死亡時効果のバリエーション実装
             # TODO 死亡時効果が範囲の場合
+            if "tension" in effect:
+                ret, scode = api_common_tension.api_common_tension_objcard(
+                    sid, playview, effect, objcard1, True, player_self, player_enemy)
             if "dmg" in effect:
                 pattern = r"[+-]?\d+"
                 matches = re.search(pattern, effect)

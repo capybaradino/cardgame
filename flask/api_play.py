@@ -10,6 +10,15 @@ from class_playview import Play_view
 
 def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
     # TODO 召喚時効果のバリエーション実装
+    if "drow" in effect:
+        if "bujutsu" in effect:
+            playview.p1.draw_bujutsucard()
+        elif "spell" in effect:
+            playview.p1.draw_card_spell()
+        else:
+            playview.p1.draw_card()
+        ret = "OK"
+        scode = 200
     if "dmg" in effect:
         if not "leader" in effect:
             if card3 is None:
