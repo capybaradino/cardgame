@@ -1,8 +1,9 @@
 import re
-from class_playview import Play_view
-from class_playinfo import Card_info
-import card_db
+
 import api_common_util
+import card_db
+from class_playinfo import Card_info
+from class_playview import Play_view
 
 
 def api_common_active(sid, playview: Play_view, effect, card2, isRun):
@@ -11,13 +12,17 @@ def api_common_active(sid, playview: Play_view, effect, card2, isRun):
         if not isRun:
             return "OK", 200
         objcard2 = api_common_util.getobjcard(playview, card2)
-        board_self, board_enemy, player_self, player_enemy = api_common_util.get_self_or_enemy(
-            playview, objcard2)
+        (
+            board_self,
+            board_enemy,
+            player_self,
+            player_enemy,
+        ) = api_common_util.get_self_or_enemy(playview, objcard2)
         if "self" in effect:
             if isRun:
-                card_db.putsession(playview.playdata.card_table,
-                                   "cuid", objcard2.cuid,
-                                   "active", 1)
+                card_db.putsession(
+                    playview.playdata.card_table, "cuid", objcard2.cuid, "active", 1
+                )
     else:
         raise Exception
 
@@ -36,25 +41,30 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
         matches = re.search(pattern, effect)
         value = int(matches.group())
 
-        if (objcard2 is None):
+        if objcard2 is None:
             return {"error": "unit don't exists in target card"}, 403
         # ALL OK DB更新
         # 対象ユニットステータス更新
         dattack = objcard2.dattack + value
         if isRun:
-            card_db.putsession(playview.playdata.card_table,
-                               "cuid", objcard2.cuid,
-                               "dattack", dattack)
+            card_db.putsession(
+                playview.playdata.card_table, "cuid", objcard2.cuid, "dattack", dattack
+            )
         # このターンだけの場合減算をセット
-        if ("thisturn" in effect):
+        if "thisturn" in effect:
             record = card_db.getrecord_fromsession(
-                playview.playdata.card_table, "cuid", objcard2.cuid)
+                playview.playdata.card_table, "cuid", objcard2.cuid
+            )
             turnend_effect_ontime = record[8]
             turnend_effect_ontime = turnend_effect_ontime + ",attack-2"
             if isRun:
-                card_db.putsession(playview.playdata.card_table,
-                                   "cuid", objcard2.cuid,
-                                   "turnend_effect_ontime", turnend_effect_ontime)
+                card_db.putsession(
+                    playview.playdata.card_table,
+                    "cuid",
+                    objcard2.cuid,
+                    "turnend_effect_ontime",
+                    turnend_effect_ontime,
+                )
     else:
         return {"error": "unit don't exists in target card"}, 403
 
@@ -73,41 +83,49 @@ def api_common_attack(sid, playview: Play_view, effect, card2, isRun):
         value = int(matches.group())
 
         # 攻撃先確認
-        pattern_p1board = r'leftboard_[0-5]$'   # 盤面
-        pattern_p1leader = r'leftboard_10'  # リーダー
-        pattern_p2board = r'rightboard_[0-5]$'   # 盤面
-        pattern_p2leader = r'rightboard_10'  # リーダー
+        pattern_p1board = r"leftboard_[0-5]$"  # 盤面
+        pattern_p1leader = r"leftboard_10"  # リーダー
+        pattern_p2board = r"rightboard_[0-5]$"  # 盤面
+        pattern_p2leader = r"rightboard_10"  # リーダー
         # TODO 相手ボードへの効果
         if re.match(pattern_p1board, card2):
             # TODO 対象制限の確認
 
             # ボードの確認
-            pattern = r'[0-5]'
+            pattern = r"[0-5]"
             number = int(re.findall(pattern, card2)[0])
             boards = playview.p1board
             objcard2: Card_info
             objcard2 = boards[number]
-            if (objcard2 is None):
+            if objcard2 is None:
                 return {"error": "unit don't exists in target card"}, 403
             # ALL OK DB更新
-            card_db.appendlog(playview.playdata.card_table,
-                              "effect->" + objcard2.name)
+            card_db.appendlog(playview.playdata.card_table, "effect->" + objcard2.name)
             # 対象ユニットステータス更新
             dattack = objcard2.dattack + value
             if isRun:
-                card_db.putsession(playview.playdata.card_table,
-                                   "cuid", objcard2.cuid,
-                                   "dattack", dattack)
+                card_db.putsession(
+                    playview.playdata.card_table,
+                    "cuid",
+                    objcard2.cuid,
+                    "dattack",
+                    dattack,
+                )
             # このターンだけの場合減算をセット
-            if ("thisturn" in effect):
+            if "thisturn" in effect:
                 record = card_db.getrecord_fromsession(
-                    playview.playdata.card_table, "cuid", objcard2.cuid)
+                    playview.playdata.card_table, "cuid", objcard2.cuid
+                )
                 turnend_effect_ontime = record[8]
                 turnend_effect_ontime = turnend_effect_ontime + ",attack-2"
                 if isRun:
-                    card_db.putsession(playview.playdata.card_table,
-                                       "cuid", objcard2.cuid,
-                                       "turnend_effect_ontime", turnend_effect_ontime)
+                    card_db.putsession(
+                        playview.playdata.card_table,
+                        "cuid",
+                        objcard2.cuid,
+                        "turnend_effect_ontime",
+                        turnend_effect_ontime,
+                    )
     else:
         return {"error": "unit don't exists in target card"}, 403
 
