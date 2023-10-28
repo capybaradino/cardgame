@@ -1,6 +1,17 @@
 {
+    "editor.formatOnSave": true,
     "[python]": {
-        "editor.defaultFormatter": "ms-python.autopep8"
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
     },
-    "python.formatting.provider": "none"
+    "isort.args": [
+        "--profile",
+        "black"
+    ],
+    "flake8.args": [
+        "--max-line-length=100",
+        "--max-complexity=10",
+    ],
 }
