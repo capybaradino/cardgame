@@ -74,7 +74,7 @@ def unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value):
     return
 
 
-def leader_hp_change(playview: Play_view, player: Player, value):
+def leader_hp_change(player: Player, value):
     # リーダーHP減算
     newhp = player.hp - value
     card_db.putsession("playerstats", "player_tid", player.player_tid, "hp", newhp)
