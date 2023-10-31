@@ -47,9 +47,7 @@ def ondead(sid, playview: Play_view, objcard1: Card_info):
                         card_db.appendlog(
                             playview.playdata.card_table, "effect->" + player_enemy.name
                         )
-                        api_common_common.leader_hp_change(
-                            playview, player_enemy, value
-                        )
+                        api_common_common.leader_hp_change(player_enemy, value)
                     else:
                         objcard2 = board_enemy[index[number]]
                         card_db.appendlog(
