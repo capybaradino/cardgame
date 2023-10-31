@@ -15,7 +15,7 @@ class TestAPICommonActive(unittest.TestCase):
         card2 = "dummy_card"
         isRun = True
 
-        # 小関数のMock化
+        # 子関数のMock化
         api_common_util.getobjcard = MagicMock()
         api_common_util.get_self_or_enemy = MagicMock(
             return_value=[None, None, None, None]
