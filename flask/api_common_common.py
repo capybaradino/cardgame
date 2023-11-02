@@ -75,21 +75,13 @@ def unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value):
 
 
 def leader_hp_change(player: Player, value):
+    """リーダーのHPを増減させる
+
+    Args:
+        player (Player): playview.p1/playview.p2 で指定推奨
+        value (_type_): 増減させる値
+    """
     # リーダーHP減算
     newhp = player.hp - value
     card_db.putsession("playerstats", "player_tid", player.player_tid, "hp", newhp)
-    return
-
-
-def p2leader_hp_change(playview: Play_view, value):
-    # リーダーHP減算
-    newhp = playview.p2hp - value
-    if playview.playdata.player1.name == playview.p1name:
-        card_db.putsession(
-            "playerstats", "player_tid", playview.playdata.p2_player_tid, "hp", newhp
-        )
-    else:
-        card_db.putsession(
-            "playerstats", "player_tid", playview.playdata.p1_player_tid, "hp", newhp
-        )
     return
