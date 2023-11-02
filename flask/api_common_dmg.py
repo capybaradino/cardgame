@@ -36,6 +36,6 @@ def api_common_dmg_leader(sid, playview: Play_view, effect):
 
     # リーダーHP減算
     card_db.appendlog(playview.playdata.card_table, "effect->" + playview.p2name)
-    api_common_common.p2leader_hp_change(playview, value)
+    api_common_common.leader_hp_change(playview.p2, value)
 
     return "OK", 200
