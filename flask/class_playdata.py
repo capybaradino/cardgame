@@ -307,20 +307,22 @@ class Playdata:
                 playername = self.player2.name
 
             # デバッグ用：任意のカードをデッキトップに配置
-            ret = debug.getdebugparam("topcard")
-            if ret is not None and ret != "":
-                record = card_db.getrecord_fromgame("card_basicdata", "cardname", ret)
-                tcid = record[0]
-                cuid = card_db.postdeck(self.card_table, tcid, playername)
-                self.set_static_status_effect(tcid, cuid)
-                self.set_static_turnend_effect(tcid, cuid)
-            ret = debug.getdebugparam("topcard2")
-            if ret is not None and ret != "":
-                record = card_db.getrecord_fromgame("card_basicdata", "cardname", ret)
-                tcid = record[0]
-                cuid = card_db.postdeck(self.card_table, tcid, playername)
-                self.set_static_status_effect(tcid, cuid)
-                self.set_static_turnend_effect(tcid, cuid)
+            i = 0
+            while i < 3:
+                if i == 0:
+                    key = "topcard"
+                else:
+                    key = "topcard" + str(i)
+                ret = debug.getdebugparam(key)
+                if ret is not None and ret != "":
+                    record = card_db.getrecord_fromgame(
+                        "card_basicdata", "cardname", ret
+                    )
+                    tcid = record[0]
+                    cuid = card_db.postdeck(self.card_table, tcid, playername)
+                    self.set_static_status_effect(tcid, cuid)
+                    self.set_static_turnend_effect(tcid, cuid)
+                i = i + 1
 
             cids = card_db.getcids_fromdeck(deck_name)
             num_cids = len(cids)
