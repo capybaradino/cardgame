@@ -18,14 +18,14 @@ def unit_hp_change_multi(sid, playview: Play_view, objcards, values):
         if "metalbody" in objcard2.status:
             if value <= 3:
                 value = 1
-        dhp = objcard2.dhp - value
+        objcard2.dhp = objcard2.dhp - value
         card_db.putsession(
-            playview.playdata.card_table, "cuid", objcard2.cuid, "dhp", dhp
+            playview.playdata.card_table, "cuid", objcard2.cuid, "dhp", objcard2.dhp
         )
     # 死亡確認
     for objcard2 in objcards:
         objcard2.refresh(playview.playdata.card_table)
-        if objcard2.hp <= 0:
+        if objcard2.hp_org + objcard2.dhp <= 0:
             (
                 board_self,
                 board_enemy,
