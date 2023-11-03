@@ -25,7 +25,7 @@ def api_spell(sid, playview: Play_view, card1, card2):
             # MP減算
             remainingmp = playview.p1mp - objcard1.cost
             if remainingmp < 0:
-                return {"error": "MP short"}
+                return {"error": "MP short"}, 403
             card_db.putsession(
                 "playerstats", "name", playview.p1name, "mp", remainingmp
             )
@@ -102,7 +102,7 @@ def api_spell(sid, playview: Play_view, card1, card2):
                 # MP減算
                 remainingmp = playview.p1mp - objcard1.cost
                 if remainingmp < 0:
-                    return {"error": "MP short"}
+                    return {"error": "MP short"}, 403
                 card_db.putsession(
                     "playerstats", "name", playview.p1name, "mp", remainingmp
                 )
@@ -165,4 +165,4 @@ def api_spell(sid, playview: Play_view, card1, card2):
         playview.p1name + "_cemetery",
     )
 
-    return {"info": "OK"}
+    return {"info": "OK"}, 200
