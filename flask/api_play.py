@@ -26,7 +26,7 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         objcard2 = boards[number]
         if objcard2 is not None:
             return {"error": "unit exists in card2"}
-        # MP減算
+        # MP減算確認
         remainingmp = playview.p1mp - objcard1.cost
         if remainingmp < 0:
             return {"error": "MP short"}
@@ -47,7 +47,9 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
             playview.playdata.card_table,
             "[" + playview.p1name + "]play:" + objcard1.name,
         )
+        # MP減算
         card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+        # ハンドからボードへ移動
         card_db.putsession(
             playview.playdata.card_table,
             "cuid",
