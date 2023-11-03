@@ -45,6 +45,9 @@ def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
                     ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
                 else:
                     return {"error": "illegal target"}, 403
+        elif "leader" in effect:
+            # リーダーHP減算
+            ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
     if "attack" in effect:
         if "unit" in effect:
             if card3 is None:
@@ -61,8 +64,6 @@ def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
         ret, scode = api_common_status.api_common_active(
             sid, playview, effect, card2, isRun
         )
-    if "leader" in effect and "enemy" in effect:
-        ret, scode = api_common_dmg(sid, playview, effect, "rightboard_10", isRun)
     return ret, scode
 
 
