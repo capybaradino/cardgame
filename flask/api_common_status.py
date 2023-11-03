@@ -126,7 +126,7 @@ def api_common_attack(sid, playview: Play_view, effect, card2, isRun):
                         "turnend_effect_ontime",
                         turnend_effect_ontime,
                     )
-    else:
-        return {"error": "unit don't exists in target card"}, 403
+        else:
+            return {"error": "unit don't exists in target card"}, 403
 
     return "OK", 200
