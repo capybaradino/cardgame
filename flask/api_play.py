@@ -1,10 +1,10 @@
 import re
 
-import api_common_dmg
 import api_common_status
 import api_common_tension
 import api_common_util
 import card_db
+from api_common_common import api_common_dmg, api_common_dmg_leader
 from class_playinfo import Card_info
 from class_playview import Play_view
 
@@ -36,14 +36,10 @@ def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
                     objcard3 = api_common_util.getobjcard(playview, card3)
                     if objcard3 is None:
                         return {"error": "unit don't exists in target card"}, 403
-                    ret, scode = api_common_dmg.api_common_dmg(
-                        sid, playview, effect, objcard3
-                    )
+                    ret, scode = api_common_dmg(sid, playview, effect, objcard3)
                 elif re.match(pattern_p2leader, card3):
                     # リーダーHP減算
-                    ret, scode = api_common_dmg.api_common_dmg_leader(
-                        sid, playview, effect
-                    )
+                    ret, scode = api_common_dmg_leader(sid, playview, effect)
                 else:
                     return {"error": "illegal target"}, 403
     if "attack" in effect:
@@ -63,9 +59,7 @@ def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
             sid, playview, effect, card2, isRun
         )
     if "leader" in effect and "enemy" in effect:
-        ret, scode = api_common_dmg.api_common_dmg(
-            sid, playview, effect, "rightboard_10", isRun
-        )
+        ret, scode = api_common_dmg(sid, playview, effect, "rightboard_10", isRun)
     return ret, scode
 
 
