@@ -255,6 +255,9 @@ async function fetchData_impl() {
                 if (attack >= 0) {
                     setdivvalue('p1card' + i + '_attack', attack);
                     setdivvalue('p1card' + i + '_hp', hp);
+                } else {
+                    setdivvalue('p1card' + i + '_attack', "");
+                    setdivvalue('p1card' + i + '_hp', "");
                 }
                 setdivvalue('p1card' + i + '_name', "" + name + "");
                 const effect = item['effect'];
