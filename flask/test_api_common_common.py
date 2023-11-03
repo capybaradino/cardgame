@@ -2,7 +2,66 @@ import unittest
 from unittest.mock import Mock, patch
 
 import card_db
-from api_common_common import leader_hp_change, unit_hp_change, unit_hp_change_multi
+from api_common_common import (
+    api_common_dmg,
+    api_common_dmg_leader,
+    leader_hp_change,
+    unit_hp_change,
+    unit_hp_change_multi,
+)
+from class_playview import Play_view
+
+
+class TestApiCommonDmg(unittest.TestCase):
+    @patch("re.search")
+    @patch("api_common_common.unit_hp_change")
+    def test_api_common_dmg(self, mock_unit_hp_change, mock_search):
+        # Mockオブジェクトの設定
+        mock_search.return_value.group.side_effect = ["target", "10"]
+        mock_unit_hp_change.return_value = None
+        # card_db.appendlog関数をモック化
+        card_db.appendlog = Mock()
+
+        # テスト対象の関数を呼び出す
+        sid = "test_sid"
+        playview = Mock()  # Play_viewのMockオブジェクト
+        effect = "test_effect"
+        objcard2 = Mock()  # Card_infoのMockオブジェクト
+        objcard2.name = "test_name"
+        result = api_common_dmg(sid, playview, effect, objcard2)
+
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_search.assert_any_call(r"(^.*)_.*", effect)
+        mock_search.assert_any_call(r"[+-]?\d+", effect)
+        mock_unit_hp_change.assert_called_once_with(sid, playview, objcard2, 10)
+
+
+class TestApiCommonDmgLeader(unittest.TestCase):
+    @patch("re.search")
+    @patch("api_common_common.leader_hp_change")
+    def test_api_common_dmg_leader(self, mock_leader_hp_change, mock_search):
+        # Mockオブジェクトの設定
+        mock_search.return_value.group.side_effect = ["target", "10"]
+        mock_leader_hp_change.return_value = None
+
+        # テスト対象の関数を呼び出す
+        sid = "test_sid"
+        playview = Mock()  # Play_viewのMockオブジェクト
+        playview.p2name = "test_p2name"
+        playview.p2 = "test_p2"
+        effect = "test_effect"
+        result = api_common_dmg_leader(sid, playview, effect)
+
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_search.assert_any_call(r"(^.*)_.*", effect)
+        mock_search.assert_any_call(r"[+-]?\d+", effect)
+        mock_leader_hp_change.assert_called_once_with(playview.p2, 10)
 
 
 class TestUnitHPChangeMulti(unittest.TestCase):
