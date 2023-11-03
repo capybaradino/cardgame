@@ -22,8 +22,10 @@ class TestOnplayEffect(unittest.TestCase):
     @patch("api_common_status.api_common_attack")
     @patch("api_common_status.api_common_active")
     @patch("api_common_tension.api_common_tension")
+    @patch("api_common_util.get_self_or_enemy")
     def test_onplay_effect(
         self,
+        mock_api_common_get_self_or_enemy,
         mock_api_common_tension,
         mock_api_common_active,
         mock_api_common_attack,
@@ -38,6 +40,12 @@ class TestOnplayEffect(unittest.TestCase):
         mock_api_common_active.return_value = ("OK", 200)
         mock_api_common_attack.return_value = ("OK", 200)
         mock_api_common_tension.return_value = ("OK", 200)
+        mock_api_common_get_self_or_enemy.return_value = [
+            Mock(),
+            Mock(),
+            Mock(),
+            Mock(),
+        ]
 
         # テスト対象の関数を呼び出す
         sid = "test_sid"
@@ -51,7 +59,7 @@ class TestOnplayEffect(unittest.TestCase):
         isRun = True
 
         # draw_bujutsuのテスト
-        effect = "drow_bujutsu"
+        effect = "self_1drow_bujutsu"
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
@@ -59,7 +67,7 @@ class TestOnplayEffect(unittest.TestCase):
         playview.p1.draw_bujutsucard.assert_called_once()
 
         # draw_card_spellのテスト
-        effect = "drow_spell"
+        effect = "self_1drow_spell"
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
@@ -182,11 +190,13 @@ class TestUnitHPChangeMulti(unittest.TestCase):
         objcard1.dhp = 0  # 仮のdhp値
         objcard1.status = [""]
         objcard1.name = "test_name1"
+        objcard1.effect = "test_effect"
         objcard2 = Mock()
         objcard2.hp_org = 5  # 仮のhp_org値
         objcard2.dhp = 0  # 仮のdhp値
         objcard2.status = [""]
         objcard2.name = "test_name2"
+        objcard2.effect = "test_effect"
         objcards = [objcard1, objcard2]
         values = [3, 2]  # 減算する値
 
@@ -233,7 +243,9 @@ class TestUnitHPChangeMulti(unittest.TestCase):
 
         with patch("card_db.putsession") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
-        ) as mock_get_self_or_enemy, patch("api_common_dead.ondead") as mock_ondead:
+        ) as mock_get_self_or_enemy, patch(
+            "api_common_common._ondead_effect"
+        ) as mock_ondead:
             # api_common_util.get_self_or_enemyの戻り値をモック化
             player_self = Mock()
             player_self.name = "player_self"
@@ -287,7 +299,7 @@ class TestUnitHPChangeMulti(unittest.TestCase):
 
         with patch("card_db.putsession") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
-        ) as mock_get_self_or_enemy, patch("api_common_dead.ondead") as mock_ondead:
+        ) as mock_get_self_or_enemy:
             # api_common_util.get_self_or_enemyの戻り値をモック化
             player_self = Mock()
             player_self.name = "player_self"
@@ -362,11 +374,16 @@ class TestUnitHPChange(unittest.TestCase):
 
         with patch("card_db.putsession") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
-        ) as mock_get_self_or_enemy, patch("api_common_dead.ondead") as mock_ondead:
+        ) as mock_get_self_or_enemy, patch(
+            "api_common_common._ondead_effect"
+        ) as mock_ondead:
             # api_common_util.get_self_or_enemyの戻り値をモック化
             player_self = Mock()
             player_self.name = "player_self"
             mock_get_self_or_enemy.return_value = [Mock(), Mock(), player_self, Mock()]
+
+            # ondeadの対象外にする
+            objcard2.effect = "test_effect"
 
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)
@@ -404,7 +421,7 @@ class TestUnitHPChange(unittest.TestCase):
 
         with patch("card_db.putsession") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
-        ) as mock_get_self_or_enemy, patch("api_common_dead.ondead") as mock_ondead:
+        ) as mock_get_self_or_enemy:
             # api_common_util.get_self_or_enemyの戻り値をモック化
             player_self = Mock()
             player_self.name = "player_self"
