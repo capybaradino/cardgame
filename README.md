@@ -47,7 +47,9 @@ p1hp = 5
 p2hp = 5
 senkou = 1
 topcard = meraghost
-topcard2 = obake-candle
+topcard1 = kakuto-panther
+topcard2 = tiger-claw
+topcard3 = 
 ```
 
 ## Contribution
