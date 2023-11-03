@@ -6,10 +6,114 @@ from api_common_common import (
     api_common_dmg,
     api_common_dmg_leader,
     leader_hp_change,
+    onplay_effect,
     unit_hp_change,
     unit_hp_change_multi,
 )
-from class_playview import Play_view
+
+
+class TestOnplayEffect(unittest.TestCase):
+    @patch("api_common_util.getobjcard")
+    @patch("api_common_common.api_common_dmg")
+    @patch("api_common_common.api_common_dmg_leader")
+    @patch("api_common_status.api_common_attack")
+    @patch("api_common_status.api_common_active")
+    @patch("api_common_tension.api_common_tension")
+    def test_onplay_effect(
+        self,
+        mock_api_common_tension,
+        mock_api_common_active,
+        mock_api_common_attack,
+        mock_api_common_dmg_leader,
+        mock_api_common_dmg,
+        mock_getobjcard,
+    ):
+        # Mockオブジェクトの設定
+        mock_getobjcard.return_value = Mock()
+        mock_api_common_dmg.return_value = ("OK", 200)
+        mock_api_common_dmg_leader.return_value = ("OK", 200)
+        mock_api_common_active.return_value = ("OK", 200)
+        mock_api_common_attack.return_value = ("OK", 200)
+        mock_api_common_tension.return_value = ("OK", 200)
+
+        # テスト対象の関数を呼び出す
+        sid = "test_sid"
+        playview = Mock()  # Play_viewのMockオブジェクト
+        playview.p1 = Mock()
+        playview.p1.draw_bujutsucard = Mock()
+        playview.p1.draw_card_spell = Mock()
+        playview.p1.draw_card = Mock()
+        card2 = "test_card2"
+        card3 = "rightboard_3"
+        isRun = True
+
+        # draw_bujutsuのテスト
+        effect = "drow_bujutsu"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        playview.p1.draw_bujutsucard.assert_called_once()
+
+        # draw_card_spellのテスト
+        effect = "drow_spell"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        playview.p1.draw_card_spell.assert_called_once()
+
+        # dmgのテスト
+        effect = "any_5dmg"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_api_common_dmg.assert_called_once()
+
+        # dmgのテスト(対象が敵リーダー)
+        effect = "enemy_5dmg"
+        card3 = "rightboard_10"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_api_common_dmg_leader.assert_called_once()
+
+        # attackのテスト
+        effect = "unit_attack+2_thisturn"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_api_common_attack.assert_called_once()
+
+        # tensionのテスト
+        effect = "tension+2"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_api_common_tension.assert_called_once()
+
+        # activeのテスト
+        effect = "active"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_api_common_active.assert_called_once()
+
+        # 前回のテストで呼び出されたMockオブジェクトをリセット
+        mock_api_common_dmg_leader.reset_mock()
+        # dmgのテスト(対象が敵リーダー限定)
+        effect = "enemy_3dmg_leader"
+        card3 = "test_card3"
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_api_common_dmg_leader.assert_called_once()
 
 
 class TestApiCommonDmg(unittest.TestCase):
@@ -28,7 +132,7 @@ class TestApiCommonDmg(unittest.TestCase):
         effect = "test_effect"
         objcard2 = Mock()  # Card_infoのMockオブジェクト
         objcard2.name = "test_name"
-        result = api_common_dmg(sid, playview, effect, objcard2)
+        result = api_common_dmg(sid, playview, effect, objcard2, True)
 
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
@@ -53,7 +157,7 @@ class TestApiCommonDmgLeader(unittest.TestCase):
         playview.p2name = "test_p2name"
         playview.p2 = "test_p2"
         effect = "test_effect"
-        result = api_common_dmg_leader(sid, playview, effect)
+        result = api_common_dmg_leader(sid, playview, effect, True)
 
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
