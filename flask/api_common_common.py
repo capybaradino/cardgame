@@ -171,7 +171,23 @@ def _onplay_effect(
                     # 特技無効チェック
                     if "antieffect" in objcard3.status:
                         return {"error": "target unit has antieffect"}, 403
-                    ret, scode = api_common_dmg(sid, playview, effect, objcard3, isRun)
+                    if "times" in effect:
+                        # unit_1dmg_3times というフォーマットの3の部分を取得
+                        pattern = r"\d+(?!.*\d)"
+                        matches = re.search(pattern, effect)
+                        value = int(matches.group(0))
+                        # effectから_3timesの部分を削除
+                        effect = effect.replace(matches.group(0), "")
+                    else:
+                        value = 1
+                    i = 0
+                    while i < value:
+                        ret, scode = api_common_dmg(
+                            sid, playview, effect, objcard3, isRun
+                        )
+                        if ret == "HP0":
+                            break
+                        i = i + 1
                 elif re.match(pattern_p2leader, card3):
                     # リーダーHP減算
                     ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
@@ -223,12 +239,16 @@ def api_common_dmg(sid, playview: Play_view, effect, objcard2: Card_info, isRun)
     value = int(matches.group())
 
     # TODO 対象制限の確認
+    ret = 1
     if isRun:
         # 対象ユニットHP減算
         card_db.appendlog(playview.playdata.card_table, "effect->" + objcard2.name)
-        api_common_common.unit_hp_change(sid, playview, objcard2, value)
+        ret = api_common_common.unit_hp_change(sid, playview, objcard2, value)
 
-    return "OK", 200
+    if ret <= 0:
+        return "HP0", 200
+    else:
+        return "OK", 200
 
 
 def api_common_dmg_leader(sid, playview: Play_view, effect, isRun):
@@ -265,7 +285,7 @@ def unit_hp_change_multi(sid, playview: Play_view, objcards, values):
 
 
 def unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value):
-    _unit_hp_change(sid, playview, objcard2, value, "all")
+    return _unit_hp_change(sid, playview, objcard2, value, "all")
 
 
 def _unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value, mode):
@@ -307,7 +327,7 @@ def _unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value, mode):
         card_db.appendlog(playview.playdata.card_table, objcard2.name + " dead")
         # 死亡時効果発動
         _ondead_effect(sid, playview, objcard2)
-    return
+    return objcard2.hp_org + objcard2.dhp
 
 
 def _ondead_effect(sid, playview: Play_view, objcard2: Card_info):

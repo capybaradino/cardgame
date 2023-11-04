@@ -73,6 +73,7 @@ class TestAPITension(unittest.TestCase):
             api_common_util.getobjcard = Mock()
             api_common_util.getobjcard.return_value = objcard2
             self.playview.p2board[0] = objcard2
+            api_common_common.unit_hp_change.return_value = 0
             result = api_tension.api_tension(
                 self.sid, self.playview, "card1", "rightboard_0"
             )

@@ -135,7 +135,7 @@ class TestApiCommonDmg(unittest.TestCase):
     def test_api_common_dmg(self, mock_unit_hp_change, mock_search):
         # Mockオブジェクトの設定
         mock_search.return_value.group.side_effect = ["target", "10"]
-        mock_unit_hp_change.return_value = None
+        mock_unit_hp_change.return_value = 10
         # card_db.appendlog関数をモック化
         card_db.appendlog = Mock()
 
