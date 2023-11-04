@@ -46,7 +46,7 @@ def api_tension(sid, playview: Play_view, card1, card2):
                 playview.playdata.card_table, "[" + playview.p1name + "]tension skill:"
             )
         # 魔法使い
-        if job == "wiz":
+        elif job == "wiz":
             # 攻撃先確認
             pattern_p1board = r"rightboard_[0-5]$"  # 盤面
             pattern_p1leader = r"rightboard_10"  # リーダー
@@ -117,6 +117,8 @@ def api_tension(sid, playview: Play_view, card1, card2):
                     return {"info": "OK"}
             else:
                 return {"error": "illegal card2"}, 403
+        else:
+            return {"error": "unknown job"}, 403
 
         # テンション初期化
         tension = 0
