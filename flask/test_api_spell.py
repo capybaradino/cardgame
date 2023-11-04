@@ -62,78 +62,99 @@ class TestAPISpell(unittest.TestCase):
 
     def test_api_spell_with_self_1drow_effect(self):
         # Test case 2: Test with self_1drow effect
-        api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
-        card_db.putsession = MagicMock()
-        self.objcard.effect = "self_1drow"
-        result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
-        self.assertEqual(result, {"info": "OK"})
-        self.assertEqual(status_code, 200)
-        self.player_self.draw_card.assert_called_once()
-        card_db.putsession.assert_any_call(
-            "playerstats", "name", self.playview.p1name, "mp", 2
-        )
-        card_db.putsession.assert_any_call(
-            self.playview.playdata.card_table,
-            "cuid",
-            self.objcard.cuid,
-            "loc",
-            self.playview.p1name + "_cemetery",
-        )
+        with patch("api_spell.Play_view") as play_view_mock:
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
+            card_db.putsession = MagicMock()
+            self.objcard.effect = "self_1drow"
+            result, status_code = api_spell(
+                self.sid, self.playview, self.card1, self.card2
+            )
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(status_code, 200)
+            self.player_self.draw_card.assert_called_once()
+            card_db.putsession.assert_any_call(
+                "playerstats", "name", self.playview.p1name, "mp", 2
+            )
+            card_db.putsession.assert_any_call(
+                self.playview.playdata.card_table,
+                "cuid",
+                self.objcard.cuid,
+                "loc",
+                self.playview.p1name + "_cemetery",
+            )
 
     def test_api_spell_with_switch_effect(self):
         # Test case 3: Test with switch effect
-        api_common_util.getobjcard = MagicMock(return_value=self.objcard2)
-        api_common_util.getobjcard_oppsite = MagicMock(
-            return_value=(self.objcard3, 2, 1)
-        )
-        card_db.putdeck_locnum = MagicMock()
-        card_db.putsession = MagicMock()
-        self.objcard.effect = "switch"
-        result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
-        self.assertEqual(result, {"info": "OK"})
-        self.assertEqual(status_code, 200)
-        api_common_util.getobjcard_oppsite.assert_called_once_with(
-            self.playview, self.card2
-        )
-        card_db.putdeck_locnum.assert_any_call(
-            self.playview.playdata.card_table, self.objcard2.cuid, 1
-        )
-        card_db.putdeck_locnum.assert_any_call(
-            self.playview.playdata.card_table, self.objcard3.cuid, 2
-        )
-        card_db.putsession.assert_any_call(
-            "playerstats", "name", self.playview.p1name, "mp", 2
-        )
-        card_db.putsession.assert_any_call(
-            self.playview.playdata.card_table,
-            "cuid",
-            self.objcard.cuid,
-            "loc",
-            self.playview.p1name + "_cemetery",
-        )
+        with patch("api_spell.Play_view") as play_view_mock:
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            api_common_util.getobjcard = MagicMock(return_value=self.objcard2)
+            api_common_util.getobjcard_oppsite = MagicMock(
+                return_value=(self.objcard3, 2, 1)
+            )
+            card_db.putdeck_locnum = MagicMock()
+            card_db.putsession = MagicMock()
+            self.objcard.effect = "switch"
+            result, status_code = api_spell(
+                self.sid, self.playview, self.card1, self.card2
+            )
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(status_code, 200)
+            api_common_util.getobjcard_oppsite.assert_called_once_with(
+                self.playview, self.card2
+            )
+            card_db.putdeck_locnum.assert_any_call(
+                self.playview.playdata.card_table, self.objcard2.cuid, 1
+            )
+            card_db.putdeck_locnum.assert_any_call(
+                self.playview.playdata.card_table, self.objcard3.cuid, 2
+            )
+            card_db.putsession.assert_any_call(
+                "playerstats", "name", self.playview.p1name, "mp", 2
+            )
+            card_db.putsession.assert_any_call(
+                self.playview.playdata.card_table,
+                "cuid",
+                self.objcard.cuid,
+                "loc",
+                self.playview.p1name + "_cemetery",
+            )
 
     def test_api_spell_with_dmg_enemy_effect(self):
         # Test case 4: Test with dmg_enemy effect
-        api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
-        card_db.putsession = MagicMock()
-        api_common_common.unit_hp_change = MagicMock()
-        self.objcard.effect = "any_3dmg"
-        result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
-        self.assertEqual(result, {"info": "OK"})
-        self.assertEqual(status_code, 200)
-        api_common_common.unit_hp_change.assert_called_once_with(
-            self.sid, self.playview, self.objcard1, 3
-        )
-        card_db.putsession.assert_any_call(
-            "playerstats", "name", self.playview.p1name, "mp", 2
-        )
-        card_db.putsession.assert_any_call(
-            self.playview.playdata.card_table,
-            "cuid",
-            self.objcard.cuid,
-            "loc",
-            self.playview.p1name + "_cemetery",
-        )
+        with patch("api_spell.Play_view") as play_view_mock:
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
+            card_db.putsession = MagicMock()
+            api_common_common.unit_hp_change = MagicMock()
+            self.objcard.effect = "any_3dmg"
+            result, status_code = api_spell(
+                self.sid, self.playview, self.card1, self.card2
+            )
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(status_code, 200)
+            api_common_common.unit_hp_change.assert_called_once_with(
+                self.sid, self.playview, self.objcard1, 3
+            )
+            card_db.putsession.assert_any_call(
+                "playerstats", "name", self.playview.p1name, "mp", 2
+            )
+            card_db.putsession.assert_any_call(
+                self.playview.playdata.card_table,
+                "cuid",
+                self.objcard.cuid,
+                "loc",
+                self.playview.p1name + "_cemetery",
+            )
 
     def test_api_spell_with_dmg_enemy_effect_and_antieffect(self):
         # Test case 5: Test with dmg_enemy effect and antieffect
