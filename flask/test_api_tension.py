@@ -60,52 +60,64 @@ class TestAPITension(unittest.TestCase):
         self.assertEqual(result, {"error": "MP short"})
 
     def test_api_tension_with_tension_skill_wiz_board(self):
-        self.playview.p1tension = 3
-        objcard2 = Mock()
-        objcard2.refresh = Mock()
-        objcard2.status = "test_status"
-        objcard2.name = "test_name"
-        api_common_util.getobjcard = Mock()
-        api_common_util.getobjcard.return_value = objcard2
-        self.playview.p2board[0] = objcard2
-        result = api_tension.api_tension(
-            self.sid, self.playview, "card1", "rightboard_0"
-        )
-        self.assertEqual(result, {"info": "OK"})
-        api_common_common.unit_hp_change.assert_called_once_with(
-            self.sid, self.playview, self.playview.p2board[0], 3
-        )
-        card_db.appendlog.assert_any_call(
-            self.playview.playdata.card_table,
-            "[" + self.playview.p1name + "]tension skill:",
-        )
-        card_db.appendlog.assert_any_call(
-            self.playview.playdata.card_table,
-            "effect->" + self.playview.p2board[0].name,
-        )
+        with patch("api_tension.Play_view") as play_view_mock:
+            self.playview.p1tension = 3
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            objcard2 = Mock()
+            objcard2.refresh = Mock()
+            objcard2.status = "test_status"
+            objcard2.name = "test_name"
+            api_common_util.getobjcard = Mock()
+            api_common_util.getobjcard.return_value = objcard2
+            self.playview.p2board[0] = objcard2
+            result = api_tension.api_tension(
+                self.sid, self.playview, "card1", "rightboard_0"
+            )
+            self.assertEqual(result, {"info": "OK"})
+            api_common_common.unit_hp_change.assert_called_once_with(
+                self.sid, self.playview, self.playview.p2board[0], 3
+            )
+            card_db.appendlog.assert_any_call(
+                self.playview.playdata.card_table,
+                "[" + self.playview.p1name + "]tension skill:",
+            )
+            card_db.appendlog.assert_any_call(
+                self.playview.playdata.card_table,
+                "effect->" + self.playview.p2board[0].name,
+            )
 
     def test_api_tension_with_tension_skill_wiz_leader(self):
-        self.playview.p1tension = 3
-        api_common_common.leader_hp_change = Mock()
-        result = api_tension.api_tension(
-            self.sid, self.playview, "card1", "rightboard_10"
-        )
-        self.assertEqual(result, {"info": "OK"})
-        # card_db.putsession.assert_any_call(
-        #     "playerstats",
-        #     "player_tid",
-        #     self.playview.p2.player_tid,
-        #     "hp",
-        #     7,
-        # )
-        api_common_common.leader_hp_change.assert_called_once_with(self.playview.p2, 3)
-        card_db.appendlog.assert_any_call(
-            self.playview.playdata.card_table,
-            "[" + self.playview.p1name + "]tension skill:",
-        )
-        card_db.appendlog.assert_any_call(
-            self.playview.playdata.card_table, "effect->" + self.playview.p2name
-        )
+        with patch("api_tension.Play_view") as play_view_mock:
+            self.playview.p1tension = 3
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            api_common_common.leader_hp_change = Mock()
+            result = api_tension.api_tension(
+                self.sid, self.playview, "card1", "rightboard_10"
+            )
+            self.assertEqual(result, {"info": "OK"})
+            # card_db.putsession.assert_any_call(
+            #     "playerstats",
+            #     "player_tid",
+            #     self.playview.p2.player_tid,
+            #     "hp",
+            #     7,
+            # )
+            api_common_common.leader_hp_change.assert_called_once_with(
+                self.playview.p2, 3
+            )
+            card_db.appendlog.assert_any_call(
+                self.playview.playdata.card_table,
+                "[" + self.playview.p1name + "]tension skill:",
+            )
+            card_db.appendlog.assert_any_call(
+                self.playview.playdata.card_table, "effect->" + self.playview.p2name
+            )
 
     def test_api_tension_with_tension_skill_wiz_illegal_card2(self):
         self.playview.p1tension = 3
