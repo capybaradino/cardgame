@@ -236,9 +236,17 @@ class Playdata:
         # TODO デッキ固定
         deck_name: str
         if newgame:
-            deck_name = "gamecard_wiz_2018haru_3_aguzesi"
+            ret = debug.getdebugparam("p1_deck")
+            if ret is not None and ret != "":
+                deck_name = ret
+            else:
+                deck_name = "gamecard_wiz_2018haru_3_aguzesi"
         else:
-            deck_name = "gamecard_mnk_2018haru_2_butoka"
+            ret = debug.getdebugparam("p2_deck")
+            if ret is not None and ret != "":
+                deck_name = ret
+            else:
+                deck_name = "gamecard_mnk_2018haru_2_butoka"
 
         # 職業判定
         if deck_name.startswith("gamecard_wiz"):
