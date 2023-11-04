@@ -18,7 +18,7 @@
 バアルゼブブ	baaru-zebubu	onplay:enemy_3dmg_leader
 かくとうパンサー	kakuto-panther	onplay:self_1drow_bujutsu
 はりせんもぐら	harisen-mole	ondead:self_tension+1
-タイガークロー	tiger-claw	
+タイガークロー	tiger-claw	unit_1dmg_3times
 せいけん突き	seiken-punch	
 とうこん討ち	tokon-punch	
 まわしげり	mawashi-kick	

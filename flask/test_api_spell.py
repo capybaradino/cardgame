@@ -135,7 +135,7 @@ class TestAPISpell(unittest.TestCase):
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
             card_db.putsession = MagicMock()
-            api_common_common.unit_hp_change = MagicMock()
+            api_common_common.unit_hp_change = MagicMock(return_value=3)
             self.objcard.effect = "any_3dmg"
             result, status_code = api_spell(
                 self.sid, self.playview, self.card1, self.card2
@@ -144,6 +144,72 @@ class TestAPISpell(unittest.TestCase):
             self.assertEqual(status_code, 200)
             api_common_common.unit_hp_change.assert_called_once_with(
                 self.sid, self.playview, self.objcard1, 3
+            )
+            card_db.putsession.assert_any_call(
+                "playerstats", "name", self.playview.p1name, "mp", 2
+            )
+            card_db.putsession.assert_any_call(
+                self.playview.playdata.card_table,
+                "cuid",
+                self.objcard.cuid,
+                "loc",
+                self.playview.p1name + "_cemetery",
+            )
+
+    def test_api_spell_with_dmg_enemy_effect_3times(self):
+        # Test case 4-2: Test with dmg_enemy effect 3times
+        with patch("api_spell.Play_view") as play_view_mock:
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
+            card_db.putsession = MagicMock()
+            api_common_common.unit_hp_change = MagicMock(return_value=1)
+            self.objcard.effect = "unit_1dmg_3times"
+            result, status_code = api_spell(
+                self.sid, self.playview, self.card1, self.card2
+            )
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(status_code, 200)
+            # api_common_common.unit_hp_changeが3回呼ばれていることを確認
+            api_common_common.unit_hp_change.assert_called()
+            self.assertEqual(api_common_common.unit_hp_change.call_count, 3)
+            # そのうち1回はself.objcard1に対して呼ばれていることを確認
+            api_common_common.unit_hp_change.assert_any_call(
+                self.sid, self.playview, self.objcard1, 1
+            )
+            card_db.putsession.assert_any_call(
+                "playerstats", "name", self.playview.p1name, "mp", 2
+            )
+            card_db.putsession.assert_any_call(
+                self.playview.playdata.card_table,
+                "cuid",
+                self.objcard.cuid,
+                "loc",
+                self.playview.p1name + "_cemetery",
+            )
+        # Test case 4-3: Test with dmg_enemy effect 1times of 3
+        with patch("api_spell.Play_view") as play_view_mock:
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            play_view_mock.return_value = playview_end
+            api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
+            card_db.putsession = MagicMock()
+            api_common_common.unit_hp_change = MagicMock(return_value=0)
+            self.objcard.effect = "unit_1dmg_3times"
+            result, status_code = api_spell(
+                self.sid, self.playview, self.card1, self.card2
+            )
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(status_code, 200)
+            # api_common_common.unit_hp_changeが1回呼ばれていることを確認
+            api_common_common.unit_hp_change.assert_called()
+            self.assertEqual(api_common_common.unit_hp_change.call_count, 1)
+            # そのうち1回はself.objcard1に対して呼ばれていることを確認
+            api_common_common.unit_hp_change.assert_any_call(
+                self.sid, self.playview, self.objcard1, 1
             )
             card_db.putsession.assert_any_call(
                 "playerstats", "name", self.playview.p1name, "mp", 2
