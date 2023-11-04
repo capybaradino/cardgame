@@ -1,7 +1,8 @@
 import re
 
-import api_common_attack
 import api_common_common
+import api_common_status
+import api_common_util
 import card_db
 from class_playinfo import Card_info
 from class_playview import Play_view
@@ -42,7 +43,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return {"error": "card2 has stealth"}, 403
         # 攻撃時効果
         ret = "OK"
-        ret, scode = api_common_attack.api_onattack(sid, playview, objcard1)
+        ret, scode = api_onattack(sid, playview, objcard1)
         objcard1.refresh(playview.playdata.card_table)
 
         if ret != "OK":
@@ -72,7 +73,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return {"error": "wall exists"}, 403
         # 攻撃時効果
         ret = "OK"
-        ret, scode = api_common_attack.api_onattack(sid, playview, objcard1)
+        ret, scode = api_onattack(sid, playview, objcard1)
         objcard1.refresh(playview.playdata.card_table)
 
         if ret != "OK":
@@ -111,4 +112,35 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
     else:
         return {"error": "illegal card2"}, 403
 
-    return {"info": "OK"}
+    return {"info": "OK"}, 200
+
+
+def api_onattack(sid, playview: Play_view, objcard1: Card_info):
+    effect_array = objcard1.effect.split(",")
+    effect: str
+    for effect in effect_array:
+        if effect.startswith("onattack"):
+            # TODO 攻撃時効果のバリエーション実装
+            subeffect = effect.split(":")[1]
+            if "attack" in subeffect:
+                api_common_status.api_common_attack_card(
+                    sid, playview, effect, objcard1
+                )
+            if "drow" in subeffect:
+                if "enemy" in subeffect:
+                    (
+                        board_self,
+                        board_enemy,
+                        player_self,
+                        player_enemy,
+                    ) = api_common_util.get_self_or_enemy(playview, objcard1)
+                    player_enemy.draw_card()
+    # ステルス解除
+    objcard1.refresh(playview.playdata.card_table)
+    status = objcard1.status
+    status = status.replace(",stealth", "")
+    card_db.putsession(
+        playview.playdata.card_table, "cuid", objcard1.cuid, "status", status
+    )
+
+    return "OK", 200
