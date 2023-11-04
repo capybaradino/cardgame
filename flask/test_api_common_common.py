@@ -34,7 +34,9 @@ class TestOnplayEffect(unittest.TestCase):
         mock_getobjcard,
     ):
         # Mockオブジェクトの設定
-        mock_getobjcard.return_value = Mock()
+        objcard3 = Mock()
+        objcard3.status = "test_status"
+        mock_getobjcard.return_value = objcard3
         mock_api_common_dmg.return_value = ("OK", 200)
         mock_api_common_dmg_leader.return_value = ("OK", 200)
         mock_api_common_active.return_value = ("OK", 200)

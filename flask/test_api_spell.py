@@ -20,7 +20,7 @@ class TestAPISpell(unittest.TestCase):
         self.playview.p1name = "test_name"
         self.playview.playdata.card_table = "test_card_table"
         self.card1 = "card1_1"
-        self.card2 = "leftboard_1"
+        self.card2 = "rightboard_1"
         self.objcard1 = Mock()
         self.objcard1.effect = "self_1drow,switch,dmg_enemy_1"
         self.objcard1.cost = 3
@@ -45,6 +45,13 @@ class TestAPISpell(unittest.TestCase):
         self.pattern_p1leader = r"leftboard_10"
         self.pattern_p2leader = r"rightboard_10"
         card_db.appendlog = Mock()
+        self.player_self = Mock()
+        self.player_self.draw_card = Mock()
+        self.player_enemy = Mock()
+        self.player_enemy.draw_card = Mock()
+        api_common_util.get_self_or_enemy = MagicMock(
+            return_value=(Mock(), Mock(), self.player_self, self.player_enemy)
+        )
 
     def test_api_spell_with_illegal_card1_number(self):
         # Test case 1: Test with illegal card1 number
@@ -61,6 +68,7 @@ class TestAPISpell(unittest.TestCase):
         result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
         self.assertEqual(result, {"info": "OK"})
         self.assertEqual(status_code, 200)
+        self.player_self.draw_card.assert_called_once()
         card_db.putsession.assert_any_call(
             "playerstats", "name", self.playview.p1name, "mp", 2
         )
@@ -132,7 +140,7 @@ class TestAPISpell(unittest.TestCase):
         api_common_util.getobjcard = MagicMock(return_value=self.objcard2)
         self.objcard2.status = "antieffect"
         result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
-        self.assertEqual(result, {"error": "card2 has antieffect"})
+        self.assertEqual(result, {"error": "target unit has antieffect"})
         self.assertEqual(status_code, 403)
 
     def test_api_spell_with_illegal_card2(self):
@@ -141,14 +149,14 @@ class TestAPISpell(unittest.TestCase):
         result, status_code = api_spell(
             self.sid, self.playview, self.card1, "dummy_card"
         )
-        self.assertEqual(result, {"error": "illegal card2"})
+        self.assertEqual(result, {"error": "illegal target"})
         self.assertEqual(status_code, 403)
 
     def test_api_spell_with_illegal_card2_unit(self):
         # Test case 7: Test with illegal card2 unit
         api_common_util.getobjcard = MagicMock(return_value=None)
         result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
-        self.assertEqual(result, {"error": "unit don't exists in card2"})
+        self.assertEqual(result, {"error": "unit don't exists in target"})
         self.assertEqual(status_code, 403)
 
     def test_api_spell_with_mp_short(self):
