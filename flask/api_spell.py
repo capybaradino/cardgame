@@ -54,4 +54,11 @@ def api_spell(sid, playview: Play_view, card1, card2):
         playview.p1name + "_cemetery",
     )
 
+    # 勝敗確認
+    playview = Play_view(sid)
+    if playview.p1hp <= 0:
+        playview.playdata.gameover(sid)
+    if playview.p2hp <= 0:
+        playview.playdata.gamewin(sid)
+
     return {"info": "OK"}, 200
