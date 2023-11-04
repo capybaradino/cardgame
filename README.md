@@ -47,9 +47,13 @@ p1hp = 5
 p2hp = 5
 senkou = 1
 topcard = meraghost
-topcard1 = kakuto-panther
-topcard2 = tiger-claw
-topcard3 = 
+topcard1 = takeyari-soldier
+topcard2 = baaru-zebubu
+# topcard =
+# topcard1 =
+# topcard2 =
+p1_deck = gamecard_wiz_2018haru_3_aguzesi
+p2_deck = gamecard_wiz_2018haru_3_aguzesi
 ```
 
 ## Contribution
