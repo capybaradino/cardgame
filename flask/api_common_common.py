@@ -19,9 +19,48 @@ def onplay_effect_objcard(sid, playview: Play_view, effect, objcard: Card_info, 
     return _onplay_effect(sid, playview, effect, None, None, objcard, isRun)
 
 
+def onplay_effect_spell(
+    sid, playview: Play_view, effect, objcard: Card_info, card2, isRun
+):
+    """効果の確認と実行(特技用)
+    特技使用先(card2)は、内部関数上はcard3に変換する。
+    (特技なので内部関数のcard2(ユニット配置先)は使わない)
+
+    Args:
+        sid (_type_): セッションID
+        playview (Play_view): 引継ぎ情報
+        effect (_type_): 効果(テキスト、単体)
+        objcard (Card_info): 効果を発動するカードの情報
+        card2 (_type_): 特技使用先の対象
+        isRun (bool): 実行フラグ(事前チェックの場合はFalseにする)
+
+    Returns:
+        _type_: _description_
+    """
+    return _onplay_effect(sid, playview, effect, None, card2, objcard, isRun)
+
+
 def _onplay_effect(
     sid, playview: Play_view, effect, card2, card3, objcard: Card_info, isRun
 ):
+    """効果の確認と実行
+
+    Args:
+        sid (_type_): セッションID
+        playview (Play_view): 引継ぎ情報
+        effect (_type_): 効果(テキスト、単体)
+        card2 (_type_): プレイ時のユニット配置先
+        card3 (_type_): プレイ時または特技使用時の効果対象
+        objcard (Card_info): 効果を発動するカードの情報
+        isRun (bool): 実行フラグ(事前チェックの場合はFalseにする)
+
+    Raises:
+        Exception: _description_
+        Exception: _description_
+
+    Returns:
+        _type_: _description_
+    """
     if objcard is not None:
         (
             board_self,
@@ -30,7 +69,36 @@ def _onplay_effect(
             player_enemy,
         ) = api_common_util.get_self_or_enemy(playview, objcard)
     # TODO 効果のバリエーション実装
-    if "drow" in effect:
+    if "switch" in effect:
+        # 対象確認
+        pattern_p1board = r"leftboard_[0-5]$"  # 盤面
+        pattern_p2board = r"rightboard_[0-5]$"  # 盤面
+        if re.match(pattern_p2board, card3) or re.match(pattern_p1board, card3):
+            # TODO 対象制限の確認
+            objcard2 = api_common_util.getobjcard(playview, card3)
+            if objcard2 is None:
+                return {"error": "unit don't exists in target card"}, 403
+            # ALL OK DB更新
+            if isRun:
+                card_db.appendlog(
+                    playview.playdata.card_table, "target->" + objcard2.name
+                )
+                # 対象ユニット場所入れ替え
+                objcard3, loc1, loc2 = api_common_util.getobjcard_oppsite(
+                    playview, card3
+                )
+                card_db.putdeck_locnum(
+                    playview.playdata.card_table, objcard2.cuid, loc2
+                )
+                if objcard3 is not None:
+                    card_db.putdeck_locnum(
+                        playview.playdata.card_table, objcard3.cuid, loc1
+                    )
+        else:
+            return {"error": "illegal target card"}, 403
+        ret = "OK"
+        scode = 200
+    elif "drow" in effect:
         if isRun:
             if objcard is None:
                 player = playview.p1
@@ -99,7 +167,10 @@ def _onplay_effect(
                     # ユニットHP減算
                     objcard3 = api_common_util.getobjcard(playview, card3)
                     if objcard3 is None:
-                        return {"error": "unit don't exists in target card"}, 403
+                        return {"error": "unit don't exists in target"}, 403
+                    # 特技無効チェック
+                    if "antieffect" in objcard3.status:
+                        return {"error": "target unit has antieffect"}, 403
                     ret, scode = api_common_dmg(sid, playview, effect, objcard3, isRun)
                 elif re.match(pattern_p2leader, card3):
                     # リーダーHP減算
