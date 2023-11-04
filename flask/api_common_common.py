@@ -190,6 +190,12 @@ def _onplay_effect(
                 ret, scode = api_common_status.api_common_attack(
                     sid, playview, effect, card3, isRun
                 )
+        elif "self" in effect:
+            # onattack専用
+            api_common_status.api_common_attack_card(sid, playview, effect, objcard)
+            ret = "OK"
+            scode = 200
+
     elif "tension" in effect:
         if objcard is None:
             ret, scode = api_common_tension.api_common_tension(
