@@ -29,7 +29,7 @@ def _onplay_effect(
             player_self,
             player_enemy,
         ) = api_common_util.get_self_or_enemy(playview, objcard)
-    # TODO 召喚時効果のバリエーション実装
+    # TODO 効果のバリエーション実装
     if "drow" in effect:
         if isRun:
             if objcard is None:
@@ -53,7 +53,7 @@ def _onplay_effect(
                 i = i + 1
         ret = "OK"
         scode = 200
-    if "dmg" in effect:
+    elif "dmg" in effect:
         if "random" in effect:
             pattern = r"[+-]?\d+"
             matches = re.search(pattern, effect)
@@ -111,7 +111,7 @@ def _onplay_effect(
             ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
         else:
             raise Exception("illegal dmg effect")
-    if "attack" in effect:
+    elif "attack" in effect:
         if "unit" in effect:
             if card3 is None:
                 return {"error": "Specify 3rd card"}, 403
@@ -119,7 +119,7 @@ def _onplay_effect(
                 ret, scode = api_common_status.api_common_attack(
                     sid, playview, effect, card3, isRun
                 )
-    if "tension" in effect:
+    elif "tension" in effect:
         if objcard is None:
             ret, scode = api_common_tension.api_common_tension(
                 sid, playview, effect, card2, isRun
@@ -128,7 +128,7 @@ def _onplay_effect(
             ret, scode = api_common_tension.api_common_tension_objcard(
                 sid, playview, effect, objcard, isRun
             )
-    if "active" in effect:
+    elif "active" in effect:
         ret, scode = api_common_status.api_common_active(
             sid, playview, effect, card2, isRun
         )
