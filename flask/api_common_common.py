@@ -133,7 +133,7 @@ def _onplay_effect(
                 for card in board_enemy:
                     if card is not None:
                         # HP=0のユニットは除外
-                        if card.hp + card.dhp > 0:
+                        if card.hp_org + card.dhp > 0:
                             index.append(i)
                     i = i + 1
                 leader = len(index)
