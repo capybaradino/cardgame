@@ -468,7 +468,7 @@ class TestUnitHPChange(unittest.TestCase):
             player_self = Mock()
             player_self.name = "player_self"
             card = Mock()
-            card.hp = 5
+            card.hp_org = 5
             card.dhp = 0
             card.name = "test_name"
             player_enemy = Mock()
@@ -490,23 +490,24 @@ class TestUnitHPChange(unittest.TestCase):
             # Mockオブジェクトが期待通りに呼び出されたことを確認
             api_common_tension.api_common_tension_objcard.assert_called_once()
 
-            # dmgのテスト(対象がユニット)
-            objcard2.effect = "ondead:enemy_1dmg_random"
-            api_common_common.unit_hp_change = Mock(return_value=("OK", 200))
-            random.randrange = Mock(return_value=0)
-            # unit_hp_change関数を呼び出す
-            unit_hp_change(sid, playview, objcard2, value)
-            # Mockオブジェクトが期待通りに呼び出されたことを確認
-            api_common_common.unit_hp_change.assert_called_once()
+            with patch("random.randrange") as mock_randrange:
+                # dmgのテスト(対象がユニット)
+                objcard2.effect = "ondead:enemy_1dmg_random"
+                api_common_common.unit_hp_change = Mock(return_value=("OK", 200))
+                mock_randrange.return_value = 0
+                # unit_hp_change関数を呼び出す
+                unit_hp_change(sid, playview, objcard2, value)
+                # Mockオブジェクトが期待通りに呼び出されたことを確認
+                api_common_common.unit_hp_change.assert_called_once()
 
-            # dmgのテスト(対象がリーダー)
-            objcard2.effect = "ondead:enemy_1dmg_random"
-            api_common_common.leader_hp_change = Mock(return_value=("OK", 200))
-            random.randrange = Mock(return_value=1)
-            # unit_hp_change関数を呼び出す
-            unit_hp_change(sid, playview, objcard2, value)
-            # Mockオブジェクトが期待通りに呼び出されたことを確認
-            api_common_common.leader_hp_change.assert_called_once()
+                # dmgのテスト(対象がリーダー)
+                objcard2.effect = "ondead:enemy_1dmg_random"
+                api_common_common.leader_hp_change = Mock(return_value=("OK", 200))
+                mock_randrange.return_value = 1
+                # unit_hp_change関数を呼び出す
+                unit_hp_change(sid, playview, objcard2, value)
+                # Mockオブジェクトが期待通りに呼び出されたことを確認
+                api_common_common.leader_hp_change.assert_called_once()
 
             # drowのテスト(対象が自リーダー)
             objcard2.effect = "ondead:self_1drow_spell"
