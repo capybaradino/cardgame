@@ -1,8 +1,9 @@
 import unittest
 from unittest.mock import Mock, patch
 
+import api_common_util
 import card_db
-from api_attack import api_unit_attack
+from api_attack import api_onattack, api_unit_attack
 
 
 class TestAPIUnitAttack(unittest.TestCase):
@@ -158,6 +159,75 @@ class TestAPIUnitAttack(unittest.TestCase):
                 7,
             )
             mock_api_onattack.assert_called_with(self.sid, self.playview, self.objcard1)
+
+
+class TestAPIOnAttack(unittest.TestCase):
+    def setUp(self):
+        self.sid = 1
+        self.playview = Mock()
+        self.objcard1 = Mock()
+        self.objcard1.cuid = "test_cuid_1"
+        self.objcard1.name = "test_card_1"
+        self.objcard1.attack = 3
+        self.objcard1.status = ""
+        self.objcard1.effect = ""
+        self.objcard2 = Mock()
+        self.objcard2.cuid = "test_cuid_2"
+        self.objcard2.name = "test_card_2"
+        self.objcard2.attack = 2
+        self.objcard2.status = []
+        self.playview.p1board = [self.objcard1, None, None, None]
+        self.playview.p2board = [None, None, None, self.objcard2]
+        self.playview.p1name = "test_player_1"
+        self.playview.p2name = "test_player_2"
+        self.playview.p2hp = 10
+        self.playview.playdata = Mock()
+        self.playview.playdata.card_table = "test_card_table"
+        self.playview.playdata.player1 = Mock()
+        self.playview.playdata.player1.name = "test_player_1"
+        self.playview.playdata.p1_player_tid = 1
+        self.playview.playdata.p2_player_tid = 2
+        card_db.getrecord_fromsession = Mock()
+        card_db.getrecord_fromsession.return_value = [0, 0, 0, 0, 0, 0, 1, 0]
+        card_db.appendlog = Mock()
+        card_db.putsession = Mock()
+
+    def test_api_onattack_with_attack_subeffect(self):
+        with patch(
+            "api_common_status.api_common_attack_card"
+        ) as mock_api_common_attack_card:
+            self.objcard1.effect = "onattack:attack"
+            api_onattack(self.sid, self.playview, self.objcard1)
+            mock_api_common_attack_card.assert_called_once_with(
+                self.sid, self.playview, "onattack:attack", self.objcard1
+            )
+
+    def test_api_onattack_with_drow_subeffect_and_enemy(self):
+        # 敵に1ドロー
+        self.objcard1.effect = "onattack:enemy_1drow_any"
+        api_common_util.get_self_or_enemy = Mock()
+        api_common_util.get_self_or_enemy.return_value = [
+            Mock(),
+            Mock(),
+            Mock(),
+            self.playview.p2player,
+        ]
+        api_onattack(self.sid, self.playview, self.objcard1)
+        self.assertEqual(self.playview.p2player.draw_card.call_count, 1)
+
+    # def test_api_onattack_with_drow_subeffect_and_self(self):
+    #     # 自分に1ドロー
+    #     self.objcard1.effect = "onattack:self_1drow"
+    #     api_onattack(self.sid, self.playview, self.objcard1)
+    #     self.assertEqual(self.playview.p1player.draw_card.call_count, 1)
+
+    def test_api_onattack_with_stealth_status(self):
+        # ステルス解除
+        self.objcard1.status = ",stealth"
+        api_onattack(self.sid, self.playview, self.objcard1)
+        card_db.putsession.assert_called_once_with(
+            self.playview.playdata.card_table, "cuid", self.objcard1.cuid, "status", ""
+        )
 
 
 # メイン関数
