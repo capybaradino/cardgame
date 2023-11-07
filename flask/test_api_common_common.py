@@ -93,6 +93,30 @@ class TestOnplayEffect(unittest.TestCase):
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         mock_api_common_dmg_leader.assert_called_once()
 
+        # dmgのテスト(前列指定(OK))
+        effect = "unit_5dmg_frontonly"
+        card3 = "rightboard_1"
+        objcard3.locnum = 1
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+
+        # dmgのテスト(前列指定(NG))
+        effect = "unit_5dmg_frontonly"
+        card3 = "rightboard_3"
+        objcard3.locnum = 3
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ({"error": "target unit is not front"}, 403))
+
+        # dmgのテスト(ユニット限定でリーダー指定)
+        effect = "unit_5dmg"
+        card3 = "rightboard_10"
+        objcard3.locnum = 10
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認
+        self.assertEqual(result, ({"error": "cannot target leader"}, 403))
+
         # attackのテスト
         effect = "unit_attack+2_thisturn"
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)

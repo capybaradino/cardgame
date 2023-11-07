@@ -153,7 +153,10 @@ def _onplay_effect(
                 scode = 200
             else:
                 raise Exception("illegal randomdmg effect")
-        elif not "leader" in effect:
+        elif "leader" in effect:
+            # リーダーHP減算
+            ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
+        elif "any" in effect or "unit" in effect or "enemy" in effect:
             if card3 is None:
                 return {"error": "Specify 3rd card"}, 403
             else:
@@ -171,6 +174,10 @@ def _onplay_effect(
                     # 特技無効チェック
                     if "antieffect" in objcard3.status:
                         return {"error": "target unit has antieffect"}, 403
+                    # 前列指定制限チェック
+                    if "frontonly" in effect:
+                        if objcard3.locnum > 2:
+                            return {"error": "target unit is not front"}, 403
                     if "times" in effect:
                         # unit_1dmg_3times というフォーマットの3の部分を取得
                         pattern = r"\d+(?!.*\d)"
@@ -189,13 +196,13 @@ def _onplay_effect(
                             break
                         i = i + 1
                 elif re.match(pattern_p2leader, card3):
+                    # ユニット指定の場合はエラー
+                    if "unit" in effect:
+                        return {"error": "cannot target leader"}, 403
                     # リーダーHP減算
                     ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
                 else:
                     return {"error": "illegal target"}, 403
-        elif "leader" in effect:
-            # リーダーHP減算
-            ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
         else:
             raise Exception("illegal dmg effect")
     elif "attack" in effect:
