@@ -3,20 +3,20 @@
 モーモン	mo-mon	
 おばけキャンドル	obake-candle	ondead:enemy_1dmg_random
 プチアーノン	petite-anon	onattack:self_attack+1
-ニードルマン	needleman	onattack:enemy_1drow_any
-マジックフライ	magicfly	ondead:self_1drow_spell
+ニードルマン	needleman	onattack:enemy_1draw_any
+マジックフライ	magicfly	ondead:self_1draw_spell
 メラミ	merami	any_3dmg
 たけやりへい	takeyari-soldier	onplay:unit_attack+2_thisturn
 ドロヌーバ	doronu-ba	stealth
-わたぼう	watabo	onturnend_each:active_1drow_any
+わたぼう	watabo	onturnend_each:active_1draw_any
 ベビーパンサー	baby-panther	onplay:self_tension+1
-ミミック	mimic	ondead:enemy_1drow_any
+ミミック	mimic	ondead:enemy_1draw_any
 はぐれメタル	hagure-metal	onplay:self_active,metalbody
 メラゾーマ	merazo-ma	any_5dmg
 亡者のひとだま	mouja-ghost	antieffect
 シルビア	silvia	onplay:each_tension+3
 バアルゼブブ	baaru-zebubu	onplay:enemy_3dmg_leader
-かくとうパンサー	kakuto-panther	onplay:self_1drow_bujutsu
+かくとうパンサー	kakuto-panther	onplay:self_1draw_bujutsu
 はりせんもぐら	harisen-mole	ondead:self_tension+1
 タイガークロー	tiger-claw	unit_1dmg_3times
 せいけん突き	seiken-punch	unit_5dmg_frontonly
@@ -34,6 +34,6 @@
 キングレオ	king-leo	
 ネルゲル	nelgel	
 シドー	sydow	
-精神統一	bujutsu_meditation	self_1drow
+精神統一	bujutsu_meditation	self_1draw
 飛びげり	bujutsu_jump-kick	switch
 ストレートパンチ	bujutsu_straight-punch	any_1dmg

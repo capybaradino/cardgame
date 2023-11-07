@@ -61,7 +61,7 @@ class TestOnplayEffect(unittest.TestCase):
         isRun = True
 
         # draw_bujutsuのテスト
-        effect = "self_1drow_bujutsu"
+        effect = "self_1draw_bujutsu"
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
@@ -69,7 +69,7 @@ class TestOnplayEffect(unittest.TestCase):
         playview.p1.draw_bujutsucard.assert_called_once()
 
         # draw_card_spellのテスト
-        effect = "self_1drow_spell"
+        effect = "self_1draw_spell"
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
@@ -533,16 +533,16 @@ class TestUnitHPChange(unittest.TestCase):
                 # Mockオブジェクトが期待通りに呼び出されたことを確認
                 api_common_common.leader_hp_change.assert_called_once()
 
-            # drowのテスト(対象が自リーダー)
-            objcard2.effect = "ondead:self_1drow_spell"
+            # drawのテスト(対象が自リーダー)
+            objcard2.effect = "ondead:self_1draw_spell"
             player_self.draw_card_spell = Mock()
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)
             # Mockオブジェクトが期待通りに呼び出されたことを確認
             player_self.draw_card_spell.assert_called_once()
 
-            # drowのテスト(対象が敵リーダー)
-            objcard2.effect = "ondead:enemy_1drow_any"
+            # drawのテスト(対象が敵リーダー)
+            objcard2.effect = "ondead:enemy_1draw_any"
             player_enemy.draw_card = Mock()
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)

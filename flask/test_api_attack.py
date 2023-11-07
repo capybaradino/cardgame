@@ -209,15 +209,15 @@ class TestAPIOnAttack(unittest.TestCase):
                 self.sid, self.playview, "self_attack+1", self.objcard1
             )
 
-    def test_api_onattack_with_drow_subeffect_and_enemy(self):
+    def test_api_onattack_with_draw_subeffect_and_enemy(self):
         # 敵に1ドロー
-        self.objcard1.effect = "onattack:enemy_1drow_any"
+        self.objcard1.effect = "onattack:enemy_1draw_any"
         api_onattack(self.sid, self.playview, self.objcard1)
         self.assertEqual(self.playview.p2player.draw_card.call_count, 1)
 
-    # def test_api_onattack_with_drow_subeffect_and_self(self):
+    # def test_api_onattack_with_draw_subeffect_and_self(self):
     #     # 自分に1ドロー
-    #     self.objcard1.effect = "onattack:self_1drow"
+    #     self.objcard1.effect = "onattack:self_1draw"
     #     api_onattack(self.sid, self.playview, self.objcard1)
     #     self.assertEqual(self.playview.p1player.draw_card.call_count, 1)
 
