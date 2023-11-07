@@ -30,7 +30,7 @@ def api_common_tension_objcard(
                 player_enemy,
             ) = api_common_util.get_self_or_enemy(playview, objcard2)
         if "self" in effect or "each" in effect:
-            newvalue = playview.p1tension + value
+            newvalue = player_self.tension + value
             if newvalue > 3:
                 newvalue = 3
             if isRun:
@@ -42,7 +42,7 @@ def api_common_tension_objcard(
                     newvalue,
                 )
         if "enemy" in effect or "each" in effect:
-            newvalue = playview.p2tension + value
+            newvalue = player_enemy.tension + value
             if newvalue > 3:
                 newvalue = 3
             if isRun:
