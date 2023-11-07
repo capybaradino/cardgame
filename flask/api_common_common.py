@@ -226,7 +226,7 @@ def _onplay_effect(
             )
         else:
             ret, scode = api_common_tension.api_common_tension_objcard(
-                sid, playview, effect, objcard, isRun
+                sid, playview, effect, objcard, isRun, player_self, player_enemy
             )
     elif "active" in effect:
         ret, scode = api_common_status.api_common_active(
