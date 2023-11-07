@@ -98,7 +98,7 @@ def _onplay_effect(
             return {"error": "illegal target card"}, 403
         ret = "OK"
         scode = 200
-    elif "drow" in effect:
+    elif "draw" in effect:
         if isRun:
             if objcard is None:
                 player = playview.p1
