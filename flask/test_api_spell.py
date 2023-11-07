@@ -22,7 +22,7 @@ class TestAPISpell(unittest.TestCase):
         self.card1 = "card1_1"
         self.card2 = "rightboard_1"
         self.objcard1 = Mock()
-        self.objcard1.effect = "self_1drow,switch,dmg_enemy_1"
+        self.objcard1.effect = "self_1draw,switch,dmg_enemy_1"
         self.objcard1.cost = 3
         self.objcard1.status = ""
         self.objcard1.name = "test_name"
@@ -60,8 +60,8 @@ class TestAPISpell(unittest.TestCase):
         self.assertEqual(result, {"error": "illegal card1 number"})
         self.assertEqual(status_code, 403)
 
-    def test_api_spell_with_self_1drow_effect(self):
-        # Test case 2: Test with self_1drow effect
+    def test_api_spell_with_self_1draw_effect(self):
+        # Test case 2: Test with self_1draw effect
         with patch("api_spell.Play_view") as play_view_mock:
             playview_end = Mock()
             playview_end.p1hp = 10
@@ -69,7 +69,7 @@ class TestAPISpell(unittest.TestCase):
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
             card_db.putsession = MagicMock()
-            self.objcard.effect = "self_1drow"
+            self.objcard.effect = "self_1draw"
             result, status_code = api_spell(
                 self.sid, self.playview, self.card1, self.card2
             )
