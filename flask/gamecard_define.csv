@@ -20,7 +20,7 @@
 はりせんもぐら	harisen-mole	ondead:self_tension+1
 タイガークロー	tiger-claw	unit_1dmg_3times
 せいけん突き	seiken-punch	unit_5dmg_frontonly
-とうこん討ち	tokon-punch	
+とうこん討ち	tokon-punch	self_tension+1,unit_2dmg
 まわしげり	mawashi-kick	
 ふくめんバニー	fukumen-bunny	
 ジャガーメイジ	jaguar-mage	
