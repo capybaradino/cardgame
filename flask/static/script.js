@@ -305,7 +305,7 @@ async function fetchData_impl() {
                     if (effect != "") {
                         seteffecttext('p1board' + i + '_text', effect);
                     } else {
-                        seteffecttext('p1card' + i + '_text', "");
+                        seteffecttext('p1board' + i + '_text', "");
                     }
                     const active = item['active'];
                     if (active == 1) {
