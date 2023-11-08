@@ -68,6 +68,12 @@ def _onplay_effect(
             player_self,
             player_enemy,
         ) = api_common_util.get_self_or_enemy(playview, objcard)
+    # 特技無効チェック
+    if card3 is not None:
+        objcard3 = api_common_util.getobjcard(playview, card3)
+        if objcard3 is not None:
+            if "antieffect" in objcard3.status:
+                return {"error": "target unit has antieffect"}, 403
     # TODO 効果のバリエーション実装
     if "switch" in effect:
         # 対象確認
@@ -202,9 +208,6 @@ def _onplay_effect(
                         objcard3 = api_common_util.getobjcard(playview, card3)
                         if objcard3 is None:
                             return {"error": "unit don't exists in target"}, 403
-                        # 特技無効チェック
-                        if "antieffect" in objcard3.status:
-                            return {"error": "target unit has antieffect"}, 403
                         # 前列指定制限チェック
                         if "frontonly" in effect:
                             if objcard3.locnum > 2:
