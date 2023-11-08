@@ -22,7 +22,7 @@
 せいけん突き	seiken-punch	unit_5dmg_frontonly
 とうこん討ち	tokon-punch	self_tension+1,unit_2dmg
 まわしげり	mawashi-kick	enemy_unit_vertical_4dmg_frontonly
-ふくめんバニー	fukumen-bunny	
+ふくめんバニー	fukumen-bunny	onattack_leader:self_1draw_bujutsu
 ジャガーメイジ	jaguar-mage	
 ムーンキメラ	moon-chimera	
 キラーピッケル	killer-pickel	
