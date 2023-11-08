@@ -73,7 +73,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return {"error": "wall exists"}, 403
         # 攻撃時効果
         ret = "OK"
-        ret, scode = api_onattack(sid, playview, objcard1)
+        ret, scode = api_onattack(sid, playview, objcard1, ifleader=True)
         objcard1.refresh(playview.playdata.card_table)
 
         if ret != "OK":
@@ -115,11 +115,14 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
     return {"info": "OK"}, 200
 
 
-def api_onattack(sid, playview: Play_view, objcard1: Card_info):
+def api_onattack(sid, playview: Play_view, objcard1: Card_info, ifleader=False):
     effect_array = objcard1.effect.split(",")
     effect: str
     for effect in effect_array:
         if effect.startswith("onattack"):
+            if effect.startswith("onattack_leader"):
+                if not ifleader:
+                    continue
             # 攻撃時効果
             subeffect = effect.split(":")[1]
             api_common_common.onplay_effect_objcard(

@@ -158,7 +158,7 @@ class TestAPIUnitAttack(unittest.TestCase):
                 "hp",
                 7,
             )
-            mock_api_onattack.assert_called_with(self.sid, self.playview, self.objcard1)
+            mock_api_onattack.assert_called_with(self.sid, self.playview, self.objcard1, ifleader=True)
 
 
 class TestAPIOnAttack(unittest.TestCase):
@@ -195,7 +195,7 @@ class TestAPIOnAttack(unittest.TestCase):
         api_common_util.get_self_or_enemy.return_value = [
             Mock(),
             Mock(),
-            Mock(),
+            self.playview.p1player,
             self.playview.p2player,
         ]
 
@@ -220,6 +220,18 @@ class TestAPIOnAttack(unittest.TestCase):
     #     self.objcard1.effect = "onattack:self_1draw"
     #     api_onattack(self.sid, self.playview, self.objcard1)
     #     self.assertEqual(self.playview.p1player.draw_card.call_count, 1)
+
+    def test_api_onattack_leader_draw_bujutsu(self):
+        # 攻撃対象が敵リーダーだった場合、武術カードを1ドロー
+        self.objcard1.effect = "onattack_leader:self_1draw_bujutsu"
+        api_onattack(self.sid, self.playview, self.objcard1, ifleader=True)
+        self.assertEqual(self.playview.p1player.draw_bujutsucard.call_count, 1)
+
+    def test_api_onattack_leader_draw_bujutsu(self):
+        # 攻撃対象が敵リーダーじゃなかった場合、武術カードを1ドローしない
+        self.objcard1.effect = "onattack_leader:self_1draw_bujutsu"
+        api_onattack(self.sid, self.playview, self.objcard1)
+        self.assertEqual(self.playview.p1player.draw_bujutsucard.call_count, 0)
 
     def test_api_onattack_with_stealth_status(self):
         # ステルス解除
