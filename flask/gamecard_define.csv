@@ -21,7 +21,7 @@
 タイガークロー	tiger-claw	unit_1dmg_3times
 せいけん突き	seiken-punch	unit_5dmg_frontonly
 とうこん討ち	tokon-punch	self_tension+1,unit_2dmg
-まわしげり	mawashi-kick	
+まわしげり	mawashi-kick	enemy_unit_vertical_4dmg_frontonly
 ふくめんバニー	fukumen-bunny	
 ジャガーメイジ	jaguar-mage	
 ムーンキメラ	moon-chimera	
