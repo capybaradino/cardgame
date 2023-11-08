@@ -23,8 +23,10 @@ class TestOnplayEffect(unittest.TestCase):
     @patch("api_common_status.api_common_active")
     @patch("api_common_tension.api_common_tension")
     @patch("api_common_util.get_self_or_enemy")
+    @patch("api_common_common.unit_hp_change_multi")
     def test_onplay_effect(
         self,
+        mock_unit_hp_change_multi,
         mock_api_common_get_self_or_enemy,
         mock_api_common_tension,
         mock_api_common_active,
@@ -116,6 +118,17 @@ class TestOnplayEffect(unittest.TestCase):
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ({"error": "cannot target leader"}, 403))
+
+        # dmgのテスト(縦一列指定)
+        effect = "enemy_vertical_4dmg_frontonly"
+        card3 = "rightboard_1"
+        objcard3.locnum = 1
+        playview.p2board = [None, objcard3, None, None, None, None]
+        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        # 戻り値の確認(OK)
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_unit_hp_change_multi.assert_called_once()
 
         # attackのテスト
         effect = "unit_attack+2_thisturn"
