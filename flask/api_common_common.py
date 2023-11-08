@@ -167,34 +167,65 @@ def _onplay_effect(
                 pattern_p2leader = r"rightboard_10"  # リーダー
                 # TODO 自ボード、自リーダーへの攻撃
                 if re.match(pattern_p2board, card3):
-                    # ユニットHP減算
-                    objcard3 = api_common_util.getobjcard(playview, card3)
-                    if objcard3 is None:
-                        return {"error": "unit don't exists in target"}, 403
-                    # 特技無効チェック
-                    if "antieffect" in objcard3.status:
-                        return {"error": "target unit has antieffect"}, 403
-                    # 前列指定制限チェック
-                    if "frontonly" in effect:
-                        if objcard3.locnum > 2:
-                            return {"error": "target unit is not front"}, 403
-                    if "times" in effect:
-                        # unit_1dmg_3times というフォーマットの3の部分を取得
-                        pattern = r"\d+(?!.*\d)"
+                    # 縦一列指定の場合
+                    if "vertical" in effect:
+                        # card3から数値を取り出す
+                        pattern = r"[+-]?\d+"
+                        matches = re.search(pattern, card3)
+                        value = int(matches.group())
+                        # 前列指定制限チェック
+                        if "frontonly" in effect:
+                            if value > 2:
+                                return {"error": "target is not front"}, 403
+                        # 対象ユニットHP減算
+                        pattern = r"[+-]?\d+"
                         matches = re.search(pattern, effect)
-                        value = int(matches.group(0))
-                        # effectから_3timesの部分を削除
-                        effect = effect.replace(matches.group(0), "")
+                        value = int(matches.group())
+                        objcard3s = []
+                        values = []
+                        i = 0
+                        for objcard3tmp in playview.p2board:
+                            if i > 2:
+                                break
+                            if objcard3tmp is not None:
+                                objcard3s.append(objcard3tmp)
+                                values.append(value)
+                            i = i + i
+                        # 対象ユニットが1つ以上いる場合はHP減算処理
+                        if len(objcard3s) > 0:
+                            unit_hp_change_multi(sid, playview, objcard3s, values)
+                        ret = "OK"
+                        scode = 200
+                    # 単体指定の場合
                     else:
-                        value = 1
-                    i = 0
-                    while i < value:
-                        ret, scode = api_common_dmg(
-                            sid, playview, effect, objcard3, isRun
-                        )
-                        if ret == "HP0":
-                            break
-                        i = i + 1
+                        # ユニットHP減算
+                        objcard3 = api_common_util.getobjcard(playview, card3)
+                        if objcard3 is None:
+                            return {"error": "unit don't exists in target"}, 403
+                        # 特技無効チェック
+                        if "antieffect" in objcard3.status:
+                            return {"error": "target unit has antieffect"}, 403
+                        # 前列指定制限チェック
+                        if "frontonly" in effect:
+                            if objcard3.locnum > 2:
+                                return {"error": "target unit is not front"}, 403
+                        if "times" in effect:
+                            # unit_1dmg_3times というフォーマットの3の部分を取得
+                            pattern = r"\d+(?!.*\d)"
+                            matches = re.search(pattern, effect)
+                            value = int(matches.group(0))
+                            # effectから_3timesの部分を削除
+                            effect = effect.replace(matches.group(0), "")
+                        else:
+                            value = 1
+                        i = 0
+                        while i < value:
+                            ret, scode = api_common_dmg(
+                                sid, playview, effect, objcard3, isRun
+                            )
+                            if ret == "HP0":
+                                break
+                            i = i + 1
                 elif re.match(pattern_p2leader, card3):
                     # ユニット指定の場合はエラー
                     if "unit" in effect:
