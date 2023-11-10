@@ -130,6 +130,40 @@ class TestOnplayEffect(unittest.TestCase):
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         mock_unit_hp_change_multi.assert_called_once()
 
+        # dmgのテスト(敵３体以上なら敵全ユニットにダメージ)
+        # Mockオブジェクトをリセット
+        mock_unit_hp_change_multi.reset_mock()
+        effect = "onplay_enemy_unit_3over:all_enemy_unit_1dmg"
+        objcard_enemy1 = Mock()
+        objcard_enemy1.hp_org = 5
+        objcard_enemy1.dhp = 0
+        objcard_enemy2 = Mock()
+        objcard_enemy2.hp_org = 5
+        objcard_enemy2.dhp = 0
+        objcard_enemy3 = Mock()
+        objcard_enemy3.hp_org = 5
+        objcard_enemy3.dhp = 0
+        playview.p2board = [None, objcard_enemy1, None, None, objcard_enemy2, objcard_enemy3]
+        mock_api_common_get_self_or_enemy.return_value = [None, playview.p2board, None, None]
+        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        # 戻り値の確認(OK)
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        mock_unit_hp_change_multi.assert_called_once()
+
+        
+        # dmgのテスト(敵が３体未満の場合hp_changeは実行されない)
+        # Mockオブジェクトをリセット
+        mock_unit_hp_change_multi.reset_mock()
+        effect = "onplay_enemy_unit_3over:all_enemy_unit_1dmg"
+        playview.p2board = [None, objcard_enemy1, None, None, None, None]
+        mock_api_common_get_self_or_enemy.return_value = [None, playview.p2board, None, None]
+        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        # 戻り値の確認(OK)
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが呼び出されなかったことを確認
+        mock_unit_hp_change_multi.assert_not_called()
+
         # attackのテスト
         effect = "unit_attack+2_thisturn"
         result = onplay_effect(sid, playview, effect, card2, card3, isRun)
