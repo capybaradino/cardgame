@@ -11,8 +11,8 @@ from class_playinfo import Card_info
 from class_playview import Play_view
 
 
-def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun):
-    return _onplay_effect(sid, playview, effect, card2, card3, None, isRun)
+def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun, objcard=None):
+    return _onplay_effect(sid, playview, effect, card2, card3, objcard, isRun)
 
 
 def onplay_effect_objcard(sid, playview: Play_view, effect, objcard: Card_info, isRun):
@@ -74,6 +74,28 @@ def _onplay_effect(
         if objcard3 is not None:
             if "antieffect" in objcard3.status:
                 return {"error": "target unit has antieffect"}, 403
+    # 発動条件チェック
+    if "onplay" in effect:
+        # 正規表現でenemy_unit_Xoverにマッチするか確認(Xには数字が入る)
+        pattern = r".*enemy_unit_[0-5]over.*"
+        if re.match(pattern, effect):
+            # effectをコロンで分割
+            effect_array = effect.split(":")
+            # 分割した1つ目の文字列のenemy_unit_XoverのXの部分を取り出す
+            pattern = r"[0-5]"
+            matches2 = re.search(pattern, effect_array[0])
+            # Xの部分を数値に変換
+            value = int(matches2.group())
+            # 敵ユニットの数を数える
+            i = 0
+            for objcard2 in board_enemy:
+                if objcard2 is not None:
+                    i = i + 1
+            # 敵ユニットの数がX以上か確認
+            if i < value:
+                # 発動しないがエラーにはしないで終了する
+                return "OK", 200
+
     # TODO 効果のバリエーション実装
     if "switch" in effect:
         # 対象確認
@@ -159,6 +181,32 @@ def _onplay_effect(
                 scode = 200
             else:
                 raise Exception("illegal randomdmg effect")
+        elif "all" in effect:
+            # 正規表現でXdmgにマッチする文字列を取り出す
+            pattern = r"[0-5]dmg"
+            matches = re.search(pattern, effect)
+            # XdmgのXの部分を取り出す
+            pattern = r"[0-5]"
+            matches2 = re.search(pattern, matches.group())
+            # Xの部分を数値に変換
+            value = int(matches2.group())
+            # 敵盤面ユニット全体にダメージ
+            if "all_enemy_unit" in effect:
+                # 敵盤面ユニット全体にダメージ
+                objcard3s = []
+                values = []
+                for objcard2 in board_enemy:
+                    if objcard2 is not None:
+                        # HP=0のユニットは除外
+                        if objcard2.hp_org + objcard2.dhp > 0:
+                            objcard3s.append(objcard2)
+                            values.append(value)
+                # 対象ユニットが1つ以上いる場合はHP減算処理
+                if len(objcard3s) > 0:
+                    unit_hp_change_multi(sid, playview, objcard3s, values)
+                ret = "OK"
+                scode = 200
+
         elif "leader" in effect:
             # リーダーHP減算
             ret, scode = api_common_dmg_leader(sid, playview, effect, isRun)
