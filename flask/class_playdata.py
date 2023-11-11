@@ -314,13 +314,14 @@ class Playdata:
             else:
                 playername = self.player2.name
 
-            # デバッグ用：任意のカードをデッキトップに配置
+            # デバッグ用：任意のカードをデッキトップに配置(matchinggameの場合のみ)
+            if newgame:
+                keystr = "p1_topcard"
+            else:
+                keystr = "p2_topcard"
             i = 0
             while i < 3:
-                if i == 0:
-                    key = "topcard"
-                else:
-                    key = "topcard" + str(i)
+                key = keystr + str(i)
                 ret = debug.getdebugparam(key)
                 if ret is not None and ret != "":
                     record = card_db.getrecord_fromgame(
@@ -332,6 +333,7 @@ class Playdata:
                     self.set_static_turnend_effect(tcid, cuid)
                 i = i + 1
 
+            # デッキ登録
             cids = card_db.getcids_fromdeck(deck_name)
             num_cids = len(cids)
             if num_cids != 30:
