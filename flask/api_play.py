@@ -37,7 +37,9 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         effect: str
         for effect in effect_array:
             if effect.startswith("onplay"):
-                ret, scode = onplay_effect(sid, playview, effect, card2, card3, False, objcard1)
+                ret, scode = onplay_effect(
+                    sid, playview, effect, card2, card3, False, objcard1
+                )
 
         if ret != "OK":
             return ret, scode
@@ -64,7 +66,9 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         # 召喚時効果の実行
         for effect in effect_array:
             if effect.startswith("onplay"):
-                ret, scode = onplay_effect(sid, playview, effect, card2, card3, True, objcard1)
+                ret, scode = onplay_effect(
+                    sid, playview, effect, card2, card3, True, objcard1
+                )
 
         playview = Play_view(sid)
         if playview.p1hp <= 0:

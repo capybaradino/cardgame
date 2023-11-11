@@ -144,21 +144,37 @@ class TestOnplayEffect(unittest.TestCase):
         objcard_enemy3 = Mock()
         objcard_enemy3.hp_org = 5
         objcard_enemy3.dhp = 0
-        playview.p2board = [None, objcard_enemy1, None, None, objcard_enemy2, objcard_enemy3]
-        mock_api_common_get_self_or_enemy.return_value = [None, playview.p2board, None, None]
+        playview.p2board = [
+            None,
+            objcard_enemy1,
+            None,
+            None,
+            objcard_enemy2,
+            objcard_enemy3,
+        ]
+        mock_api_common_get_self_or_enemy.return_value = [
+            None,
+            playview.p2board,
+            None,
+            None,
+        ]
         result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
         # 戻り値の確認(OK)
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         mock_unit_hp_change_multi.assert_called_once()
 
-        
         # dmgのテスト(敵が３体未満の場合hp_changeは実行されない)
         # Mockオブジェクトをリセット
         mock_unit_hp_change_multi.reset_mock()
         effect = "onplay_enemy_unit_3over:all_enemy_unit_1dmg"
         playview.p2board = [None, objcard_enemy1, None, None, None, None]
-        mock_api_common_get_self_or_enemy.return_value = [None, playview.p2board, None, None]
+        mock_api_common_get_self_or_enemy.return_value = [
+            None,
+            playview.p2board,
+            None,
+            None,
+        ]
         result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
         # 戻り値の確認(OK)
         self.assertEqual(result, ("OK", 200))
@@ -200,7 +216,6 @@ class TestOnplayEffect(unittest.TestCase):
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         mock_api_common_dmg_leader.assert_called_once()
 
-
         # movefrontのテスト
         effect = "onplay:allbackunit_movefront"
         # 対象無し
@@ -216,7 +231,6 @@ class TestOnplayEffect(unittest.TestCase):
         # Mockオブジェクトが呼び出されなかったことを確認
         api_common_util.getobjcard_oppsite.assert_not_called()
 
-
         # 対象無し(前列にユニットが存在する)
         board_enemy = [Mock(), Mock(), Mock(), None, Mock(), None]
         api_common_util.get_self_or_enemy = Mock()
@@ -229,7 +243,6 @@ class TestOnplayEffect(unittest.TestCase):
         # Mockオブジェクトが呼び出されなかったことを確認
         api_common_util.getobjcard_oppsite.assert_not_called()
 
-
         # 対象あり
         board_enemy = [None, None, None, None, Mock(), Mock()]
         api_common_util.get_self_or_enemy = Mock()
@@ -241,7 +254,6 @@ class TestOnplayEffect(unittest.TestCase):
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが2回呼び出されたことを確認
         self.assertEqual(card_db.putdeck_locnum.call_count, 2)
-
 
         # 対象あり(前列あり無し混在)
         # Mockオブジェクトをリセット
