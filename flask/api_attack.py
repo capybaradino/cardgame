@@ -125,8 +125,8 @@ def api_onattack(sid, playview: Play_view, objcard1: Card_info, ifleader=False):
                     continue
             # 攻撃時効果
             subeffect = effect.split(":")[1]
-            api_common_common.onplay_effect_objcard(
-                sid, playview, subeffect, objcard1, True
+            api_common_common.apply_effect(
+                sid, playview, subeffect, objcard1, None, None, True
             )
 
     # ステルス解除
