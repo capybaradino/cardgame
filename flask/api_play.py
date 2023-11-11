@@ -1,7 +1,7 @@
 import re
 
 import card_db
-from api_common_common import onplay_effect
+import api_common_common
 from class_playinfo import Card_info
 from class_playview import Play_view
 
@@ -37,8 +37,8 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         effect: str
         for effect in effect_array:
             if effect.startswith("onplay"):
-                ret, scode = onplay_effect(
-                    sid, playview, effect, card2, card3, False, objcard1
+                ret, scode = api_common_common.apply_effect(
+                    sid, playview, effect, objcard1, card2, card3, False
                 )
 
         if ret != "OK":
@@ -66,8 +66,8 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
         # 召喚時効果の実行
         for effect in effect_array:
             if effect.startswith("onplay"):
-                ret, scode = onplay_effect(
-                    sid, playview, effect, card2, card3, True, objcard1
+                ret, scode = api_common_common.apply_effect(
+                    sid, playview, effect, objcard1, card2, card3, True
                 )
 
         playview = Play_view(sid)
