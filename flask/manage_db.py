@@ -1,6 +1,7 @@
 import sqlite3
 import os
 
+
 def update_table(db_name, table_name, key_name, key, column, value):
     try:
         # データベースに接続（存在しない場合は新規作成される）
@@ -20,22 +21,22 @@ print("[INFO] Select db to update.")
 print("       1:game.db 2:user.db 3:session.db M:manual C:Cancel")
 str = input()
 
-if(str == 'C'):
+if str == "C":
     exit()
 
 print("[INFO] Update db start.")
 
 # user.db
-if(str == '2'):
+if str == "2":
     print("[INFO] Input nickname:")
     key = input()
     print("[INFO] Input grant(admin/[empty]):")
     value = input()
-    dbfile_path = 'user.db'
-    table_name = 'user'
+    dbfile_path = "user.db"
+    table_name = "user"
     update_table(dbfile_path, table_name, "nickname", key, "grant", value)
 
-if(str == 'M'):
+if str == "M":
     print("[INFO] Input db name:")
     dbfile_path = input()
     print("[INFO] Input table_name:")

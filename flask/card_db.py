@@ -5,7 +5,7 @@ import uuid
 # utility
 def card_fetchone(cur):
     item = cur.fetchone()
-    if (item is not None):
+    if item is not None:
         item = item[0]
     return item
 
@@ -33,11 +33,10 @@ def card_getcolumnno(db_name, table_name, column_name):
 
 # accesser
 def isexist_gsid(gsid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute(
-        "select gsid from gamesession where gsid = '" + gsid + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute("select gsid from gamesession where gsid = '" + gsid + "'")
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -46,11 +45,10 @@ def isexist_gsid(gsid):
 
 
 def isexist_player_tid(name):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute(
-        "select player_tid from playerstats where player_tid = '" + name + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute("select player_tid from playerstats where player_tid = '" + name + "'")
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -65,7 +63,9 @@ def is_table_exists(table_name):
         cursor = conn.cursor()
 
         # sqlite_masterテーブルをクエリして指定したテーブル名が存在するか確認する
-        query = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+        query = (
+            f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+        )
         cursor.execute(query)
 
         table_exists = len(cursor.fetchall()) > 0
@@ -78,7 +78,7 @@ def is_table_exists(table_name):
 
 
 def getallcids():
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("select cid from card_basicdata")
     cids = cur.fetchall()
@@ -87,7 +87,7 @@ def getallcids():
 
 
 def getcids_fromdeck(deck_name):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     query = f"""
         SELECT cid FROM {deck_name}
@@ -99,7 +99,7 @@ def getcids_fromdeck(deck_name):
 
 
 def deletegamesession(gsid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("delete from gamesession where gsid = '" + gsid + "'")
     con.commit()
@@ -108,11 +108,11 @@ def deletegamesession(gsid):
 
 
 def getgamesession(gsid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select * from gamesession where gsid = '" + gsid + "'")
     gamesession = cur.fetchall()
-    if (len(gamesession) != 0):
+    if len(gamesession) != 0:
         gamesession = gamesession[0]
     else:
         gamesession = None
@@ -121,7 +121,7 @@ def getgamesession(gsid):
 
 
 def putsession(table_name, key_name, key, column, value):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cursor = con.cursor()
     query = f"UPDATE {table_name} SET {column} = ? WHERE {key_name} = ?"
     cursor.execute(query, (value, key))
@@ -131,7 +131,7 @@ def putsession(table_name, key_name, key, column, value):
 
 
 def appendlog(card_table, value):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     table_name = "gamesession"
     cursor = con.cursor()
     query = f"SELECT log FROM {table_name} WHERE card_table = ?"
@@ -146,7 +146,7 @@ def appendlog(card_table, value):
 
 
 def appendsession(table_name, key_name, key, column, value):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cursor = con.cursor()
     query = f"SELECT {column} FROM {table_name} WHERE {key_name} = ?"
     cursor.execute(query, (key,))
@@ -160,7 +160,7 @@ def appendsession(table_name, key_name, key, column, value):
 
 
 def putgamesession(gsid, column, value):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cursor = con.cursor()
     query = f"UPDATE gamesession SET {column} = ? WHERE gsid = ?"
     cursor.execute(query, (value, gsid))
@@ -170,7 +170,7 @@ def putgamesession(gsid, column, value):
 
 
 def getgsid_fromsid(sid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select gsid from usersession where sid = '" + sid + "'")
     gsid = card_fetchone(cur)
@@ -179,7 +179,7 @@ def getgsid_fromsid(sid):
 
 
 def getsid_fromgsid(gsid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select sid from usersession where gsid = '" + gsid + "'")
     gsid = card_fetchone(cur)
@@ -187,35 +187,38 @@ def getsid_fromgsid(gsid):
     return gsid
 
 
-def postgamesession(gsid, p1_player_table, p2_player_table,
-                    card_table, log, state, lastupdate):
-    con = sqlite3.connect('session.db')
+def postgamesession(
+    gsid, p1_player_table, p2_player_table, card_table, log, state, lastupdate
+):
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute("insert into gamesession values (?,?,?,?,?,?,?)", (
-        gsid, p1_player_table, p2_player_table,
-        card_table, log, state, lastupdate))
+    cur.execute(
+        "insert into gamesession values (?,?,?,?,?,?,?)",
+        (gsid, p1_player_table, p2_player_table, card_table, log, state, lastupdate),
+    )
     con.commit()
     con.close()
     return
 
 
 def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute("insert into playerstats values (?,?,?,?,?,?,?)", (
-        player_tid, name, job, hp, mp, maxmp, tension))
+    cur.execute(
+        "insert into playerstats values (?,?,?,?,?,?,?)",
+        (player_tid, name, job, hp, mp, maxmp, tension),
+    )
     con.commit()
     con.close()
     return
 
 
 def getplayerstats(player_tid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute(
-        "select * from playerstats where player_tid = '" + player_tid + "'")
+    cur.execute("select * from playerstats where player_tid = '" + player_tid + "'")
     session = cur.fetchall()
-    if (len(session) != 0):
+    if len(session) != 0:
         session = session[0]
     else:
         session = None
@@ -224,17 +227,16 @@ def getplayerstats(player_tid):
 
 
 def deleteplayerstats(player_tid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute("delete from playerstats where player_tid = '" +
-                player_tid + "'")
+    cur.execute("delete from playerstats where player_tid = '" + player_tid + "'")
     con.commit()
     con.close()
     return
 
 
 def createdecktable(table_name):
-    conn = sqlite3.connect('session.db')
+    conn = sqlite3.connect("session.db")
     cursor = conn.cursor()
 
     # テーブルの作成
@@ -265,7 +267,7 @@ def createdecktable(table_name):
 
 
 def deletedecktable(table_name):
-    conn = sqlite3.connect('session.db')
+    conn = sqlite3.connect("session.db")
     cursor = conn.cursor()
 
     # テーブルの作成
@@ -279,24 +281,25 @@ def deletedecktable(table_name):
 
 def postdeck(table_name, cid, loc):
     cardname = getcardname_fromcid(cid)
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cursor = con.cursor()
     while True:
         # gsid生成
         cuid = str(uuid.uuid4())
-        if (isexist_cuid(table_name, cuid)):
+        if isexist_cuid(table_name, cuid):
             continue
         break
     query = f"INSERT INTO {table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-    cursor.execute(query, (cid, loc, cuid, -1, 0, 0,
-                   0, "", "", "", cardname, "", "", "", ""))
+    cursor.execute(
+        query, (cid, loc, cuid, -1, 0, 0, 0, "", "", "", cardname, "", "", "", "")
+    )
     con.commit()
     con.close()
     return cuid
 
 
 def putdeck(table_name, cuid, loc):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cursor = con.cursor()
     query = f"UPDATE {table_name} SET loc = ? WHERE cuid = ?"
     cursor.execute(query, (loc, cuid))
@@ -306,7 +309,7 @@ def putdeck(table_name, cuid, loc):
 
 
 def putdeck_locnum(table_name, cuid, loc):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cursor = con.cursor()
     query = f"UPDATE {table_name} SET locnum = ? WHERE cuid = ?"
     cursor.execute(query, (loc, cuid))
@@ -316,11 +319,10 @@ def putdeck_locnum(table_name, cuid, loc):
 
 
 def isexist_cuid(table_name, cuid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute(
-        "select cuid from '" + table_name + "' where cid = '" + cuid + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute("select cuid from '" + table_name + "' where cid = '" + cuid + "'")
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -329,17 +331,16 @@ def isexist_cuid(table_name, cuid):
 
 
 def getfirstcuid_fromdeck(table_name, name):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute("select cuid from " + table_name +
-                " where loc = '" + name + "'")
+    cur.execute("select cuid from " + table_name + " where loc = '" + name + "'")
     cuid = card_fetchone(cur)
     con.close()
     return cuid
 
 
 def getcards_fromdeck(table_name, name):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select * from " + table_name + " where loc = '" + name + "'")
     cards = cur.fetchall()
@@ -349,7 +350,7 @@ def getcards_fromdeck(table_name, name):
 
 def getrecords_fromsession(table_name, key_name, key):
     # データベースに接続
-    conn = sqlite3.connect('session.db')
+    conn = sqlite3.connect("session.db")
     cursor = conn.cursor()
 
     # レコードを取得するSQL文を実行
@@ -367,7 +368,7 @@ def getrecords_fromsession(table_name, key_name, key):
 
 def getrecords_fromsession2(table_name, key_name, key, key_name2, key2):
     # データベースに接続
-    conn = sqlite3.connect('session.db')
+    conn = sqlite3.connect("session.db")
     cursor = conn.cursor()
 
     # レコードを取得するSQL文を実行
@@ -385,7 +386,7 @@ def getrecords_fromsession2(table_name, key_name, key, key_name2, key2):
 
 def getrecord_fromsession(table_name, key_name, key):
     # データベースに接続
-    conn = sqlite3.connect('session.db')
+    conn = sqlite3.connect("session.db")
     cursor = conn.cursor()
 
     # レコードを取得するSQL文を実行
@@ -403,7 +404,7 @@ def getrecord_fromsession(table_name, key_name, key):
 
 def getrecord_fromgame(table_name, key_name, key):
     # データベースに接続
-    conn = sqlite3.connect('game.db')
+    conn = sqlite3.connect("game.db")
     cursor = conn.cursor()
 
     # レコードを取得するSQL文を実行
@@ -420,7 +421,7 @@ def getrecord_fromgame(table_name, key_name, key):
 
 
 def deletecard_fromcid(cid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("delete from card_basicdata where cid = '" + cid + "'")
     con.commit()
@@ -429,7 +430,7 @@ def deletecard_fromcid(cid):
 
 
 def getfilename_fromfid(fid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("select filename from card_material where fid = '" + fid + "'")
     filename = card_fetchone(cur)
@@ -438,7 +439,7 @@ def getfilename_fromfid(fid):
 
 
 def getfid_fromcid(cid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("select fid from card_basicdata where cid = '" + cid + "'")
     fid = card_fetchone(cur)
@@ -453,53 +454,88 @@ def getfilename_fromcid(cid):
 
 
 def getfilename_fromupname(name):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute(
-        "select filename from card_material where name = '" + name + "'")
+    cur.execute("select filename from card_material where name = '" + name + "'")
     filename = card_fetchone(cur)
     con.close()
     return filename
 
 
 def getcardname_fromcid(cid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute(
-        "select cardname from card_basicdata where cid = '" + cid + "'")
+    cur.execute("select cardname from card_basicdata where cid = '" + cid + "'")
     cardname = card_fetchone(cur)
     con.close()
     return cardname
 
 
 def getcid_fromcardname(cardname):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute(
-        "select cid from card_basicdata where cardname = '" + cardname + "'")
+    cur.execute("select cid from card_basicdata where cardname = '" + cardname + "'")
     cardname = card_fetchone(cur)
     con.close()
     return cardname
 
 
-def postcard(cid, fid, cardname, leader, cardpack, cost, category, rarity, type, attack, hp, effect, flavor):
-    con = sqlite3.connect('game.db')
+def postcard(
+    cid,
+    fid,
+    cardname,
+    leader,
+    cardpack,
+    cost,
+    category,
+    rarity,
+    type,
+    attack,
+    hp,
+    effect,
+    flavor,
+):
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute("insert into card_basicdata values ('" + cid + "','" +
-                fid + "','" + cardname + "','" + leader + "','" + cardpack + "','" +
-                cost + "','" + category + "','" + rarity + "','" + type + "','" +
-                attack + "','" + hp + "','" + effect + "','" + flavor + "')")
+    cur.execute(
+        "insert into card_basicdata values ('"
+        + cid
+        + "','"
+        + fid
+        + "','"
+        + cardname
+        + "','"
+        + leader
+        + "','"
+        + cardpack
+        + "','"
+        + cost
+        + "','"
+        + category
+        + "','"
+        + rarity
+        + "','"
+        + type
+        + "','"
+        + attack
+        + "','"
+        + hp
+        + "','"
+        + effect
+        + "','"
+        + flavor
+        + "')"
+    )
     con.commit()
     con.close()
     return
 
 
 def isexist_cid(cid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute(
-        "select cid from card_basicdata where cid = '" + cid + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute("select cid from card_basicdata where cid = '" + cid + "'")
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -508,7 +544,7 @@ def isexist_cid(cid):
 
 
 def getallfids_frommaterial():
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("select fid from card_material")
     fids = cur.fetchall()
@@ -518,7 +554,7 @@ def getallfids_frommaterial():
 
 def getfileinfos_fromsid(sid):
     uid = getuid_fromsid(sid)
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("select * from card_material where owneruid = '" + uid + "'")
     fileinfos = cur.fetchall()
@@ -527,53 +563,76 @@ def getfileinfos_fromsid(sid):
 
 
 def deletefile_fromfilename(filename, sid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     uid = getuid_fromsid(sid)
-    cur.execute("select * from card_material where filename = '" +
-                filename + "' and owneruid = '" + uid + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute(
+        "select * from card_material where filename = '"
+        + filename
+        + "' and owneruid = '"
+        + uid
+        + "'"
+    )
+    if card_fetchone(cur) is None:
         con.close()
         return False
-    cur.execute("delete from card_material where filename = '" +
-                filename + "' and owneruid = '" + uid + "'")
+    cur.execute(
+        "delete from card_material where filename = '"
+        + filename
+        + "' and owneruid = '"
+        + uid
+        + "'"
+    )
     con.commit()
     con.close()
     return True
 
 
 def deletefile_fromfilename_admin(filename):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute("select * from card_material where filename = '" +
-                filename + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute("select * from card_material where filename = '" + filename + "'")
+    if card_fetchone(cur) is None:
         con.close()
         return False
-    cur.execute("delete from card_material where filename = '" +
-                filename + "'")
+    cur.execute("delete from card_material where filename = '" + filename + "'")
     con.commit()
     con.close()
     return True
 
 
 def postfile(fid, owneruid, kind, name, original_filename, filename, upload_date):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute("insert into card_material values ('" + fid + "','" +
-                owneruid + "','" + kind + "','" + name + "','" + original_filename + "','" +
-                filename + "','" + upload_date + "')")
+    cur.execute(
+        "insert into card_material values ('"
+        + fid
+        + "','"
+        + owneruid
+        + "','"
+        + kind
+        + "','"
+        + name
+        + "','"
+        + original_filename
+        + "','"
+        + filename
+        + "','"
+        + upload_date
+        + "')"
+    )
     con.commit()
     con.close()
     return
 
 
 def isexist_filename(filename):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute(
-        "select filename from card_material where filename = '" + filename + "'")
-    if (card_fetchone(cur) is None):
+        "select filename from card_material where filename = '" + filename + "'"
+    )
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -582,10 +641,10 @@ def isexist_filename(filename):
 
 
 def isexist_fid(fid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
     cur.execute("select filename from card_material where fid = '" + fid + "'")
-    if (card_fetchone(cur) is None):
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -600,7 +659,7 @@ def getuser_fromsid(sid):
 
 
 def getuid_fromsid(sid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select uid from usersession where sid = '" + sid + "'")
     uid = card_fetchone(cur)
@@ -609,7 +668,7 @@ def getuid_fromsid(sid):
 
 
 def getuser_fromuid(uid):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select * from user where uid = '" + uid + "'")
     user = card_fetchone(cur)
@@ -624,7 +683,7 @@ def getnickname_fromsid(sid):
 
 
 def getnickname_fromuid(uid):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select nickname from user where uid = '" + uid + "'")
     nickname = card_fetchone(cur)
@@ -639,7 +698,7 @@ def getemail_fromsid(sid):
 
 
 def getemail_fromuid(uid):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select email from user where uid = '" + uid + "'")
     email = card_fetchone(cur)
@@ -648,7 +707,7 @@ def getemail_fromuid(uid):
 
 
 def getsid_fromuid(uid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select sid from usersession where uid = '" + uid + "'")
     sid = card_fetchone(cur)
@@ -657,7 +716,7 @@ def getsid_fromuid(uid):
 
 
 def getsid_fromsid(sid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute("select sid from usersession where sid = '" + sid + "'")
     sid = card_fetchone(cur)
@@ -666,7 +725,7 @@ def getsid_fromsid(sid):
 
 
 def postusersession(sid, uid, datestr):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     query = f"insert into usersession values (?,?,?,?,?)"
     cur.execute(query, (sid, uid, datestr, "", getnickname_fromuid(uid)))
@@ -676,27 +735,33 @@ def postusersession(sid, uid, datestr):
 
 
 def putusersession(sid, datestr):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute("update usersession set accessdate = '" +
-                datestr + "' where sid = '" + sid + "'")
+    cur.execute(
+        "update usersession set accessdate = '"
+        + datestr
+        + "' where sid = '"
+        + sid
+        + "'"
+    )
     con.commit()
     con.close()
     return
 
 
 def putusersession_gsid(sid, gsid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
-    cur.execute("update usersession set gsid = '" +
-                gsid + "' where sid = '" + sid + "'")
+    cur.execute(
+        "update usersession set gsid = '" + gsid + "' where sid = '" + sid + "'"
+    )
     con.commit()
     con.close()
     return
 
 
 def deleteusersession(uid):
-    con = sqlite3.connect('session.db')
+    con = sqlite3.connect("session.db")
     cur = con.cursor()
     query = f"DELETE FROM usersession WHERE uid = ?"
     cur.execute(query, (uid,))
@@ -706,17 +771,16 @@ def deleteusersession(uid):
 
 
 def getnickname_fromemail(email):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
-    cur.execute("select nickname from user where email = '" +
-                email + "'")
+    cur.execute("select nickname from user where email = '" + email + "'")
     username = card_fetchone(cur)
     con.close()
     return username
 
 
 def getuid_fromuid(uid):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select uid from user where uid = '" + uid + "'")
     uid = card_fetchone(cur)
@@ -725,7 +789,7 @@ def getuid_fromuid(uid):
 
 
 def getnickname_fromnickname(username):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select nickname from user where nickname = '" + username + "'")
     username = card_fetchone(cur)
@@ -734,7 +798,7 @@ def getnickname_fromnickname(username):
 
 
 def getgrant_fromuid(uid):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select grant from user where uid = '" + uid + "'")
     username = card_fetchone(cur)
@@ -743,7 +807,7 @@ def getgrant_fromuid(uid):
 
 
 def postuser(uid, email, username):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     query = f"INSERT INTO user VALUES (?,?,?,?)"
     cur.execute(query, (uid, email, username, ""))
@@ -753,7 +817,7 @@ def postuser(uid, email, username):
 
 
 def getuid_fromemail(email):
-    con = sqlite3.connect('user.db')
+    con = sqlite3.connect("user.db")
     cur = con.cursor()
     cur.execute("select uid from user where email is '" + email + "'")
     uid = card_fetchone(cur)

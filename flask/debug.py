@@ -1,6 +1,7 @@
 import configparser
 import os
 
+
 def getdebugparam(key):
     is_file = os.path.isfile("debug.conf")
     if is_file:

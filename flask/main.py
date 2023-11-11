@@ -9,40 +9,41 @@ import card_manage_card
 import card_manage_image
 import card_play
 import debug
+
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = card_admin.UPLOAD_FOLDER
+app.config["UPLOAD_FOLDER"] = card_admin.UPLOAD_FOLDER
 
 
-@app.route('/play2', methods=['GET'])
+@app.route("/play2", methods=["GET"])
 def play2():
     sid = request.cookies.get("card_sid", None)
     sid = card_user.card_checksession(sid)
-    if (sid is None):
+    if sid is None:
         return abort(401)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
-    if (sid is None):
+    if sid is None:
         return redirect(url_for("index"))
     else:
         return card_play.card_play_get2(sid)
 
 
-@app.route('/test', methods=['GET'])
+@app.route("/test", methods=["GET"])
 def test():
-    return render_template('test.html')
+    return render_template("test.html")
 
 
-@app.route('/<debugp>')
+@app.route("/<debugp>")
 def debugp(debugp=None):
-    if (debugp == "p1"):
+    if debugp == "p1":
         email = debug.getdebugparam("email1")
-        if (email is None):
+        if email is None:
             abort(404)
             return
         return index(email)
-    elif (debugp == "p2"):
+    elif debugp == "p2":
         email = debug.getdebugparam("email2")
-        if (email is None):
+        if email is None:
             abort(404)
             return
         return index(email)
@@ -50,11 +51,11 @@ def debugp(debugp=None):
         abort(404)
 
 
-@app.route('/')
+@app.route("/")
 def index(email=None):
-    if (email is None):
+    if email is None:
         email = request.headers.get("X-Forwarded-Email")
-    if (email is None):
+    if email is None:
         abort(401)
 
     greetings, uid = card_user.card_auth(email)
@@ -63,12 +64,12 @@ def index(email=None):
     # 2.  Yes     No      postsession(cookie override)
     # 3.  Yes     Yes     do nothing
     sid = request.cookies.get("card_sid", None)
-    if (sid is None):
+    if sid is None:
         # 1.
         sid = card_user.card_postsession(uid)
     else:
         sid_chk = card_user.card_getsession(sid, email)
-        if (sid_chk is None):
+        if sid_chk is None:
             # 2.
             sid = card_user.card_postsession(uid)
         else:
@@ -76,12 +77,14 @@ def index(email=None):
             card_user.card_putsession(sid, uid)
 
     grant = card_user.card_getgrant(uid)
-    if (grant == "admin"):
-        resp = make_response(render_template(
-            'index.html', title='Cardgame(admin)', greetings=greetings))
+    if grant == "admin":
+        resp = make_response(
+            render_template("index.html", title="Cardgame(admin)", greetings=greetings)
+        )
     else:
-        resp = make_response(render_template(
-            'index2.html', title='Cardgame', greetings=greetings))
+        resp = make_response(
+            render_template("index2.html", title="Cardgame", greetings=greetings)
+        )
 
     resp.set_cookie("card_sid", sid)
     resp.set_cookie("card-email", email)
@@ -89,67 +92,69 @@ def index(email=None):
     return resp
 
 
-@app.route('/play/<target>', methods=['GET', 'POST', 'DELETE'])
+@app.route("/play/<target>", methods=["GET", "POST", "DELETE"])
 def play(target=None):
     sid = request.cookies.get("card_sid", None)
     sid = card_user.card_checksession(sid)
-    if (sid is None):
+    if sid is None:
         return abort(401)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
-    if (sid is None):
+    if sid is None:
         return redirect(url_for("index"))
-    if (request.method == 'POST'):
-        return card_play.card_play_post(sid, target, 'card')
-    if (request.method == 'DELETE' and target != "card"):
-        return card_play.card_play_delete(sid, target, 'card')
+    if request.method == "POST":
+        return card_play.card_play_post(sid, target, "card")
+    if request.method == "DELETE" and target != "card":
+        return card_play.card_play_delete(sid, target, "card")
     else:
         return card_play.card_play_get(sid)
 
 
-@app.route('/admin/<option>', methods=['GET', 'POST', 'DELETE'])
+@app.route("/admin/<option>", methods=["GET", "POST", "DELETE"])
 def admin(option=None):
     sid = request.cookies.get("card_sid", None)
     sid = card_user.card_checksession(sid)
-    if (sid is None):
+    if sid is None:
         return abort(401)
     grant = card_user.card_getgrant_fromsid(sid)
-    if (grant != "admin"):
+    if grant != "admin":
         return abort(403)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
-    if (sid is None):
+    if sid is None:
         return redirect(url_for("index"))
-    if (request.method == 'POST'):
+    if request.method == "POST":
         return card_admin.card_admin_post(sid, option, request, request.url)
-    if (request.method == 'DELETE' and option != "view"):
-        return card_admin.card_admin_delete(sid, option, 'view')
+    if request.method == "DELETE" and option != "view":
+        return card_admin.card_admin_delete(sid, option, "view")
     else:
-        if (option == "view"):
+        if option == "view":
             return card_admin.card_admin_view(sid)
         return card_admin.card_admin_view(sid)
 
 
-@app.route('/uploads/<filename>')
+@app.route("/uploads/<filename>")
 # ファイルを表示する
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
-@app.route('/uploads/<uploads_sub>/<filename>')
+@app.route("/uploads/<uploads_sub>/<filename>")
 # ファイルを表示する
 def uploaded_file_sub(uploads_sub, filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], uploads_sub + "/" + filename)
+    return send_from_directory(
+        app.config["UPLOAD_FOLDER"], uploads_sub + "/" + filename
+    )
 
 
-@app.route('/chkheaders/')
+@app.route("/chkheaders/")
 def chkheaders():
     sid = request.cookies.get("card_sid", None)
     sid = card_user.card_checksession(sid)
-    if (sid is None):
+    if sid is None:
         return abort(401)
     grant = card_user.card_getgrant_fromsid(sid)
-    if (grant != "admin"):
+    if grant != "admin":
         return abort(403)
     headers = "<table border=1>"
     for header in request.headers:
@@ -158,59 +163,59 @@ def chkheaders():
         headers += "</tr>"
         # envs += request.headers.get("Host")
     headers += "</table>"
-    return render_template('chkheaders.html', title='Check Headers', headers=headers)
+    return render_template("chkheaders.html", title="Check Headers", headers=headers)
 
 
-@app.route('/chktable/<tablename>')
+@app.route("/chktable/<tablename>")
 def chkusers(tablename=None):
     sid = request.cookies.get("card_sid", None)
     sid = card_user.card_checksession(sid)
-    if (sid is None):
+    if sid is None:
         return abort(401)
     grant = card_user.card_getgrant_fromsid(sid)
-    if (grant != "admin"):
+    if grant != "admin":
         return abort(403)
     headers = card_util.card_gettablehtml(tablename, None)
-    return render_template('chkheaders.html', title=tablename, headers=headers)
+    return render_template("chkheaders.html", title=tablename, headers=headers)
 
 
-@app.route('/manage_card/<target>', methods=['GET', 'POST', 'DELETE'])
+@app.route("/manage_card/<target>", methods=["GET", "POST", "DELETE"])
 def manage_card(target=None):
     sid = request.cookies.get("card_sid", None)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
-    if (sid is None):
+    if sid is None:
         return redirect(url_for("index"))
     grant = card_user.card_getgrant_fromsid(sid)
-    if (grant != "admin"):
+    if grant != "admin":
         return abort(403)
-    if (request.method == 'POST'):
+    if request.method == "POST":
         return card_manage_card.card_management_post(request, request.url)
-    if (request.method == 'DELETE' and target != "card"):
-        return card_manage_card.card_management_delete(target, '/manage_card/card')
+    if request.method == "DELETE" and target != "card":
+        return card_manage_card.card_management_delete(target, "/manage_card/card")
     else:
         return card_manage_card.card_management_view()
 
 
-@app.route('/manage_image/<target>', methods=['GET', 'DELETE'])
+@app.route("/manage_image/<target>", methods=["GET", "DELETE"])
 def manage_image(target=None):
     sid = request.cookies.get("card_sid", None)
     email = request.cookies.get("card-email")
     sid = card_user.card_getsession(sid, email)
-    if (sid is None):
+    if sid is None:
         return redirect(url_for("index"))
     grant = card_user.card_getgrant_fromsid(sid)
-    if (grant != "admin"):
+    if grant != "admin":
         return abort(403)
-    if (request.method == 'DELETE' and target != "card"):
-        return card_manage_image.card_management_delete(target, '/manage_image/card')
+    if request.method == "DELETE" and target != "card":
+        return card_manage_image.card_management_delete(target, "/manage_image/card")
     else:
         return card_manage_image.card_management_view()
 
 
-@app.route('/hello/<name>')
+@app.route("/hello/<name>")
 def hello(name=None):
-    return render_template('hello.html', title='flask test', name=name)
+    return render_template("hello.html", title="flask test", name=name)
 
 
 # Omajinai
