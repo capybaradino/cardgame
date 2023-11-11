@@ -44,6 +44,18 @@ class TestApplyEffect_other(unittest.TestCase):
         self.card2 = "test_card2"
         self.isRun = True
 
+    def tearDown(self):
+        # Mockオブジェクトのリセット
+        self.mock_unit_hp_change_multi.reset_mock()
+        self.mock_api_common_dmg.reset_mock()
+        self.mock_api_common_dmg_leader.reset_mock()
+        self.mock_api_common_attack.reset_mock()
+        self.mock_api_common_active.reset_mock()
+        self.mock_api_common_tension.reset_mock()
+        self.mock_api_common_get_self_or_enemy.reset_mock()
+        self.mock_getobjcard.reset_mock()
+
+    # ドローのテスト
     @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
     @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
     @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
@@ -52,7 +64,7 @@ class TestApplyEffect_other(unittest.TestCase):
     @patch("api_common_tension.api_common_tension", mock_api_common_tension)
     @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
     @patch("api_common_util.getobjcard", mock_getobjcard)
-    def test_apply_effect_other(self):
+    def test_apply_effect_draw(self):
         # draw_bujutsuのテスト
         effect = "self_1draw_bujutsu"
         card3 = "test_card3"
@@ -75,8 +87,19 @@ class TestApplyEffect_other(unittest.TestCase):
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         self.playview.p1.draw_card_spell.assert_called_once()
 
+    # attack等のテスト
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_attack(self):
         # attackのテスト
         effect = "unit_attack+2_thisturn"
+        card3 = "test_card3"
         result = apply_effect(
             self.sid, self.playview, effect, None, self.card2, card3, self.isRun
         )
@@ -87,6 +110,7 @@ class TestApplyEffect_other(unittest.TestCase):
 
         # tensionのテスト
         effect = "tension+2"
+        card3 = "test_card3"
         result = apply_effect(
             self.sid, self.playview, effect, None, self.card2, card3, self.isRun
         )
@@ -97,6 +121,7 @@ class TestApplyEffect_other(unittest.TestCase):
 
         # activeのテスト
         effect = "active"
+        card3 = "test_card3"
         result = apply_effect(
             self.sid, self.playview, effect, None, self.card2, card3, self.isRun
         )
@@ -118,7 +143,16 @@ class TestApplyEffect_other(unittest.TestCase):
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         self.mock_api_common_dmg_leader.assert_called_once()
 
-        # movefrontのテスト
+    # movefrontのテスト
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_movefront(self):
         effect = "onplay:allbackunit_movefront"
         # 対象無し
         board_enemy = [None, None, None, None, None, None]
