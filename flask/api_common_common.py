@@ -126,6 +126,23 @@ def _onplay_effect(
             return {"error": "illegal target card"}, 403
         ret = "OK"
         scode = 200
+    elif "movefront" in effect:
+        if "allbackunit" in effect:
+            # 全ての後列の敵ユニットを前列に移動
+            i = 0
+            while i < 3:
+                loc1 = i
+                loc2 = i + 3
+                objcard2 = board_enemy[loc1]
+                objcard3 = board_enemy[loc2]
+                if objcard2 is None and objcard3 is not None:
+                    # 対象ユニット場所入れ替え
+                    card_db.putdeck_locnum(
+                        playview.playdata.card_table, objcard3.cuid, loc1
+                    )
+                i = i + 1
+        ret = "OK"
+        scode = 200
     elif "draw" in effect:
         if isRun:
             if objcard is None:
