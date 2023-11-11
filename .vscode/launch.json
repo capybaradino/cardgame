@@ -13,6 +13,17 @@
             "justMyCode": true
         },
         {
+            "name": "Python: Run All Tests",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/flask",
+            "module": "unittest",
+            "args": [
+                "discover"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "_main.py",
             "type": "python",
             "request": "launch",
