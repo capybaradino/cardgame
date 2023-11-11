@@ -158,7 +158,9 @@ class TestAPIUnitAttack(unittest.TestCase):
                 "hp",
                 7,
             )
-            mock_api_onattack.assert_called_with(self.sid, self.playview, self.objcard1, ifleader=True)
+            mock_api_onattack.assert_called_with(
+                self.sid, self.playview, self.objcard1, ifleader=True
+            )
 
 
 class TestAPIOnAttack(unittest.TestCase):
