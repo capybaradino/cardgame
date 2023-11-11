@@ -10,13 +10,13 @@ from api_common_common import (
     api_common_dmg_leader,
     api_common_util,
     leader_hp_change,
-    onplay_effect,
+    apply_effect,
     unit_hp_change,
     unit_hp_change_multi,
 )
 
 
-class TestOnplayEffect(unittest.TestCase):
+class TestApplyEffect(unittest.TestCase):
     @patch("api_common_util.getobjcard")
     @patch("api_common_common.api_common_dmg")
     @patch("api_common_common.api_common_dmg_leader")
@@ -25,7 +25,7 @@ class TestOnplayEffect(unittest.TestCase):
     @patch("api_common_tension.api_common_tension")
     @patch("api_common_util.get_self_or_enemy")
     @patch("api_common_common.unit_hp_change_multi")
-    def test_onplay_effect(
+    def test_apply_effect(
         self,
         mock_unit_hp_change_multi,
         mock_api_common_get_self_or_enemy,
@@ -65,7 +65,7 @@ class TestOnplayEffect(unittest.TestCase):
 
         # draw_bujutsuのテスト
         effect = "self_1draw_bujutsu"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -73,7 +73,7 @@ class TestOnplayEffect(unittest.TestCase):
 
         # draw_card_spellのテスト
         effect = "self_1draw_spell"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -81,7 +81,7 @@ class TestOnplayEffect(unittest.TestCase):
 
         # dmgのテスト
         effect = "any_5dmg"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -90,7 +90,7 @@ class TestOnplayEffect(unittest.TestCase):
         # dmgのテスト(対象が敵リーダー)
         effect = "enemy_5dmg"
         card3 = "rightboard_10"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -100,7 +100,7 @@ class TestOnplayEffect(unittest.TestCase):
         effect = "unit_5dmg_frontonly"
         card3 = "rightboard_1"
         objcard3.locnum = 1
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
 
@@ -108,7 +108,7 @@ class TestOnplayEffect(unittest.TestCase):
         effect = "unit_5dmg_frontonly"
         card3 = "rightboard_3"
         objcard3.locnum = 3
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ({"error": "target unit is not front"}, 403))
 
@@ -116,7 +116,7 @@ class TestOnplayEffect(unittest.TestCase):
         effect = "unit_5dmg"
         card3 = "rightboard_10"
         objcard3.locnum = 10
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ({"error": "cannot target leader"}, 403))
 
@@ -125,7 +125,7 @@ class TestOnplayEffect(unittest.TestCase):
         card3 = "rightboard_1"
         objcard3.locnum = 1
         playview.p2board = [None, objcard3, None, None, None, None]
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認(OK)
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -158,7 +158,7 @@ class TestOnplayEffect(unittest.TestCase):
             None,
             None,
         ]
-        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        result = apply_effect(sid, playview, effect, objcard3, card2, None, isRun)
         # 戻り値の確認(OK)
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -175,7 +175,7 @@ class TestOnplayEffect(unittest.TestCase):
             None,
             None,
         ]
-        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        result = apply_effect(sid, playview, effect, objcard3, card2, None, isRun)
         # 戻り値の確認(OK)
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが呼び出されなかったことを確認
@@ -183,7 +183,7 @@ class TestOnplayEffect(unittest.TestCase):
 
         # attackのテスト
         effect = "unit_attack+2_thisturn"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -191,7 +191,7 @@ class TestOnplayEffect(unittest.TestCase):
 
         # tensionのテスト
         effect = "tension+2"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -199,7 +199,7 @@ class TestOnplayEffect(unittest.TestCase):
 
         # activeのテスト
         effect = "active"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -210,7 +210,7 @@ class TestOnplayEffect(unittest.TestCase):
         # dmgのテスト(対象が敵リーダー限定)
         effect = "enemy_3dmg_leader"
         card3 = "test_card3"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
+        result = apply_effect(sid, playview, effect, None, card2, card3, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが期待通りに呼び出されたことを確認
@@ -225,7 +225,7 @@ class TestOnplayEffect(unittest.TestCase):
         api_common_util.getobjcard_oppsite = Mock()
         api_common_util.getobjcard_oppsite.return_value = [None, 0, 1]
         card_db.putdeck_locnum = Mock()
-        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        result = apply_effect(sid, playview, effect, objcard3, card2, None, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが呼び出されなかったことを確認
@@ -237,7 +237,7 @@ class TestOnplayEffect(unittest.TestCase):
         api_common_util.get_self_or_enemy.return_value = [None, board_enemy, None, None]
         api_common_util.getobjcard_oppsite = Mock()
         card_db.putdeck_locnum = Mock()
-        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        result = apply_effect(sid, playview, effect, objcard3, card2, None, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが呼び出されなかったことを確認
@@ -249,7 +249,7 @@ class TestOnplayEffect(unittest.TestCase):
         api_common_util.get_self_or_enemy.return_value = [None, board_enemy, None, None]
         api_common_util.getobjcard_oppsite = Mock()
         card_db.putdeck_locnum = Mock()
-        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        result = apply_effect(sid, playview, effect, objcard3, card2, None, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが2回呼び出されたことを確認
@@ -263,7 +263,7 @@ class TestOnplayEffect(unittest.TestCase):
         api_common_util.get_self_or_enemy.return_value = [None, board_enemy, None, None]
         api_common_util.getobjcard_oppsite = Mock()
         card_db.putdeck_locnum = Mock()
-        result = onplay_effect(sid, playview, effect, card2, None, isRun, objcard3)
+        result = apply_effect(sid, playview, effect, objcard3, card2, None, isRun)
         # 戻り値の確認
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが1回呼び出されたことを確認

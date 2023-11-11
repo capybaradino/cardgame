@@ -22,8 +22,8 @@ def api_spell(sid, playview: Play_view, card1, card2):
     # 特技の対象確認
     for effect in effect_array:
         # 事前チェック
-        ret, scode = api_common_common.onplay_effect_spell(
-            sid, playview, effect, objcard1, card2, False
+        ret, scode = api_common_common.apply_effect(
+            sid, playview, effect, objcard1, None, card2, False
         )
         if ret != "OK":
             return ret, scode
@@ -41,8 +41,8 @@ def api_spell(sid, playview: Play_view, card1, card2):
         )
         # MP減算
         card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
-        ret, scode = api_common_common.onplay_effect_spell(
-            sid, playview, effect, objcard1, card2, True
+        ret, scode = api_common_common.apply_effect(
+            sid, playview, effect, objcard1, None, card2, True
         )
 
     # カード状態変更

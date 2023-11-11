@@ -11,47 +11,24 @@ from class_playinfo import Card_info
 from class_playview import Play_view
 
 
-def onplay_effect(sid, playview: Play_view, effect, card2, card3, isRun, objcard=None):
-    return _onplay_effect(sid, playview, effect, card2, card3, objcard, isRun)
-
-
-def onplay_effect_objcard(sid, playview: Play_view, effect, objcard: Card_info, isRun):
-    return _onplay_effect(sid, playview, effect, None, None, objcard, isRun)
-
-
-def onplay_effect_spell(
-    sid, playview: Play_view, effect, objcard: Card_info, card2, isRun
-):
-    """効果の確認と実行(特技用)
-    特技使用先(card2)は、内部関数上はcard3に変換する。
-    (特技なので内部関数のcard2(ユニット配置先)は使わない)
-
-    Args:
-        sid (_type_): セッションID
-        playview (Play_view): 引継ぎ情報
-        effect (_type_): 効果(テキスト、単体)
-        objcard (Card_info): 効果を発動するカードの情報
-        card2 (_type_): 特技使用先の対象
-        isRun (bool): 実行フラグ(事前チェックの場合はFalseにする)
-
-    Returns:
-        _type_: _description_
-    """
-    return _onplay_effect(sid, playview, effect, None, card2, objcard, isRun)
-
-
-def _onplay_effect(
-    sid, playview: Play_view, effect, card2, card3, objcard: Card_info, isRun
+def apply_effect(
+    sid,
+    playview: Play_view,
+    effect: str,
+    objcard: Card_info,
+    card2: str,
+    card3: str,
+    isRun: bool,
 ):
     """効果の確認と実行
 
     Args:
         sid (_type_): セッションID
         playview (Play_view): 引継ぎ情報
-        effect (_type_): 効果(テキスト、単体)
-        card2 (_type_): プレイ時のユニット配置先
-        card3 (_type_): プレイ時または特技使用時の効果対象
+        effect (str): 効果(テキスト、単体)
         objcard (Card_info): 効果を発動するカードの情報
+        card2 (str): プレイ時のユニット配置先(特技使用時はNoneを指定)
+        card3 (str): プレイ時または特技使用時の効果対象
         isRun (bool): 実行フラグ(事前チェックの場合はFalseにする)
 
     Raises:
@@ -442,8 +419,8 @@ def _ondead_effect(sid, playview: Play_view, objcard2: Card_info):
         if effect.startswith("ondead"):
             # effectからondead:以外の部分を切り出し
             effectbody = objcard2.effect.split("ondead:")[1]
-            api_common_common.onplay_effect_objcard(
-                sid, playview, effectbody, objcard2, True
+            api_common_common.apply_effect(
+                sid, playview, effectbody, objcard2, None, None, True
             )
 
 
