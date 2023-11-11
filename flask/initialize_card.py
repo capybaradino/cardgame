@@ -5,17 +5,16 @@ import uuid
 
 def card_fetchone(cur):
     item = cur.fetchone()
-    if (item is not None):
+    if item is not None:
         item = item[0]
     return item
 
 
 def isexist_cid(cid):
-    con = sqlite3.connect('game.db')
+    con = sqlite3.connect("game.db")
     cur = con.cursor()
-    cur.execute(
-        "select cid from card_basicdata where cid = '" + cid + "'")
-    if (card_fetchone(cur) is None):
+    cur.execute("select cid from card_basicdata where cid = '" + cid + "'")
+    if card_fetchone(cur) is None:
         con.close()
         return False
     else:
@@ -23,12 +22,12 @@ def isexist_cid(cid):
         return True
 
 
-class Csvcard():
+class Csvcard:
     def __init__(self, originalname, newname, effect):
         self.name = newname
 
-        with open('gamecard.csv', 'r') as file:
-            reader = csv.reader(file, delimiter='\t')  # タブ区切りのCSVとして読み込む
+        with open("gamecard.csv", "r") as file:
+            reader = csv.reader(file, delimiter="\t")  # タブ区切りのCSVとして読み込む
 
             row = next(reader)
             # print(row)
@@ -67,8 +66,7 @@ class Csvcard():
                     elif row[LEADER] == "武闘家":
                         self.leader = "mnk"
                     else:
-                        print("[ERROR] Leader " +
-                              row[LEADER] + " is not defined.")
+                        print("[ERROR] Leader " + row[LEADER] + " is not defined.")
                         exit(1)
 
                     if row[CARD_PACK] == "00ベーシック":
@@ -120,24 +118,23 @@ class Csvcard():
 
 
 if __name__ == "__main__":
-
     print("[INFO] Select table to create.")
     print("       1:card_basicdata 2:deck C:Cancel")
     opt = input()
 
-    if (opt == 'C'):
+    if opt == "C":
         exit()
 
     # print("[INFO] Create card data start.")
 
-    if opt == '1':
+    if opt == "1":
         print("[INFO] Create card basic data start.")
 
         # SQLite3データベースに接続
-        conn = sqlite3.connect('game.db')
+        conn = sqlite3.connect("game.db")
         cursor = conn.cursor()
         # 削除したいテーブルの名前を指定
-        table_name = 'card_basicdata'
+        table_name = "card_basicdata"
         # テーブルを削除するSQLクエリを実行
         cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
         # テーブルの作成
@@ -165,8 +162,8 @@ if __name__ == "__main__":
         conn.close()
 
         print("[INFO] Create cards according to csv file")
-        with open('gamecard_define.csv', 'r') as file:
-            reader = csv.reader(file, delimiter='\t')  # タブ区切りのCSVとして読み込む
+        with open("gamecard_define.csv", "r") as file:
+            reader = csv.reader(file, delimiter="\t")  # タブ区切りのCSVとして読み込む
 
             row = next(reader)
             print(row)
@@ -194,16 +191,41 @@ if __name__ == "__main__":
                 flavor = newcard.flavor
                 while True:
                     cid = str(uuid.uuid4())
-                    if (isexist_cid(cid)):
+                    if isexist_cid(cid):
                         continue
                     break
 
-                con = sqlite3.connect('game.db')
+                con = sqlite3.connect("game.db")
                 cur = con.cursor()
-                cur.execute("insert into card_basicdata values ('" + cid + "','" +
-                            fid + "','" + cardname + "','" + leader + "','" + cardpack + "','" +
-                            cost + "','" + category + "','" + rarity + "','" + type + "','" +
-                            attack + "','" + hp + "','" + effect + "','" + flavor + "')")
+                cur.execute(
+                    "insert into card_basicdata values ('"
+                    + cid
+                    + "','"
+                    + fid
+                    + "','"
+                    + cardname
+                    + "','"
+                    + leader
+                    + "','"
+                    + cardpack
+                    + "','"
+                    + cost
+                    + "','"
+                    + category
+                    + "','"
+                    + rarity
+                    + "','"
+                    + type
+                    + "','"
+                    + attack
+                    + "','"
+                    + hp
+                    + "','"
+                    + effect
+                    + "','"
+                    + flavor
+                    + "')"
+                )
                 con.commit()
                 con.close()
 
@@ -222,17 +244,42 @@ if __name__ == "__main__":
         effect = ""
         flavor = ""
 
-        con = sqlite3.connect('game.db')
+        con = sqlite3.connect("game.db")
         cur = con.cursor()
-        cur.execute("insert into card_basicdata values ('" + cid + "','" +
-                    fid + "','" + cardname + "','" + leader + "','" + cardpack + "','" +
-                    cost + "','" + category + "','" + rarity + "','" + type + "','" +
-                    attack + "','" + hp + "','" + effect + "','" + flavor + "')")
+        cur.execute(
+            "insert into card_basicdata values ('"
+            + cid
+            + "','"
+            + fid
+            + "','"
+            + cardname
+            + "','"
+            + leader
+            + "','"
+            + cardpack
+            + "','"
+            + cost
+            + "','"
+            + category
+            + "','"
+            + rarity
+            + "','"
+            + type
+            + "','"
+            + attack
+            + "','"
+            + hp
+            + "','"
+            + effect
+            + "','"
+            + flavor
+            + "')"
+        )
         con.commit()
         con.close()
         print("[INFO] Create card basic data end.")
 
-    if opt == '2':
+    if opt == "2":
         print("[INFO] Create deck data start.")
 
         # TODO デッキ名
@@ -242,7 +289,7 @@ if __name__ == "__main__":
 
         for deck_name in deck_names:
             # SQLite3データベースに接続
-            conn = sqlite3.connect('game.db')
+            conn = sqlite3.connect("game.db")
             cursor = conn.cursor()
             # 削除したいテーブルの名前を指定
             table_name = deck_name
@@ -270,16 +317,16 @@ if __name__ == "__main__":
             conn.commit()
             conn.close()
 
-            with open(deck_name + '.csv', 'r') as file:
-                reader = csv.reader(file, delimiter='\t')  # タブ区切りのCSVとして読み込む
+            with open(deck_name + ".csv", "r") as file:
+                reader = csv.reader(file, delimiter="\t")  # タブ区切りのCSVとして読み込む
 
                 i = 0
                 for row in reader:
                     print(row)
 
-                    with open('gamecard_define.csv', 'r') as file:
+                    with open("gamecard_define.csv", "r") as file:
                         # タブ区切りのCSVとして読み込む
-                        reader2 = csv.reader(file, delimiter='\t')
+                        reader2 = csv.reader(file, delimiter="\t")
 
                         row2 = next(reader2)
                         # print(row)
@@ -300,7 +347,7 @@ if __name__ == "__main__":
                     """
                     cur.execute(query)
                     cid = card_fetchone(cur)
-                    if (cid is None):
+                    if cid is None:
                         con.close()
                         print("[ERROR] Card " + cardname + " not found.")
                         exit(1)
