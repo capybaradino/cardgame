@@ -1,6 +1,39 @@
-from datetime import datetime
 import sqlite3
+from datetime import datetime
+
 import card_db
+
+
+def card_getwaitingsessionhtml():
+    # マッチング待機中のセッションを取得する
+    gamesessions = card_db.getrecords_fromsession(
+        "gamesession", "p2_player_tid", "waiting"
+    )
+    # HTMLでテーブルを作成する
+    headers = ""
+    headers += "<table border=1>"
+    headers += "<tr>"
+    headers += "<td>player1</td>"
+    headers += "<td>player2</td>"
+    headers += "</tr>"
+    for gamesession in gamesessions:
+        p1_player_tid = gamesession[1]
+        p2_player_tid = gamesession[2]
+        p1_player_name = card_db.getrecord_fromsession(
+            "playerstats", "player_tid", p1_player_tid
+        )[1]
+        if p2_player_tid != "waiting":
+            p2_player_name = card_db.getrecord_fromsession(
+                "playerstats", "player_tid", p2_player_tid
+            )[1]
+        else:
+            p2_player_name = "waiting"
+        headers += "<tr>"
+        headers += "<td>" + p1_player_name + "</td>"
+        headers += "<td>" + p2_player_name + "</td>"
+        headers += "</tr>"
+    headers += "</table>"
+    return headers
 
 
 def card_gettablehtml(tablename, sid):
