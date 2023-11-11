@@ -1,14 +1,21 @@
-from flask import Flask, render_template
-from flask import request, make_response, redirect, url_for
-from flask.helpers import send_from_directory
-from flask import abort
-import card_user
 import card_admin
-import card_util
 import card_manage_card
 import card_manage_image
 import card_play
+import card_user
+import card_util
 import debug
+
+from flask import (
+    Flask,
+    abort,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from flask.helpers import send_from_directory
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = card_admin.UPLOAD_FOLDER
@@ -82,8 +89,14 @@ def index(email=None):
             render_template("index.html", title="Cardgame(admin)", greetings=greetings)
         )
     else:
+        playertablehtml = card_util.card_getwaitingsessionhtml()
         resp = make_response(
-            render_template("index2.html", title="Cardgame", greetings=greetings)
+            render_template(
+                "index2.html",
+                title="Cardgame",
+                greetings=greetings,
+                playertablehtml=playertablehtml,
+            )
         )
 
     resp.set_cookie("card_sid", sid)
