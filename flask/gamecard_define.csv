@@ -24,7 +24,7 @@
 まわしげり	mawashi-kick	enemy_unit_vertical_4dmg_frontonly
 ふくめんバニー	fukumen-bunny	onattack_leader:self_1draw_bujutsu
 ジャガーメイジ	jaguar-mage	onplay_enemy_unit_3over:all_enemy_unit_1dmg
-ムーンキメラ	moon-chimera	
+ムーンキメラ	moon-chimera	onplay:allbackunit_movefront
 キラーピッケル	killer-pickel	
 キラーマシン	killer-machine	
 アンルシア	anlucia	
