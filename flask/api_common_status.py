@@ -93,12 +93,6 @@ def api_common_attack(sid, playview: Play_view, effect, card2, isRun):
     if "attack" in effect:
         # ステータス変化系
         # TODO ターゲットフィルタ
-        pattern = r"(^.*)_.*"
-        matches = re.search(pattern, effect)
-        target = matches.group(1)
-        pattern = r"[+-]?\d+"
-        matches = re.search(pattern, effect)
-        value = int(matches.group())
 
         # 攻撃先確認
         pattern_p1board = r"leftboard_[0-5]$"  # 盤面
