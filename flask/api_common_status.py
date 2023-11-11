@@ -39,7 +39,25 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
         target = matches.group(1)
         pattern = r"[+-]?\d+"
         matches = re.search(pattern, effect)
-        value = int(matches.group())
+        # 数値検索でヒットした場合はその値を使用
+        if matches is not None:
+            value = int(matches.group())
+        else:
+            # 数値検索でヒットしなかった場合はattack+の後ろの一文字を読み取る
+            pattern = r"attack\+(\w)"
+            matches = re.search(pattern, effect)
+            char = matches.group(1)
+            # 文字がTであった場合は自分のテンション数を取得
+            if char == "T":
+                (
+                    board_self,
+                    board_enemy,
+                    player_self,
+                    player_enemy,
+                ) = api_common_util.get_self_or_enemy(playview, objcard2)
+                value = player_self.tension
+            else:
+                raise Exception
 
         if objcard2 is None:
             return {"error": "unit don't exists in target card"}, 403
@@ -56,7 +74,7 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
                 playview.playdata.card_table, "cuid", objcard2.cuid
             )
             turnend_effect_ontime = record[8]
-            turnend_effect_ontime = turnend_effect_ontime + ",attack-2"
+            turnend_effect_ontime = turnend_effect_ontime + ",attack-" + str(value)
             if isRun:
                 card_db.putsession(
                     playview.playdata.card_table,

@@ -25,7 +25,7 @@
 ふくめんバニー	fukumen-bunny	onattack_leader:self_1draw_bujutsu
 ジャガーメイジ	jaguar-mage	onplay_enemy_unit_3over:all_enemy_unit_1dmg
 ムーンキメラ	moon-chimera	onplay:allbackunit_movefront
-キラーピッケル	killer-pickel	
+キラーピッケル	killer-pickel	onplay:unit_attack+T_thisturn
 キラーマシン	killer-machine	
 アンルシア	anlucia	
 ハッサン	hassan	
