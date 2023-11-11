@@ -13,27 +13,38 @@ def card_management_delete(cid, callback):
 
 def card_management_post(request: request, callback):
     while True:
-        fid = request.form['fid']
-        cardname = request.form['cardname']
-        leader = request.form['leader']
-        cardpack = request.form['cardpack']
-        cost = request.form['cost']
-        category = request.form['category']
-        rarity = request.form['rarity']
-        type = request.form['type']
-        attack = request.form['attack']
-        hp = request.form['hp']
-        effect = request.form['effect']
-        flavor = request.form['flavor']
+        fid = request.form["fid"]
+        cardname = request.form["cardname"]
+        leader = request.form["leader"]
+        cardpack = request.form["cardpack"]
+        cost = request.form["cost"]
+        category = request.form["category"]
+        rarity = request.form["rarity"]
+        type = request.form["type"]
+        attack = request.form["attack"]
+        hp = request.form["hp"]
+        effect = request.form["effect"]
+        flavor = request.form["flavor"]
         while True:
             cid = str(uuid.uuid4())
-            if(card_db.isexist_cid(cid)):
+            if card_db.isexist_cid(cid):
                 continue
             break
-        card_db.postcard(cid, fid, cardname, leader,
-                         cardpack, cost, category,
-                         rarity, type, attack, hp,
-                         effect, flavor)
+        card_db.postcard(
+            cid,
+            fid,
+            cardname,
+            leader,
+            cardpack,
+            cost,
+            category,
+            rarity,
+            type,
+            attack,
+            hp,
+            effect,
+            flavor,
+        )
         break
     return redirect(callback)
 
@@ -42,24 +53,37 @@ def selectform(name, cardupdateform, values):
     cardupdateform += "<td><select name=" + name + ">"
     for value in values:
         value = str(value)
-        cardupdateform += "<option value="+value+">"+value+"</option>"
+        cardupdateform += "<option value=" + value + ">" + value + "</option>"
     cardupdateform += "</select></td>"
     return cardupdateform
 
 
 def card_management_view():
-    cardinfo = card_util.card_gettablehtml_admin('card_basicdata')
-    uploadedinfo = card_util.card_gettablehtml('card_material', None)
+    cardinfo = card_util.card_gettablehtml_admin("card_basicdata")
+    uploadedinfo = card_util.card_gettablehtml("card_material", None)
 
     # make form
     cardupdateform = ""
-    cardupdateform += '<form action=card method=post enctype=multipart/form-data>'
+    cardupdateform += "<form action=card method=post enctype=multipart/form-data>"
     cardupdateform += '<table border="1">'
-    columns = ("cid", "fid", "cardname", "leader", "cardpack", "cost", "category",
-               "rarity", "type", "attack", "hp", "effect", "flavor")
+    columns = (
+        "cid",
+        "fid",
+        "cardname",
+        "leader",
+        "cardpack",
+        "cost",
+        "category",
+        "rarity",
+        "type",
+        "attack",
+        "hp",
+        "effect",
+        "flavor",
+    )
     cardupdateform += "<tr>"
     for columnname in columns:
-        cardupdateform += "<td>"+columnname+"</td>"
+        cardupdateform += "<td>" + columnname + "</td>"
     cardupdateform += "</tr>"
     cardupdateform += "<tr>"
     # cid
@@ -69,7 +93,7 @@ def card_management_view():
     cardupdateform += "<td><select name=fid>"
     for fid in fids:
         value = fid[0]
-        cardupdateform += "<option value="+value+">"+value+"</option>"
+        cardupdateform += "<option value=" + value + ">" + value + "</option>"
     cardupdateform += "</select></td>"
     # cardname
     cardupdateform += '<td><input type="text" maxlength="32" name=cardname></td>'
@@ -114,5 +138,10 @@ def card_management_view():
     cardupdateform += "<input type=submit value=Register>"
     cardupdateform += "</form>"
 
-    return render_template('manage_card.html', title='manage_card', cardinfo=cardinfo,
-                           uploadedinfo=uploadedinfo, cardupdateform=cardupdateform)
+    return render_template(
+        "manage_card.html",
+        title="manage_card",
+        cardinfo=cardinfo,
+        uploadedinfo=uploadedinfo,
+        cardupdateform=cardupdateform,
+    )

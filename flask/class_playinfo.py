@@ -9,7 +9,7 @@ class Card_info:
         self.locnum = locnum
         self.dhp = dhp
         self.dattack = dattack
-        if (self.cid is not None):
+        if self.cid is not None:
             self.update()
 
     def update(self):
