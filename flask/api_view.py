@@ -9,7 +9,8 @@ def get(playview: Play_view):
     data_dict["turn"] = playview.turnstate
     # ログ
     record = card_db.getrecord_fromsession(
-        "gamesession", "card_table", playview.playdata.card_table)
+        "gamesession", "card_table", playview.playdata.card_table
+    )
     data_dict["log"] = record[4]
 
     # Player1
@@ -24,14 +25,15 @@ def get(playview: Play_view):
     player1["job"] = playview.p1job
     # テンションカードアクティブ確認
     record = card_db.getrecord_fromsession(
-        playview.playdata.card_table, "loc", playview.p1name+"_tension")
+        playview.playdata.card_table, "loc", playview.p1name + "_tension"
+    )
     active = record[6]
     player1["tension_active"] = active
     # ハンド
     p1hand = []
     handinfo: Card_info
     for handinfo in playview.p1hand:
-        if (handinfo is not None):
+        if handinfo is not None:
             hand = {}
             hand["cost"] = handinfo.cost
             hand["attack"] = handinfo.attack
@@ -49,11 +51,12 @@ def get(playview: Play_view):
     loc = 0
     boardinfo: Card_info
     for boardinfo in playview.p1board:
-        if (boardinfo is not None):
+        if boardinfo is not None:
             board = {}
             board["location"] = loc
             record = card_db.getrecord_fromsession(
-                playview.playdata.card_table, "cuid", boardinfo.cuid)
+                playview.playdata.card_table, "cuid", boardinfo.cuid
+            )
             board["active"] = record[6]
             board["cost"] = boardinfo.cost
             board["attack"] = boardinfo.attack
@@ -88,11 +91,12 @@ def get(playview: Play_view):
     loc = 0
     boardinfo: Card_info
     for boardinfo in playview.p2board:
-        if (boardinfo is not None):
+        if boardinfo is not None:
             board = {}
             board["location"] = loc
             record = card_db.getrecord_fromsession(
-                playview.playdata.card_table, "cuid", boardinfo.cuid)
+                playview.playdata.card_table, "cuid", boardinfo.cuid
+            )
             board["cost"] = boardinfo.cost
             board["attack"] = boardinfo.attack
             board["attack_org"] = boardinfo.attack_org
