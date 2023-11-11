@@ -43,6 +43,17 @@ class TestApplyEffect_dmg(unittest.TestCase):
         self.card2 = "test_card2"
         self.isRun = True
 
+    def tearDown(self):
+        # Mockオブジェクトのリセット
+        self.mock_unit_hp_change_multi.reset_mock()
+        self.mock_api_common_dmg.reset_mock()
+        self.mock_api_common_dmg_leader.reset_mock()
+        self.mock_api_common_active.reset_mock()
+        self.mock_api_common_attack.reset_mock()
+        self.mock_api_common_tension.reset_mock()
+        self.mock_api_common_get_self_or_enemy.reset_mock()
+        self.mock_getobjcard.reset_mock()
+
     @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
     @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
     @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
@@ -94,6 +105,26 @@ class TestApplyEffect_dmg(unittest.TestCase):
         # 戻り値の確認
         self.assertEqual(result, ({"error": "target unit is not front"}, 403))
 
+    # dmgのテスト(対象が敵リーダー限定)
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_dmg_leader(self):
+        effect = "enemy_3dmg_leader"
+        card3 = "test_card3"
+        result = apply_effect(
+            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
+        )
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに呼び出されたことを確認
+        self.mock_api_common_dmg_leader.assert_called_once()
+
         # dmgのテスト(ユニット限定でリーダー指定)
         effect = "unit_5dmg"
         card3 = "rightboard_10"
@@ -104,7 +135,16 @@ class TestApplyEffect_dmg(unittest.TestCase):
         # 戻り値の確認
         self.assertEqual(result, ({"error": "cannot target leader"}, 403))
 
-        # dmgのテスト(縦一列指定)
+    # dmgのテスト(縦一列指定)
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_dmg_vertical(self):
         effect = "enemy_vertical_4dmg_frontonly"
         card3 = "rightboard_1"
         self.objcard3.locnum = 1
@@ -117,7 +157,16 @@ class TestApplyEffect_dmg(unittest.TestCase):
         # Mockオブジェクトが期待通りに呼び出されたことを確認
         self.mock_unit_hp_change_multi.assert_called_once()
 
-        # dmgのテスト(敵３体以上なら敵全ユニットにダメージ)
+    # dmgのテスト(敵３体以上なら敵全ユニットにダメージ)
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_dmg_3over(self):
         # Mockオブジェクトをリセット
         self.mock_unit_hp_change_multi.reset_mock()
         effect = "onplay_enemy_unit_3over:all_enemy_unit_1dmg"
@@ -170,19 +219,6 @@ class TestApplyEffect_dmg(unittest.TestCase):
         self.assertEqual(result, ("OK", 200))
         # Mockオブジェクトが呼び出されなかったことを確認
         self.mock_unit_hp_change_multi.assert_not_called()
-
-        # dmgのテスト(対象が敵リーダー限定)
-        # 前回のテストで呼び出されたMockオブジェクトをリセット
-        self.mock_api_common_dmg_leader.reset_mock()
-        effect = "enemy_3dmg_leader"
-        card3 = "test_card3"
-        result = apply_effect(
-            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
-        )
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        self.mock_api_common_dmg_leader.assert_called_once()
 
 
 if __name__ == "__main__":
