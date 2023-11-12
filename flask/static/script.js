@@ -308,7 +308,7 @@ async function fetchData_impl() {
                         seteffecttext('p1board' + i + '_text', "");
                     }
                     const active = item['active'];
-                    if (active == 1) {
+                    if (active > 0) {
                         changeBorderColor('p1board' + i, "green");
                     } else {
                         resetBorderColor('p1board' + i)
@@ -359,7 +359,7 @@ async function fetchData_impl() {
                 setdivvalue('p1card' + i + '_name', name);
                 setdivimage('p1card' + i, graphic);
                 const active = player1['tension_active'];
-                if (active == 1) {
+                if (active > 0) {
                     if (player1[key_mp] >= cost) {
                         changeBorderColor('p1card' + i, "green");
                     } else {
