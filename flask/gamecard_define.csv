@@ -28,7 +28,7 @@
 キラーピッケル	killer-pickel	onplay:unit_attack+T_thisturn
 キラーマシン	killer-machine	attack_twice,onplay:enemy_unit_2dmg
 アンルシア	anlucia	onplay:unit_attack-A_attack5overonly
-ハッサン	hassan	
+ハッサン	hassan	onplay_front:unit_5dmg_opposite
 モリー	molly	
 マルティナ	martina	
 キングレオ	king-leo	

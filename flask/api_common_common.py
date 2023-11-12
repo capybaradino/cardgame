@@ -89,6 +89,31 @@ def apply_effect(
                 if atk < value:
                     # 発動しないがエラーにはしないで終了する
                     return "OK", 200
+        # 正規表現でonplay_frontから始まるか確認
+        pattern = r"onplay_front"
+        if re.match(pattern, effect):
+            # 前列指定制限チェック
+            pattern_p1board = r"leftboard_[0-5]$"  # 盤面
+            if re.match(pattern_p1board, card2):
+                # card2から数値を取り出す
+                pattern = r"[+-]?\d+"
+                matches = re.search(pattern, card2)
+                value = int(matches.group())
+                # 前列指定制限チェック
+                if value > 2:
+                    # 発動しないがエラーにはしないで終了する
+                    return "OK", 200
+                else:
+                    card2_loc = value
+            else:
+                return {"error": "illegal target"}, 403
+            # 対象ユニットが必須でない場合の判定
+            if "oppositeboard" in effect:
+                card3 = "rightboard_" + str(card2_loc)
+                objcard3 = api_common_util.getobjcard(playview, card3)
+                if objcard3 is None:
+                    # 発動しないがエラーにはしないで終了する
+                    return "OK", 200
 
     # TODO 効果のバリエーション実装
     if "switch" in effect:

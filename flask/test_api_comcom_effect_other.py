@@ -253,6 +253,57 @@ class TestApplyEffect_other(unittest.TestCase):
         # Mockオブジェクトが呼び出されなかったことを確認
         self.mock_api_common_attack.assert_not_called()
 
+    # 前列指定制限チェックのテスト
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_frontonly(self):
+        # 前列指定のテスト
+        effect = "onplay_front:unit_5dmg_oppositeboard"
+        self.card2 = "leftboard_1"
+        card3 = "test_card3"
+        result = apply_effect(
+            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
+        )
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # mockが呼び出されたことを確認
+        self.mock_api_common_dmg.assert_called_once()
+
+        # 前列指定だが対向ユニットが存在しない場合のテスト
+        # mockをリセット
+        self.mock_api_common_dmg.reset_mock()
+        effect = "onplay_front:unit_5dmg_oppositeboard"
+        self.card2 = "leftboard_2"
+        card3 = "test_card3"
+        self.mock_getobjcard.return_value = None
+        result = apply_effect(
+            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
+        )
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # mockが呼び出されなかったことを確認
+        self.mock_api_common_dmg.assert_not_called()
+
+        # 後列指定のテスト
+        # mockをリセット
+        self.mock_api_common_dmg.reset_mock()
+        effect = "onplay_front:unit_5dmg_opposite"
+        self.card2 = "leftboard_3"
+        card3 = "test_card3"
+        result = apply_effect(
+            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
+        )
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # mockが呼び出されなかったことを確認
+        self.mock_api_common_dmg.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
