@@ -27,7 +27,7 @@
 ムーンキメラ	moon-chimera	onplay:allbackunit_movefront
 キラーピッケル	killer-pickel	onplay:unit_attack+T_thisturn
 キラーマシン	killer-machine	attack_twice,onplay:enemy_unit_2dmg
-アンルシア	anlucia	
+アンルシア	anlucia	onplay:unit_attack-A_attack5overonly
 ハッサン	hassan	
 モリー	molly	
 マルティナ	martina	
