@@ -59,9 +59,11 @@ class TestAPIUnitAttack(unittest.TestCase):
             )
             self.assertEqual(result, {"info": "OK"})
             self.assertEqual(status_code, 200)
-            mock_getrecord_fromsession.assert_called_once_with(
+            mock_getrecord_fromsession.assert_any_call(
                 self.playview.playdata.card_table, "cuid", self.objcard1.cuid
             )
+            # モックが2回呼ばれていることを確認
+            self.assertEqual(mock_getrecord_fromsession.call_count, 2)
             mock_appendlog.assert_any_call(
                 self.playview.playdata.card_table,
                 "[" + self.playview.p1name + "]attack:" + self.objcard1.name,

@@ -33,6 +33,13 @@ class Player:
             "playerstats", "player_tid", self.player_tid, "maxmp", self.maxmp
         )
         card_db.putsession(self.card_table, "loc", self.name + "_board", "active", 1)
+        # statusにattack_twiceがある場合はactiveを2にする
+        records = card_db.getrecords_fromsession(self.card_table, "loc", self.name + "_board")
+        for record in records:
+            cuid = record[2]
+            status = record[9]
+            if "attack_twice" in status:
+                card_db.putsession(self.card_table, "cuid", cuid, "active", 2)
         card_db.putsession(self.card_table, "loc", self.name + "_tension", "active", 1)
         return
 
@@ -446,7 +453,7 @@ class Playdata:
     def set_static_status_effect(self, tcid: str, cuid: str):
         card = Card_info(tcid, "", 0, 0, 0)
         effect_array = card.effect.split(",")
-        static_effect_list = ["stealth", "metalbody", "antieffect"]
+        static_effect_list = ["stealth", "metalbody", "antieffect", "attack_twice"]
         for effect in effect_array:
             for static_effect in static_effect_list:
                 if static_effect in effect:
