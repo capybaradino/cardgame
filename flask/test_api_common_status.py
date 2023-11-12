@@ -135,6 +135,24 @@ class TestAPICommonActive(unittest.TestCase):
                 "test,attack-3",
             )
 
+        # 攻撃力をゼロにするパターン
+        sid = 1
+        playview = Mock()
+        effect = "onplay:unit_attack-A_attack5overonly"
+        objcard2 = Mock()
+        objcard2.attack = 4
+        objcard2.dattack = 3
+
+        with patch("card_db.putsession") as mock_putsession:
+            result, status_code = api_common_attack_card(
+                sid, playview, effect, objcard2
+            )
+            self.assertEqual(result, "OK")
+            self.assertEqual(status_code, 200)
+            mock_putsession.assert_any_call(
+                playview.playdata.card_table, "cuid", objcard2.cuid, "dattack", -4
+            )
+
     def test_api_common_attack(self):
         # Test case 1: Test with valid input
         sid = 1
