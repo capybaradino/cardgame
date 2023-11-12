@@ -26,7 +26,7 @@
 ジャガーメイジ	jaguar-mage	onplay_enemy_unit_3over:all_enemy_unit_1dmg
 ムーンキメラ	moon-chimera	onplay:allbackunit_movefront
 キラーピッケル	killer-pickel	onplay:unit_attack+T_thisturn
-キラーマシン	killer-machine	
+キラーマシン	killer-machine	attack_twice,onplay:enemy_unit_2dmg
 アンルシア	anlucia	
 ハッサン	hassan	
 モリー	molly	

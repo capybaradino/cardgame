@@ -63,9 +63,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         values.append(objcard1.attack)
         values.append(objcard2.attack)
         api_common_common.unit_hp_change_multi(sid, playview, objcards, values)
-        # 自ユニットを行動済みに変更
+        # 自ユニットの行動回数を1減らす
+        record = card_db.getrecord_fromsession(
+            playview.playdata.card_table, "cuid", objcard1.cuid
+        )
+        nactive = int(record[6])
         card_db.putsession(
-            playview.playdata.card_table, "cuid", objcard1.cuid, "active", 0
+            playview.playdata.card_table, "cuid", objcard1.cuid, "active", nactive - 1
         )
     elif re.match(pattern_p2leader, card2):
         # ウォールのチェック
@@ -103,9 +107,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
                 "hp",
                 newhp,
             )
-        # 自ユニットを行動済みに変更
+        # 自ユニットの行動回数を1減らす
+        record = card_db.getrecord_fromsession(
+            playview.playdata.card_table, "cuid", objcard1.cuid
+        )
+        nactive = int(record[6])
         card_db.putsession(
-            playview.playdata.card_table, "cuid", objcard1.cuid, "active", 0
+            playview.playdata.card_table, "cuid", objcard1.cuid, "active", nactive - 1
         )
         if newhp <= 0:
             playview.playdata.gamewin(sid)
