@@ -72,6 +72,23 @@ def apply_effect(
             if i < value:
                 # 発動しないがエラーにはしないで終了する
                 return "OK", 200
+        # 正規表現でattackXoveronlyにマッチするか確認(Xには数字が入る)
+        pattern = r"(.*)attack[0-9]+overonly"
+        if re.match(pattern, effect):
+            # effectからパターンにマッチした文字列を取得
+            matches2 = re.search(pattern, effect)
+            # effectからattackXoveronlyのXの部分を取り出す
+            pattern = r"[0-9]"
+            matches3 = re.search(pattern, matches2.group())
+            # Xの部分を数値に変換
+            value = int(matches3.group())
+            if objcard3 is not None:
+                # ユニットの攻撃力を取得
+                atk = objcard3.attack_org + objcard3.dattack
+                # 攻撃力がX以上か確認
+                if atk < value:
+                    # 発動しないがエラーにはしないで終了する
+                    return "OK", 200
 
     # TODO 効果のバリエーション実装
     if "switch" in effect:

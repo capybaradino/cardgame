@@ -213,6 +213,46 @@ class TestApplyEffect_other(unittest.TestCase):
         # Mockオブジェクトが1回呼び出されたことを確認
         self.assertEqual(card_db.putdeck_locnum.call_count, 1)
 
+    # attackXoveronly条件テスト
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_attackXoveronly(self):
+        # ガードに引っかからない場合のテスト
+        effect = "onplay:unit_attack-A_attack5overonly"
+        card3 = "test_card3"
+        self.objcard3.status = ""
+        self.objcard3.attack_org = 4
+        self.objcard3.dattack = 3
+        result = apply_effect(
+            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
+        )
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが呼び出されたことを確認
+        self.mock_api_common_attack.assert_called_once()
+
+        # ガードに引っかかる場合のテスト
+        # Mockオブジェクトをリセット
+        self.mock_api_common_attack.reset_mock()
+        effect = "onplay:unit_attack-A_attack5overonly"
+        card3 = "test_card3"
+        self.objcard3.status = ""
+        self.objcard3.attack_org = 2
+        self.objcard3.dattack = 2
+        result = apply_effect(
+            self.sid, self.playview, effect, None, self.card2, card3, self.isRun
+        )
+        # 戻り値の確認
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが呼び出されなかったことを確認
+        self.mock_api_common_attack.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -34,17 +34,18 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
         isRun = True
         # ステータス変化系
         # TODO ターゲットフィルタ
-        pattern = r"(^.*)_.*"
+        # attack+-Xという文字列を正規表現で探して取得する
+        pattern = r"attack[+-][0-9A-Z]+"
         matches = re.search(pattern, effect)
-        target = matches.group(1)
+        target = matches.group()
         pattern = r"[+-]?\d+"
-        matches = re.search(pattern, effect)
+        matches = re.search(pattern, target)
         # 数値検索でヒットした場合はその値を使用
         if matches is not None:
             value = int(matches.group())
         else:
             # 数値検索でヒットしなかった場合はattack+の後ろの一文字を読み取る
-            pattern = r"attack\+(\w)"
+            pattern = r"attack[+-](\w)"
             matches = re.search(pattern, effect)
             char = matches.group(1)
             # 文字がTであった場合は自分のテンション数を取得
@@ -56,6 +57,9 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
                     player_enemy,
                 ) = api_common_util.get_self_or_enemy(playview, objcard2)
                 value = player_self.tension
+            # 文字がAであった場合は相手のattackをゼロにする
+            elif char == "A":
+                value = -(objcard2.attack + objcard2.dattack)
             else:
                 raise Exception
 
