@@ -103,21 +103,23 @@ def api_common_attack(sid, playview: Play_view, effect, card2, isRun):
         pattern_p1leader = r"leftboard_10"  # リーダー
         pattern_p2board = r"rightboard_[0-5]$"  # 盤面
         pattern_p2leader = r"rightboard_10"  # リーダー
-        # TODO 相手ボードへの効果
+        # 盤面を対象とする
         if re.match(pattern_p1board, card2):
-            # TODO 対象制限の確認
-
-            # ボードの確認
-            pattern = r"[0-5]"
-            number = int(re.findall(pattern, card2)[0])
             boards = playview.p1board
-            objcard2: Card_info
-            objcard2 = boards[number]
-            if objcard2 is None:
-                return {"error": "unit don't exists in target card"}, 403
-            # ALL OK
-            return api_common_attack_card(sid, playview, effect, objcard2)
+        elif re.match(pattern_p2board, card2):
+            boards = playview.p2board
         else:
             return {"error": "unit don't exists in target card"}, 403
+
+        # TODO 対象制限の確認
+        # ボードの確認
+        pattern = r"[0-5]"
+        number = int(re.findall(pattern, card2)[0])
+        objcard2: Card_info
+        objcard2 = boards[number]
+        if objcard2 is None:
+            return {"error": "unit don't exists in target card"}, 403
+        # ALL OK
+        return api_common_attack_card(sid, playview, effect, objcard2)
 
     return "OK", 200
