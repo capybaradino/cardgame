@@ -34,7 +34,9 @@ class Player:
         )
         card_db.putsession(self.card_table, "loc", self.name + "_board", "active", 1)
         # statusにattack_twiceがある場合はactiveを2にする
-        records = card_db.getrecords_fromsession(self.card_table, "loc", self.name + "_board")
+        records = card_db.getrecords_fromsession(
+            self.card_table, "loc", self.name + "_board"
+        )
         for record in records:
             cuid = record[2]
             status = record[9]
