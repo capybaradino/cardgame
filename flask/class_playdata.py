@@ -90,7 +90,14 @@ class Player:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5], self.card_table)
+                Card_info(
+                    record[0],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5],
+                    self.card_table,
+                )
             )
         return cards
 
@@ -114,7 +121,14 @@ class Field:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5], self.card_table)
+                Card_info(
+                    record[0],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5],
+                    self.card_table,
+                )
             )
         return cards
 
@@ -123,7 +137,14 @@ class Field:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5], self.card_table)
+                Card_info(
+                    record[0],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5],
+                    self.card_table,
+                )
             )
         return cards
 
