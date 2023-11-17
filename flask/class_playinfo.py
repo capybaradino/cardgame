@@ -42,9 +42,9 @@ class Card_info:
             record3 = card_db.getrecord_fromsession(self.card_table, "cuid", self.cuid)
             loc = record3[1]
             if "_" in loc:
-                owner = record[1].split("_")[1]
+                owner = loc.split("_")[0]
             else:
-                owner = record[1]
+                owner = loc
             record2 = card_db.getrecord_fromsession("playerstats", "name", owner)
             skillboost = int(record2[7])
             # スキルブーストの値に応じてhp_org,attack_orgを変更
