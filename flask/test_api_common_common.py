@@ -347,7 +347,9 @@ class TestUnitHPChange(unittest.TestCase):
         # api_common_util.get_self_or_enemyの戻り値をモック化
         with patch("card_db.putsession") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
-        ) as mock_get_self_or_enemy:
+        ) as mock_get_self_or_enemy, patch(
+            "api_common_tension.api_common_tension_objcard"
+        ) as mock_tension_objcard:
             # api_common_util.get_self_or_enemyの戻り値をモック化
             player_self = Mock()
             player_self.name = "player_self"
@@ -366,13 +368,11 @@ class TestUnitHPChange(unittest.TestCase):
 
             # tensionのテスト
             objcard2.effect = "ondead:self_tension+1"
-            api_common_tension.api_common_tension_objcard = Mock(
-                return_value=("OK", 200)
-            )
+            mock_tension_objcard.return_value = ("OK", 200)
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)
             # Mockオブジェクトが期待通りに呼び出されたことを確認
-            api_common_tension.api_common_tension_objcard.assert_called_once()
+            mock_tension_objcard.assert_called_once()
 
             with patch("random.randrange") as mock_randrange:
                 # dmgのテスト(対象がユニット)
