@@ -1,5 +1,5 @@
 import card_db
-from class_playdata import Playdata, Field
+from class_playdata import Field, Playdata
 from class_playinfo import Card_info
 
 
@@ -91,7 +91,7 @@ class Play_view:
 
     def isblockable(self, board: Card_info):
         if board is not None:
-            board.refresh(self.playdata.card_table)
+            board.refresh(y)
             if "stealth" in board.status:
                 return False
             else:

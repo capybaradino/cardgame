@@ -90,7 +90,7 @@ class Player:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5])
+                Card_info(record[0], record[2], record[3], record[4], record[5], self.card_table)
             )
         return cards
 
@@ -114,7 +114,7 @@ class Field:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5])
+                Card_info(record[0], record[2], record[3], record[4], record[5], self.card_table)
             )
         return cards
 
@@ -123,7 +123,7 @@ class Field:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5])
+                Card_info(record[0], record[2], record[3], record[4], record[5], self.card_table)
             )
         return cards
 
@@ -453,7 +453,7 @@ class Playdata:
         return
 
     def set_static_status_effect(self, tcid: str, cuid: str):
-        card = Card_info(tcid, "", 0, 0, 0)
+        card = Card_info(tcid, "", 0, 0, 0, self.card_table)
         effect_array = card.effect.split(",")
         static_effect_list = ["stealth", "metalbody", "antieffect", "attack_twice"]
         for effect in effect_array:
@@ -465,7 +465,7 @@ class Playdata:
         return
 
     def set_static_turnend_effect(self, tcid: str, cuid: str):
-        card = Card_info(tcid, "", 0, 0, 0)
+        card = Card_info(tcid, "", 0, 0, 0, self.card_table)
         effect_array = card.effect.split(",")
         for effect in effect_array:
             if "onturnend" in effect:

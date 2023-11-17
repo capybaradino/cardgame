@@ -4,12 +4,13 @@ import card_db
 
 
 class Card_info:
-    def __init__(self, cid, cuid, locnum: int, dhp: int, dattack: int):
+    def __init__(self, cid, cuid, locnum: int, dhp: int, dattack: int, card_table: str):
         self.cid = cid
         self.cuid = cuid
         self.locnum = locnum
         self.dhp = dhp
         self.dattack = dattack
+        self.card_table = card_table
         if self.cid is not None:
             self.update()
 
@@ -38,7 +39,13 @@ class Card_info:
             boost_hp_ratio = int(matches[0])
             boost_attack_ratio = int(matches[1])
             # スキルブーストの値を取得
-            record2 = card_db.getrecord_fromsession("playerstats", "name", self.name)
+            record3 = card_db.getrecord_fromsession(self.card_table, "cuid", self.cuid)
+            loc = record3[1]
+            if "_" in loc:
+                owner = record[1].split("_")[1]
+            else:
+                owner = record[1]
+            record2 = card_db.getrecord_fromsession("playerstats", "name", owner)
             skillboost = int(record2[7])
             # スキルブーストの値に応じてhp_org,attack_orgを変更
             self.dhp = self.dhp + boost_hp_ratio * skillboost
@@ -53,8 +60,8 @@ class Card_info:
         else:
             self.filename = fid
 
-    def refresh(self, card_table: str):
-        record = card_db.getrecord_fromsession(card_table, "cuid", self.cuid)
+    def refresh(self):
+        record = card_db.getrecord_fromsession(self.card_table, "cuid", self.cuid)
         self.locnum = record[3]
         self.dhp = record[4]
         self.dattack = record[5]

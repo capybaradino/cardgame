@@ -38,13 +38,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         if playview.isblocked(number):
             return {"error": "card2 is blocked by other unit"}, 403
         # ステルスの確認
-        objcard2.refresh(playview.playdata.card_table)
+        objcard2.refresh()
         if "stealth" in objcard2.status:
             return {"error": "card2 has stealth"}, 403
         # 攻撃時効果
         ret = "OK"
         ret, scode = api_onattack(sid, playview, objcard1)
-        objcard1.refresh(playview.playdata.card_table)
+        objcard1.refresh()
 
         if ret != "OK":
             return ret, scode
@@ -78,7 +78,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         # 攻撃時効果
         ret = "OK"
         ret, scode = api_onattack(sid, playview, objcard1, ifleader=True)
-        objcard1.refresh(playview.playdata.card_table)
+        objcard1.refresh()
 
         if ret != "OK":
             return ret, scode
@@ -138,7 +138,7 @@ def api_onattack(sid, playview: Play_view, objcard1: Card_info, ifleader=False):
             )
 
     # ステルス解除
-    objcard1.refresh(playview.playdata.card_table)
+    objcard1.refresh()
     status = objcard1.status
     status = status.replace(",stealth", "")
     card_db.putsession(
