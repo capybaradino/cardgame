@@ -29,7 +29,7 @@
 キラーマシン	killer-machine	attack_twice,onplay:enemy_unit_2dmg
 アンルシア	anlucia	onplay:unit_attack-A_attack5overonly
 ハッサン	hassan	onplay_front:unit_5dmg_oppositeboard
-モリー	molly	
+モリー	molly	onspell_self:self_tension+1,skillboost+2+2
 マルティナ	martina	
 キングレオ	king-leo	onplay:self_active
 ネルゲル	nelgel	

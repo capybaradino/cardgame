@@ -201,12 +201,29 @@ def postgamesession(
     return
 
 
-def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension):
+def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension, skillboost=0):
     con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute(
-        "insert into playerstats values (?,?,?,?,?,?,?)",
-        (player_tid, name, job, hp, mp, maxmp, tension),
+        "insert into playerstats values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        (
+            player_tid,
+            name,
+            job,
+            hp,
+            mp,
+            maxmp,
+            tension,
+            skillboost,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        ),
     )
     con.commit()
     con.close()
