@@ -91,7 +91,7 @@ class Play_view:
 
     def isblockable(self, board: Card_info):
         if board is not None:
-            board.refresh(y)
+            board.refresh()
             if "stealth" in board.status:
                 return False
             else:

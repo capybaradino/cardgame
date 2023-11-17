@@ -243,7 +243,7 @@ class TestUnitHPChange(unittest.TestCase):
             unit_hp_change(sid, playview, objcard2, value)
 
             # objcard2のrefreshメソッドが呼ばれたことを確認
-            objcard2.refresh.assert_called_once_with(playview.playdata.card_table)
+            objcard2.refresh.assert_called_once_with()
 
             # card_db.putsessionが呼ばれたかチェック
             mock_putsession.assert_called_once_with(
