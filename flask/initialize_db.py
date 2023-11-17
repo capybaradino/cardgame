@@ -1,5 +1,5 @@
-import sqlite3
 import os
+import sqlite3
 
 
 def delete_file(file_path):
@@ -121,7 +121,16 @@ def create_table(db_name, table_name):
                     hp INTEGER NOT NULL,
                     mp INTEGER NOT NULL,
                     maxmp INTEGER NOT NULL,
-                    tension INTEGER NOT NULL
+                    tension INTEGER NOT NULL,
+                    skillboost INTEGER NOT NULL,
+                    rsv1 TEXT,
+                    rsv2 TEXT,
+                    rsv3 TEXT,
+                    rsv4 TEXT,
+                    rsv5 TEXT,
+                    rsv6 TEXT,
+                    rsv7 TEXT,
+                    rsv8 TEXT
                 )
             """
         cursor.execute(query)
