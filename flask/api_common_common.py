@@ -423,7 +423,7 @@ def _unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value, mode):
         mode (str): "hponly" or "deadonly" or "all"
     """
     # 対象ユニットHP減算
-    objcard2.refresh(playview.playdata.card_table)
+    objcard2.refresh()
     # メタルボディ
     if "metalbody" in objcard2.status:
         if value <= 3:
