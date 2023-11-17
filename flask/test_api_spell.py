@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock, Mock, patch
 
 import api_common_common
+import api_common_tension
 import api_common_util
 import card_db
 from api_spell import api_spell
@@ -66,6 +67,7 @@ class TestAPISpell(unittest.TestCase):
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
+            playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
             card_db.putsession = MagicMock()
@@ -93,6 +95,8 @@ class TestAPISpell(unittest.TestCase):
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
+            self.objcard2.effect = ""
+            playview_end.p1board = [None, self.objcard2, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard2)
             api_common_util.getobjcard_oppsite = MagicMock(
@@ -132,6 +136,7 @@ class TestAPISpell(unittest.TestCase):
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
+            playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
             card_db.putsession = MagicMock()
@@ -162,6 +167,7 @@ class TestAPISpell(unittest.TestCase):
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
+            playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
             card_db.putsession = MagicMock()
@@ -194,6 +200,7 @@ class TestAPISpell(unittest.TestCase):
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
+            playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
             card_db.putsession = MagicMock()
@@ -254,6 +261,28 @@ class TestAPISpell(unittest.TestCase):
         result, status_code = api_spell(self.sid, self.playview, self.card1, self.card2)
         self.assertEqual(result, {"error": "MP short"})
         self.assertEqual(status_code, 403)
+
+    @patch("api_common_tension.api_common_tension_objcard")
+    def test_api_spell_with_onspell_effect(self, mock_api_common_tension_objcard):
+        # Test case 9: Test with onspell effect
+        with patch("api_spell.Play_view") as play_view_mock:
+            playview_end = Mock()
+            playview_end.p1hp = 10
+            playview_end.p2hp = 7
+            playview_end.p1.tension = 0
+            objcard_onspell = Mock()
+            objcard_onspell.effect = "onspell_self:self_tension+1,skillboost+2+2"
+            playview_end.p1board = [None, None, None, None, objcard_onspell, None]
+            play_view_mock.return_value = playview_end
+            card_db.putsession = MagicMock()
+            api_common_common.unit_hp_change = MagicMock(return_value=3)
+            mock_api_common_tension_objcard.return_value = ("OK", 200)
+            result, status_code = api_spell(
+                self.sid, self.playview, self.card1, self.card2
+            )
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(status_code, 200)
+            mock_api_common_tension_objcard.assert_called_once()
 
 
 if __name__ == "__main__":

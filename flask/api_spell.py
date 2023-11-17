@@ -54,6 +54,25 @@ def api_spell(sid, playview: Play_view, card1, card2):
         playview.p1name + "_cemetery",
     )
 
+    # playview更新
+    playview = Play_view(sid)
+    # ボード上のユニットのonspellエフェクト処理
+    for unit in playview.p1board:
+        if unit is None:
+            continue
+        effect_array = unit.effect.split(",")
+        for effect in effect_array:
+            if effect == "":
+                continue
+            if effect.startswith("onspell"):
+                if effect.startswith("onspell_self"):
+                    # :で分割
+                    effect = effect.split(":")[1]
+                    ret, scode = api_common_common.apply_effect(
+                        sid, playview, effect, unit, None, None, True
+                    )
+                # TODO onspell_other
+
     # 勝敗確認
     playview = Play_view(sid)
     if playview.p1hp <= 0:

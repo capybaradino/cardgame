@@ -82,4 +82,9 @@ def api_tension(sid, playview: Play_view, card1, card2):
 def _reset_tension(playview):
     # テンション初期化
     card_db.putsession("playerstats", "name", playview.p1name, "tension", 0)
+    # スキルブースト+1
+    record = card_db.getrecord_fromsession("playerstats", "name", playview.p1name)
+    skillboost = record[7]
+    skillboost = skillboost + 1
+    card_db.putsession("playerstats", "name", playview.p1name, "skillboost", skillboost)
     return
