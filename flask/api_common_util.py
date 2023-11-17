@@ -1,7 +1,8 @@
-from class_playview import Play_view
-from class_playinfo import Card_info
-import card_db
 import re
+
+import card_db
+from class_playinfo import Card_info
+from class_playview import Play_view
 
 
 def getobjcard_oppsite(playview_in: Play_view, card2: str):
@@ -21,7 +22,7 @@ def getobjcard_oppsite(playview_in: Play_view, card2: str):
     objcard2: Card_info
     objcard2 = boards[number2]
     if objcard2 is not None:
-        objcard2.refresh(playview.playdata.card_table)
+        objcard2.refresh()
     return objcard2, number, number2
 
 
@@ -38,7 +39,7 @@ def getobjcard(playview_in: Play_view, card2: str):
     objcard2: Card_info
     objcard2 = boards[number]
     if objcard2 is not None:
-        objcard2.refresh(playview.playdata.card_table)
+        objcard2.refresh()
     return objcard2
 
 
