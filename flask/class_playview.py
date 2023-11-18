@@ -100,13 +100,33 @@ class Play_view:
             return False
 
     def isblocked(self, number):
+        # 前列に仁王立ちユニットがいる場合はブロックされる
+        if self._hasfortress():
+            # 自分が仁王立ちかつ前衛で無い場合に限る
+            if not "fortress" in self.p2board[number].status:
+                return True
+            if number >= 3:
+                return True
+        # 前列にいる場合はブロックされない
         if number < 3:
             return False
+        # 前にいるユニットがブロック可能か判定(ステルスはブロック不可)
         front = self.p2board[number - 3]
         if self.isblockable(front):
             return True
         else:
             return False
+
+    def _hasfortress(self):
+        i = 0
+        for board in self.p2board:
+            # 後列は対象外
+            if i >= 3:
+                break
+            if board is not None:
+                if "fortress" in board.status:
+                    return True
+        return False
 
     def iswall(self):
         # 上段
@@ -123,4 +143,7 @@ class Play_view:
             if middle1 or middle2:
                 if lower1 or lower2:
                     return True
+        # ウォールが無くても仁王立ちがあればウォール扱い
+        if self._hasfortress():
+            return True
         return False
