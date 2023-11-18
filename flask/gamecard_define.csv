@@ -30,7 +30,7 @@
 アンルシア	anlucia	onplay:unit_attack-A_attack5overonly
 ハッサン	hassan	onplay_front:unit_5dmg_oppositeboard
 モリー	molly	onspell_self:self_tension+1,skillboost+2+2
-マルティナ	martina	
+マルティナ	martina	onplay:enemy_vertical_1dmg_random_7times
 キングレオ	king-leo	onplay:self_active
 ネルゲル	nelgel	
 シドー	sydow	
