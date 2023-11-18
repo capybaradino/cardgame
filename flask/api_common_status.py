@@ -78,7 +78,7 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
                 playview.playdata.card_table, "cuid", objcard2.cuid
             )
             turnend_effect_ontime = record[8]
-            turnend_effect_ontime = turnend_effect_ontime + ",attack-" + str(value)
+            turnend_effect_ontime = turnend_effect_ontime + ",self_attack-" + str(value)
             if isRun:
                 card_db.putsession(
                     playview.playdata.card_table,
