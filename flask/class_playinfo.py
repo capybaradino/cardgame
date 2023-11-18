@@ -50,8 +50,8 @@ class Card_info:
             record2 = card_db.getrecord_fromsession("playerstats", "name", owner)
             skillboost = int(record2[7])
             # スキルブーストの値に応じてhp_org,attack_orgを変更
-            self.dhp = self.dhp + boost_hp_ratio * skillboost
-            self.dattack = self.dattack + boost_attack_ratio * skillboost
+            self.hp_org = self.hp_org + boost_hp_ratio * skillboost
+            self.attack_org = self.attack_org + boost_attack_ratio * skillboost
         # ステータス状態を更新
         self.status = record3[9]
 
