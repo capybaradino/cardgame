@@ -333,6 +333,7 @@ class TestApplyEffect_other(unittest.TestCase):
         card_db.putdeck_locnum.return_value = ("OK", 200)
         card_db.postdeck = Mock()
         card_db.postdeck.return_value = 1
+        card_db.putdeck = Mock()
         result = apply_effect(
             self.sid, self.playview, effect, self.objcard3, None, None, True
         )
