@@ -1,5 +1,6 @@
 import re
 
+import api_common_common
 import api_common_util
 import card_db
 from class_playdata import Playdata
@@ -32,19 +33,11 @@ def card_turnend(sid, state, nickname):
         turnend_effect_ontime = record[8]
         effect_array = turnend_effect_ontime.split(",")
         for effect in effect_array:
-            if "attack" in effect:
-                pattern = r"[-+]?\d+"
-                matches = re.search(pattern, effect)
-                value = int(matches.group())
-                # 対象ユニットステータス更新
-                dattack = objcard2.dattack + value
-                card_db.putsession(
-                    playview.playdata.card_table,
-                    "cuid",
-                    objcard2.cuid,
-                    "dattack",
-                    dattack,
+            if effect != "":
+                api_common_common.apply_effect(
+                    sid, playview, effect, objcard2, None, None, True
                 )
+        # 効果の削除
         card_db.putsession(
             playview.playdata.card_table,
             "cuid",
@@ -57,16 +50,12 @@ def card_turnend(sid, state, nickname):
         effect_array = turnend_effect_static.split(",")
         for effect in effect_array:
             # TODO 自ボード対象キーワード
-            if "onturnend_each" in effect:
+            if "onturnend_self" in effect:
                 effect_detail = effect.split(":")[1]
-                if "1draw" in effect_detail:
-                    (
-                        board_self,
-                        board_enemy,
-                        player_self,
-                        player_enemy,
-                    ) = api_common_util.get_self_or_enemy(playview, objcard2)
-                    player_self.draw_card()
+                if effect_detail != "":
+                    api_common_common.apply_effect(
+                        sid, playview, effect_detail, objcard2, None, None, True
+                    )
 
     # 相手ボードの処理
     data = card_db.getrecords_fromsession(
@@ -88,16 +77,12 @@ def card_turnend(sid, state, nickname):
         effect_array = turnend_effect_static.split(",")
         for effect in effect_array:
             # TODO 相手ボード対象キーワード
-            if "onturnend_each" in effect:
+            if "onturnend_self_each" in effect:
                 effect_detail = effect.split(":")[1]
-                if "1draw" in effect_detail:
-                    (
-                        board_self,
-                        board_enemy,
-                        player_self,
-                        player_enemy,
-                    ) = api_common_util.get_self_or_enemy(playview, objcard2)
-                    player_enemy.draw_card()
+                if effect_detail != "":
+                    api_common_common.apply_effect(
+                        sid, playview, effect_detail, objcard2, None, None, True
+                    )
 
     if state == "p1turn":
         card_db.putgamesession(playdata.gsid, "state", "p2turn")

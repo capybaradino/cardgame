@@ -8,7 +8,7 @@
 メラミ	merami	any_3dmg
 たけやりへい	takeyari-soldier	onplay:unit_attack+2_thisturn
 ドロヌーバ	doronu-ba	stealth
-わたぼう	watabo	onturnend_each:active_1draw_any
+わたぼう	watabo	onturnend_self_each:1draw_any
 ベビーパンサー	baby-panther	onplay:self_tension+1
 ミミック	mimic	ondead:enemy_1draw_any
 はぐれメタル	hagure-metal	onplay:self_active,metalbody
