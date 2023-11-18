@@ -381,7 +381,7 @@ def apply_effect(
                     sid, playview, effect, card3, isRun
                 )
         elif "self" in effect:
-            # onattack専用
+            # onattack/onturnend用
             api_common_status.api_common_attack_card(sid, playview, effect, objcard)
             ret = "OK"
             scode = 200
