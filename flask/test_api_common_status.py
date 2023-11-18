@@ -103,7 +103,7 @@ class TestAPICommonActive(unittest.TestCase):
                 "cuid",
                 objcard2.cuid,
                 "turnend_effect_ontime",
-                "test,attack-2",
+                "test,self_attack-2",
             )
 
         # 攻撃力をテンションから取得するパターン
@@ -132,7 +132,7 @@ class TestAPICommonActive(unittest.TestCase):
                 "cuid",
                 objcard2.cuid,
                 "turnend_effect_ontime",
-                "test,attack-3",
+                "test,self_attack-3",
             )
 
         # 攻撃力をゼロにするパターン
