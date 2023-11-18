@@ -255,6 +255,60 @@ class TestApplyEffect_dmg(unittest.TestCase):
         # Mockオブジェクトが期待通りに7回呼び出されたことを確認
         self.assertEqual(self.mock_api_common_dmg.call_count, 7)
 
+    # dmgのテスト(このユニットを除く全てのユニットに4ダメージ)
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_dmg_all_unit(self):
+        effect = "onplay:all_unit_4dmg"
+        card3 = "rightboard_1"
+        self.objcard3.locnum = 1
+        self.objcard3.hp_org = 5
+        self.objcard3.dhp = 0
+        self.objcard3.cuid = 1
+        self.playview.p1board = [
+            self.objcard3,
+            self.objcard3,
+            self.objcard3,
+            None,
+            None,
+            None,
+        ]
+        self.playview.p2board = [
+            self.objcard3,
+            self.objcard3,
+            self.objcard3,
+            None,
+            None,
+            None,
+        ]
+        self.mock_api_common_get_self_or_enemy.return_value = [
+            self.playview.p1board,
+            self.playview.p2board,
+            None,
+            None,
+        ]
+        objcard = Mock()
+        objcard.cuid = 1
+        result = apply_effect(
+            self.sid,
+            self.playview,
+            effect,
+            objcard,
+            self.card2,
+            card3,
+            self.isRun,
+        )
+        # 戻り値の確認(OK)
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに6回呼び出されたことを確認
+        self.assertEqual(self.mock_unit_hp_change_multi.call_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
