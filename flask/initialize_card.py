@@ -87,6 +87,8 @@ class Csvcard:
 
                     if row[CATEGORY] == "ユニット":
                         self.category = "unit"
+                    elif row[CATEGORY] == "ユニット(トークン)":
+                        self.category = "unit"
                     elif row[CATEGORY] == "特技":
                         self.category = "spell"
                     elif row[CATEGORY] == "特技(トークン)":

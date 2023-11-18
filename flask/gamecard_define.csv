@@ -32,7 +32,9 @@
 モリー	molly	onspell_self:self_tension+1,skillboost+2+2
 マルティナ	martina	onplay:enemy_vertical_1dmg_random_7times
 キングレオ	king-leo	onplay:self_active
-ネルゲル	nelgel	
+ネルゲル	nelgel	attack_twice,onturnend_self_loc4:summon_nelgel-sub1_or_nelgel-sub2
+ネルゲルの配下(ピンク)	nelgel-sub1	fortress
+ネルゲルの配下(黄)	nelgel-sub2	fortress
 シドー	sydow	onplay:all_unit_4dmg
 精神統一	bujutsu_meditation	self_1draw
 飛びげり	bujutsu_jump-kick	switch
