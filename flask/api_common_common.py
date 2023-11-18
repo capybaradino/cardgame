@@ -267,6 +267,30 @@ def apply_effect(
                     unit_hp_change_multi(sid, playview, objcard3s, values)
                 ret = "OK"
                 scode = 200
+            elif "all_unit" in effect:
+                # 盤面ユニット全体にダメージ
+                objcard3s = []
+                values = []
+                for objcard2 in board_self:
+                    if objcard2 is not None:
+                        # 自分自身は対象外
+                        if objcard2.cuid == objcard.cuid:
+                            continue
+                        # HP=0のユニットは除外
+                        if objcard2.hp_org + objcard2.dhp > 0:
+                            objcard3s.append(objcard2)
+                            values.append(value)
+                for objcard2 in board_enemy:
+                    if objcard2 is not None:
+                        # HP=0のユニットは除外
+                        if objcard2.hp_org + objcard2.dhp > 0:
+                            objcard3s.append(objcard2)
+                            values.append(value)
+                # 対象ユニットが1つ以上いる場合はHP減算処理
+                if len(objcard3s) > 0:
+                    unit_hp_change_multi(sid, playview, objcard3s, values)
+                ret = "OK"
+                scode = 200
 
         elif "leader" in effect:
             # リーダーHP減算
