@@ -434,7 +434,9 @@ def apply_effect(
             playview.playdata.set_static_turnend_effect(tcid, cuid)
             # カードをデッキから盤面に移動
             card_db.putdeck_locnum(playview.playdata.card_table, cuid, i)
-            card_db.putdeck(playview.playdata.card_table, cuid, player_self.name + "_board")
+            card_db.putdeck(
+                playview.playdata.card_table, cuid, player_self.name + "_board"
+            )
             ret = "OK"
             scode = 200
         else:
