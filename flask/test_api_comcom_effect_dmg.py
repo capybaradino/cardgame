@@ -220,6 +220,41 @@ class TestApplyEffect_dmg(unittest.TestCase):
         # Mockオブジェクトが呼び出されなかったことを確認
         self.mock_unit_hp_change_multi.assert_not_called()
 
+    # dmgのテスト(合計7ダメージを縦一列のランダムなマスに割り振る)
+    @patch("api_common_common.unit_hp_change_multi", mock_unit_hp_change_multi)
+    @patch("api_common_common.api_common_dmg", mock_api_common_dmg)
+    @patch("api_common_common.api_common_dmg_leader", mock_api_common_dmg_leader)
+    @patch("api_common_status.api_common_attack", mock_api_common_attack)
+    @patch("api_common_status.api_common_active", mock_api_common_active)
+    @patch("api_common_tension.api_common_tension", mock_api_common_tension)
+    @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
+    @patch("api_common_util.getobjcard", mock_getobjcard)
+    def test_apply_effect_dmg_vertical_random(self):
+        effect = "onplay:enemy_vertical_1dmg_random_7times"
+        card3 = "rightboard_1"
+        self.objcard3.locnum = 1
+        self.playview.p2board = [
+            self.objcard3,
+            self.objcard3,
+            self.objcard3,
+            None,
+            None,
+            None,
+        ]
+        self.mock_api_common_get_self_or_enemy.return_value = [
+            None,
+            self.playview.p2board,
+            None,
+            None,
+        ]
+        result = apply_effect(
+            self.sid, self.playview, effect, Mock(), self.card2, card3, self.isRun
+        )
+        # 戻り値の確認(OK)
+        self.assertEqual(result, ("OK", 200))
+        # Mockオブジェクトが期待通りに7回呼び出されたことを確認
+        self.assertEqual(self.mock_api_common_dmg.call_count, 7)
+
 
 if __name__ == "__main__":
     unittest.main()
