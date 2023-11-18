@@ -399,6 +399,47 @@ def apply_effect(
         ret, scode = api_common_status.api_common_active(
             sid, playview, effect, card2, isRun
         )
+    elif "summon" in effect:
+        trigger = effect.split(":")[0]
+        if "loc" in trigger:
+            sloc = re.search(r"loc\d", trigger).group()
+            value = int(re.search(r"\d", sloc).group())
+            if objcard.locnum != value:
+                # エラーにはしないで終了する
+                return "OK", 200
+        effectbody = effect.split(":")[1]
+        # effectbodyからsummon_を削除
+        effectbody = effectbody.replace("summon_", "")
+        # _or_が含まれている場合は_or_で分割した配列を作成
+        if "_or_" in effectbody:
+            effect_array = effectbody.split("_or_")
+        else:
+            effect_array = [effectbody]
+        # 配列からランダムに1つ選択
+        effectbody = random.choice(effect_array)
+        # 自分のボードの空きマスを探す
+        i = 0
+        for objcard2 in board_self:
+            if objcard2 is None:
+                break
+            i = i + 1
+        # 空きますがあればそこに召喚
+        if i < 6:
+            # effectbodyの名称を持つカードのcidをデータベースから取得
+            tcid = card_db.getcid_fromcardname(effectbody)
+            cuid = card_db.postdeck(
+                playview.playdata.card_table, tcid, player_self.name
+            )
+            playview.playdata.set_static_status_effect(tcid, cuid)
+            playview.playdata.set_static_turnend_effect(tcid, cuid)
+            # カードをデッキから盤面に移動
+            card_db.putdeck_locnum(playview.playdata.card_table, cuid, i)
+            card_db.putdeck(playview.playdata.card_table, cuid, player_self.name + "_board")
+            ret = "OK"
+            scode = 200
+        else:
+            # エラーにはしないで終了する
+            return "OK", 200
     return ret, scode
 
 

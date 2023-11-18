@@ -51,11 +51,9 @@ def card_turnend(sid, state, nickname):
         for effect in effect_array:
             # TODO 自ボード対象キーワード
             if "onturnend_self" in effect:
-                effect_detail = effect.split(":")[1]
-                if effect_detail != "":
-                    api_common_common.apply_effect(
-                        sid, playview, effect_detail, objcard2, None, None, True
-                    )
+                api_common_common.apply_effect(
+                    sid, playview, effect, objcard2, None, None, True
+                )
 
     # 相手ボードの処理
     data = card_db.getrecords_fromsession(
@@ -78,11 +76,9 @@ def card_turnend(sid, state, nickname):
         for effect in effect_array:
             # TODO 相手ボード対象キーワード
             if "onturnend_self_each" in effect:
-                effect_detail = effect.split(":")[1]
-                if effect_detail != "":
-                    api_common_common.apply_effect(
-                        sid, playview, effect_detail, objcard2, None, None, True
-                    )
+                api_common_common.apply_effect(
+                    sid, playview, effect, objcard2, None, None, True
+                )
 
     if state == "p1turn":
         card_db.putgamesession(playdata.gsid, "state", "p2turn")
