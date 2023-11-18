@@ -321,7 +321,11 @@ async function fetchData_impl() {
                             effect = effect.replace("stealth", "<s>stealth</s>");
                             seteffecttext('p1board' + i + '_text', effect);
                         }
-                        changeBgColor('p1board' + i, "aliceblue");
+                        if (status.includes("fortress")) {
+                            changeBgColor('p1board' + i, "purple");
+                        } else {
+                            changeBgColor('p1board' + i, "aliceblue");
+                        }
                     }
                     setdivimage('p1board' + i, graphic);
                 }
@@ -456,7 +460,11 @@ async function fetchData_impl() {
                             effect = effect.replace("stealth", "<s>stealth</s>");
                             seteffecttext('p2board' + i + '_text', effect);
                         }
-                        changeBgColor('p2board' + i, "aliceblue");
+                        if (status.includes("fortress")) {
+                            changeBgColor('p2board' + i, "purple");
+                        } else {
+                            changeBgColor('p2board' + i, "aliceblue");
+                        }
                     }
                     setdivimage('p2board' + i, graphic);
                 }
