@@ -28,19 +28,22 @@ def api_spell(sid, playview: Play_view, card1, card2):
         if ret != "OK":
             return ret, scode
 
-        # MP減算確認
-        remainingmp = playview.p1mp - objcard1.cost
-        if remainingmp < 0:
-            return {"error": "MP short"}, 403
+    # MP減算確認
+    remainingmp = playview.p1mp - objcard1.cost
+    if remainingmp < 0:
+        return {"error": "MP short"}, 403
 
-        # ALL OK DB更新
-        # 監査ログ
-        card_db.appendlog(
-            playview.playdata.card_table,
-            "[" + playview.p1name + "]spell:" + objcard1.name,
-        )
-        # MP減算
-        card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+    # ALL OK DB更新
+    # 監査ログ
+    card_db.appendlog(
+        playview.playdata.card_table,
+        "[" + playview.p1name + "]spell:" + objcard1.name,
+    )
+    # MP減算
+    card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+
+    # 効果処理
+    for effect in effect_array:
         ret, scode = api_common_common.apply_effect(
             sid, playview, effect, objcard1, None, card2, True
         )
