@@ -29,6 +29,9 @@ class Card_info:
             self.hp_org = -1
         else:
             self.hp_org = record[10]
+
+        # デッキテーブルからデータを取得
+        record3 = card_db.getrecord_fromsession(self.card_table, "cuid", self.cuid)
         # スキルブーストによるhp_org,attack_orgの変更
         if "skillboost" in self.effect:
             pattern = r"skillboost[+-]\d[+-]\d"
@@ -39,7 +42,6 @@ class Card_info:
             boost_hp_ratio = int(matches[0])
             boost_attack_ratio = int(matches[1])
             # スキルブーストの値を取得
-            record3 = card_db.getrecord_fromsession(self.card_table, "cuid", self.cuid)
             loc = record3[1]
             if "_" in loc:
                 owner = loc.split("_")[0]
@@ -50,6 +52,8 @@ class Card_info:
             # スキルブーストの値に応じてhp_org,attack_orgを変更
             self.dhp = self.dhp + boost_hp_ratio * skillboost
             self.dattack = self.dattack + boost_attack_ratio * skillboost
+        # ステータス状態を更新
+        self.status = record3[9]
 
         self.attack = self.attack_org + self.dattack
         self.hp = self.hp_org + self.dhp
