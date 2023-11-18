@@ -33,7 +33,7 @@
 マルティナ	martina	onplay:enemy_vertical_1dmg_random_7times
 キングレオ	king-leo	onplay:self_active
 ネルゲル	nelgel	
-シドー	sydow	
+シドー	sydow	onplay:all_unit_4dmg
 精神統一	bujutsu_meditation	self_1draw
 飛びげり	bujutsu_jump-kick	switch
 ストレートパンチ	bujutsu_straight-punch	any_1dmg
