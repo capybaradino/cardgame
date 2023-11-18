@@ -191,28 +191,53 @@ def apply_effect(
             matches = re.search(pattern, effect)
             value = int(matches.group())
             if "enemy" in effect:
-                index = []
-                i = 0
-                card: Card_info
-                for card in board_enemy:
-                    if card is not None:
-                        # HP=0のユニットは除外
-                        if card.hp_org + card.dhp > 0:
-                            index.append(i)
-                    i = i + 1
-                leader = len(index)
-                number = random.randrange(len(index) + 1)
-                if number == leader:
-                    card_db.appendlog(
-                        playview.playdata.card_table, "effect->" + player_enemy.name
-                    )
-                    api_common_common.leader_hp_change(player_enemy, value)
+                # 縦一列指定の場合
+                if "vertical" in effect:
+                    # card3から数値を取り出す
+                    pattern = r"[+-]?\d+"
+                    matches = re.search(pattern, card3)
+                    loc = int(matches.group())
+                    # 合計xダメージを縦一列のランダムなマスに割り振る
+                    if "times" in effect:
+                        stmp = re.search(r"[\d]times", effect).group()
+                        matches = re.search(r"[+-]?\d+", stmp)
+                        value = int(matches.group())
+                        i = 0
+                        while i < value:
+                            # 0～2のランダムな数値を取得
+                            locrand = random.randrange(3)
+                            # 後列指定の場合は3を足す
+                            if loc > 2:
+                                locrand = locrand + 3
+                            objcard3 = board_enemy[locrand]
+                            if objcard3 is not None:
+                                ret, scode = api_common_dmg(
+                                    sid, playview, effect, objcard3, isRun
+                                )
+                            i = i + 1
                 else:
-                    objcard2 = board_enemy[index[number]]
-                    card_db.appendlog(
-                        playview.playdata.card_table, "effect->" + objcard2.name
-                    )
-                    api_common_common.unit_hp_change(sid, playview, objcard2, value)
+                    index = []
+                    i = 0
+                    card: Card_info
+                    for card in board_enemy:
+                        if card is not None:
+                            # HP=0のユニットは除外
+                            if card.hp_org + card.dhp > 0:
+                                index.append(i)
+                        i = i + 1
+                    leader = len(index)
+                    number = random.randrange(len(index) + 1)
+                    if number == leader:
+                        card_db.appendlog(
+                            playview.playdata.card_table, "effect->" + player_enemy.name
+                        )
+                        api_common_common.leader_hp_change(player_enemy, value)
+                    else:
+                        objcard2 = board_enemy[index[number]]
+                        card_db.appendlog(
+                            playview.playdata.card_table, "effect->" + objcard2.name
+                        )
+                        api_common_common.unit_hp_change(sid, playview, objcard2, value)
                 ret = "OK"
                 scode = 200
             else:
