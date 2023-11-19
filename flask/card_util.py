@@ -4,7 +4,20 @@ from datetime import datetime
 import card_db
 
 
-def card_getwaitingsessionhtml():
+def _getnamefromtid(p1_player_tid, p2_player_tid):
+    p1_player_name = card_db.getrecord_fromsession(
+        "playerstats", "player_tid", p1_player_tid
+    )[1]
+    if p2_player_tid != "waiting":
+        p2_player_name = card_db.getrecord_fromsession(
+            "playerstats", "player_tid", tid2
+        )[1]
+    else:
+        p2_player_name = "waiting"
+    return p1_player_name, p2_player_name
+
+
+def card_getwaitingsessionhtml(username):
     # マッチング待機中のセッションを取得する
     gamesessions = card_db.getrecords_fromsession(
         "gamesession", "p2_player_tid", "waiting"
@@ -15,22 +28,53 @@ def card_getwaitingsessionhtml():
     headers += "<tr>"
     headers += "<td>player1</td>"
     headers += "<td>player2</td>"
+    headers += "<td>menu</td>"
+    headers += "<td>option</td>"
     headers += "</tr>"
+    isMatchExist = False
     for gamesession in gamesessions:
+        # player1またはplayer2に自分の名前がある場合は表示
         p1_player_tid = gamesession[1]
         p2_player_tid = gamesession[2]
-        p1_player_name = card_db.getrecord_fromsession(
-            "playerstats", "player_tid", p1_player_tid
-        )[1]
-        if p2_player_tid != "waiting":
-            p2_player_name = card_db.getrecord_fromsession(
-                "playerstats", "player_tid", p2_player_tid
-            )[1]
-        else:
-            p2_player_name = "waiting"
+        p1_player_name, p2_player_name = _getnamefromtid(p1_player_tid, p2_player_tid)
+        if p1_player_name == username or p2_player_name == username:
+            headers += "<tr>"
+            headers += "<td>" + p1_player_name + "</td>"
+            headers += "<td>" + p2_player_name + "</td>"
+            headers += (
+                "<td>"
+                + '<a href="play2/'
+                + gamesession[0]
+                + '">Reconnect</a>'
+                + "</td>"
+            )
+            if p2_player_name == "waiting":
+                msg = '<a href="play2/cancel">Cancel</a>'
+            else:
+                msg = '<a href="play2/surrender">Surrender</a>'
+            headers += (
+                "<td>"
+                + msg
+                + "</td>"
+            )
+            headers += "</tr>"
+            isMatchExist = True
+
+    for gamesession in gamesessions:
+        gsid = gamesession[0]
+        p1_player_tid = gamesession[1]
+        p2_player_tid = gamesession[2]
+        # player1またはplayer2に自分の名前がある場合は非表示
+        p1_player_name, p2_player_name = _getnamefromtid(p1_player_tid, p2_player_tid)
+        if p1_player_name == username or p2_player_name == username:
+            continue
         headers += "<tr>"
         headers += "<td>" + p1_player_name + "</td>"
         headers += "<td>" + p2_player_name + "</td>"
+        if isMatchExist:
+            headers += "<td>" + "Join" + "</td>"
+        else:
+            headers += "<td>" + '<a href="play2/' + gsid + '">Join</a>' + "</td>"
         headers += "</tr>"
     headers += "</table>"
     return headers
