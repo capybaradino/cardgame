@@ -150,7 +150,7 @@ class Field:
 
 
 class Playdata:
-    def __init__(self, sid) -> None:
+    def __init__(self, sid, param="") -> None:
         self.gsid = ""
         self.p1_player_tid = ""
         self.p2_player_tid = ""
@@ -196,7 +196,7 @@ class Playdata:
                     card_db.putusersession_gsid(sid, self.gsid)
 
         # 対戦待ちのゲームがあるか確認
-        if self.gsid == "" or gamesession is None:
+        if self.gsid == "" or gamesession is None and param != "cancel":
             gamesession = card_db.getrecord_fromsession(
                 "gamesession", "p2_player_tid", "waiting"
             )
@@ -436,10 +436,22 @@ class Playdata:
         # マッチング中・・・
         i = 0
         gamesession = card_db.getgamesession(self.gsid)
+        if gamesession is None:
+            self.stat = "error"
+            return
+
         self.p2_player_tid = gamesession[2]
         if self.p2_player_tid == "waiting":
             self.stat = "matching"
             self.card_table = gamesession[3]
+
+            # パラメータがcancelの場合はゲームを終了する
+            if param == "cancel":
+                # ゲームを終了する
+                self.stat = "cancel"
+                self.cleargame(sid, "cancel")
+                return
+
             return
 
         self.p1_player_tid = gamesession[1]
@@ -511,9 +523,14 @@ class Playdata:
         if iswin == "win":
             result1 = "win"
             result2 = "lose"
-        else:
+        elif iswin == "lose":
             result1 = "lose"
             result2 = "win"
+        elif iswin == "cancel":
+            result1 = "cancel"
+            result2 = "cancel"
+        else:
+            raise Exception
         card_db.putusersession_gsid(sid, result1)
         sid2 = card_db.getsid_fromgsid(gsid)
         if sid2 is not None:

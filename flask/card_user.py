@@ -1,9 +1,10 @@
-import sqlite3
-import names
-import uuid
-import card_util
-import card_db
 import re
+import sqlite3
+import uuid
+
+import card_db
+import card_util
+import names
 
 
 def card_checksession(sid):
@@ -87,7 +88,7 @@ def card_auth(email):
         uid = card_db.getuid_fromemail(email)
         greetings = "Hello, " + username + "!"
 
-    return greetings, uid
+    return greetings, uid, username
 
 
 def card_cleargame(sid):

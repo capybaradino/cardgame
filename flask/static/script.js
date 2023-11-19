@@ -550,12 +550,12 @@ function setdivimage(id, imageUrl) {
     const images = imageDiv.querySelectorAll("img");
     var flg = false;
     images.forEach(image => {
-        image.src = imageUrl;
+        image.src = "/" + imageUrl;
         flg = true;
     });
     if (flg == false) {
         const imageElement = document.createElement('img');
-        imageElement.src = imageUrl;
+        imageElement.src = "/" + imageUrl;
         imageDiv.appendChild(imageElement);
     }
 }
