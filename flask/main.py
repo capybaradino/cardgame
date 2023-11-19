@@ -21,8 +21,8 @@ app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = card_admin.UPLOAD_FOLDER
 
 
-@app.route("/play2", methods=["GET"])
-def play2():
+@app.route("/play2/<param>", methods=["GET"])
+def play2(param=None):
     sid = request.cookies.get("card_sid", None)
     sid = card_user.card_checksession(sid)
     if sid is None:
@@ -32,7 +32,7 @@ def play2():
     if sid is None:
         return redirect(url_for("index"))
     else:
-        return card_play.card_play_get2(sid)
+        return card_play.card_play_get2(sid, param)
 
 
 @app.route("/test", methods=["GET"])
@@ -65,7 +65,7 @@ def index(email=None):
     if email is None:
         abort(401)
 
-    greetings, uid = card_user.card_auth(email)
+    greetings, uid, username = card_user.card_auth(email)
     #    cookie  table   work
     # 1.  No      ANY     postsession
     # 2.  Yes     No      postsession(cookie override)
@@ -89,7 +89,7 @@ def index(email=None):
             render_template("index.html", title="Cardgame(admin)", greetings=greetings)
         )
     else:
-        playertablehtml = card_util.card_getwaitingsessionhtml()
+        playertablehtml = card_util.card_getwaitingsessionhtml(username)
         resp = make_response(
             render_template(
                 "index2.html",
