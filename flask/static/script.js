@@ -169,13 +169,21 @@ async function fetchData() {
     }, 1000);
 }
 
+var intervalId2;
+
+async function pageReload() {
+    intervalId2 = setInterval(function () {
+        location.reload();
+    }, 1000);
+}
+
 async function fetchData_impl() {
     var sid = getCookieValue("card_sid");
     try {
         const response = await fetch('/api/view/' + sid);
         if (response.status != 200) {
             if (response.status != 500) {
-                location.reload();
+                pageReload();
             }
         }
         const data = await response.json();
