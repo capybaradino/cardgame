@@ -1,6 +1,7 @@
 import configparser
-import debug
 import os
+
+import debug
 
 
 def getparam(key):
