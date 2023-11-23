@@ -47,10 +47,22 @@ class Player:
 
     def draw_card(self):
         cuid = card_db.getfirstcuid_fromdeck(self.card_table, self.name)
-        if len(self.get_hand()) < 10:
-            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+        # デッキが空の場合はFatigueを受ける
+        if cuid is None or cuid == "":
+            currentfatigue = card_db.getplayerstats_byname(self.name)[8]
+            currentfatigue = currentfatigue + 1
+            currenthp = card_db.getplayerstats_byname(self.name)[3]
+            currenthp = currenthp - currentfatigue
+            card_db.putplayerstats("player_tid", self.player_tid, "hp", currenthp)
+            card_db.putplayerstats(
+                "player_tid", self.player_tid, "fatigue", currentfatigue
+            )
+            card_db.appendlog(self.card_table, f"fatigue({currentfatigue})->" + self.name)
         else:
-            card_db.putdeck(self.card_table, cuid, "drop")
+            if len(self.get_hand()) < 10:
+                card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+            else:
+                card_db.putdeck(self.card_table, cuid, "drop")
         return
 
     def draw_bujutsucard(self):
@@ -82,7 +94,10 @@ class Player:
                 cuids.append(cuid)
         if len(cuids) > 0:
             cuid = cuids[random.randrange(len(cuids))]
-            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+            if len(self.get_hand()) < 10:
+                card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+            else:
+                card_db.putdeck(self.card_table, cuid, "drop")
         return
 
     def get_hand(self):
@@ -394,11 +409,9 @@ class Playdata:
             if ret is None:
                 ret = str(random.randrange(2))
             if ret == "0":
-                # self.player1.start_turn()
                 self.state = "p1turn"
                 self.player1.start_turn()
             else:
-                # self.player2.start_turn()
                 self.state = "p2turn"
                 card_db.putplayerstats("name", self.player1.name, "tension", 2)
 

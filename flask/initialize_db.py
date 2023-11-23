@@ -123,7 +123,7 @@ def create_table(db_name, table_name):
                     maxmp INTEGER NOT NULL,
                     tension INTEGER NOT NULL,
                     skillboost INTEGER NOT NULL,
-                    rsv1 TEXT,
+                    fatigue INTEGER NOT NULL,
                     rsv2 TEXT,
                     rsv3 TEXT,
                     rsv4 TEXT,

@@ -18,6 +18,7 @@ class TestApplyEffect_other(unittest.TestCase):
     mock_api_common_tension = Mock()
     mock_api_common_get_self_or_enemy = Mock()
     mock_getobjcard = Mock()
+    mock_cardcommon_judge = Mock()
 
     def setUp(self):
         # Mockオブジェクトの設定
@@ -64,6 +65,7 @@ class TestApplyEffect_other(unittest.TestCase):
     @patch("api_common_tension.api_common_tension", mock_api_common_tension)
     @patch("api_common_util.get_self_or_enemy", mock_api_common_get_self_or_enemy)
     @patch("api_common_util.getobjcard", mock_getobjcard)
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_apply_effect_draw(self):
         # draw_bujutsuのテスト
         effect = "self_1draw_bujutsu"
