@@ -5,7 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "main.py",
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "_main.py",
             "type": "python",
             "request": "launch",
             "cwd": "${workspaceRoot}/flask",
@@ -13,7 +21,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "main_api.py",
+            "name": "_main_api.py",
             "type": "python",
             "request": "launch",
             "cwd": "${workspaceRoot}/flask",
