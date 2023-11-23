@@ -73,8 +73,8 @@ class Card_system(Resource):
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if _isUUID(gsid) is False:
-            return {"error": "gamesession not exist"}, 403
+        if gsid == "":
+            return {"error": "gamesession and result not exist"}, 403
         if command == "status":
             return _getstatus(gsid, sid)
         elif command == "result":
