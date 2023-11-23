@@ -4,24 +4,25 @@ from datetime import datetime
 import card_db
 
 
-def _getnamefromtid(p1_player_tid, p2_player_tid):
-    p1_player_name = card_db.getrecord_fromsession(
-        "playerstats", "player_tid", p1_player_tid
-    )[1]
+def _getnamefromtid(gamesession):
+    p1_player_tid = gamesession[1]
+    p2_player_tid = gamesession[2]
+    p1_player_name = card_db.getplayerstats_bytid(p1_player_tid)[1]
     if p2_player_tid != "waiting":
-        p2_player_name = card_db.getrecord_fromsession(
-            "playerstats", "player_tid", tid2
-        )[1]
+        p2_player_name = card_db.getplayerstats_bytid(p2_player_tid)[1]
     else:
         p2_player_name = "waiting"
     return p1_player_name, p2_player_name
 
 
+def _gettidfromname(player_name):
+    record = card_db.getplayerstats_byname(player_name)
+    if record is None:
+        return None
+    return record[0]
+
+
 def card_getwaitingsessionhtml(username):
-    # マッチング待機中のセッションを取得する
-    gamesessions = card_db.getrecords_fromsession(
-        "gamesession", "p2_player_tid", "waiting"
-    )
     # HTMLでテーブルを作成する
     headers = ""
     headers += "<table border=1>"
@@ -32,11 +33,13 @@ def card_getwaitingsessionhtml(username):
     headers += "<td>option</td>"
     headers += "</tr>"
     isMatchExist = False
+    # 全ゲームセッションを取得する
+    gamesessions = card_db.getallgamesessions()
+    if gamesessions is None:
+        return headers
     for gamesession in gamesessions:
         # player1またはplayer2に自分の名前がある場合は表示
-        p1_player_tid = gamesession[1]
-        p2_player_tid = gamesession[2]
-        p1_player_name, p2_player_name = _getnamefromtid(p1_player_tid, p2_player_tid)
+        p1_player_name, p2_player_name = _getnamefromtid(gamesession)
         if p1_player_name == username or p2_player_name == username:
             headers += "<tr>"
             headers += "<td>" + p1_player_name + "</td>"
@@ -52,20 +55,14 @@ def card_getwaitingsessionhtml(username):
                 msg = '<a href="play2/cancel">Cancel</a>'
             else:
                 msg = '<a href="play2/surrender">Surrender</a>'
-            headers += (
-                "<td>"
-                + msg
-                + "</td>"
-            )
+            headers += "<td>" + msg + "</td>"
             headers += "</tr>"
             isMatchExist = True
 
     for gamesession in gamesessions:
         gsid = gamesession[0]
-        p1_player_tid = gamesession[1]
-        p2_player_tid = gamesession[2]
         # player1またはplayer2に自分の名前がある場合は非表示
-        p1_player_name, p2_player_name = _getnamefromtid(p1_player_tid, p2_player_tid)
+        p1_player_name, p2_player_name = _getnamefromtid(gamesession)
         if p1_player_name == username or p2_player_name == username:
             continue
         headers += "<tr>"
@@ -94,6 +91,8 @@ def card_gettablehtml_impl(tablename, sid, isadmin):
         con = sqlite3.connect("session.db")
     elif "card_" in tablename:
         con = sqlite3.connect("game.db")
+    elif "user" == tablename:
+        raise Exception("user table is not supported")
     else:
         con = sqlite3.connect(tablename + ".db")
 

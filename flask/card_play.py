@@ -24,13 +24,19 @@ def card_play_get2(sid, param=None):
         return render_template("play_win.html", title="Win", debug_code=debug_code)
 
     if playdata.stat == "matching":
-        return render_template("play_info.html", title="Matching", msg="Match making...")
+        return render_template(
+            "play_info.html", title="Matching", msg="Match making..."
+        )
 
     if playdata.stat == "cancel":
         return render_template("play_info.html", title="Cancel", msg="Match canceled.")
-    
+
     if playdata.stat == "error":
-        return render_template("play_info.html", title="Error", msg="Error has occured. Go back and reload window.")
+        return render_template(
+            "play_info.html",
+            title="Error",
+            msg="Error has occured. Go back and reload window.",
+        )
 
     return render_template("play2.html")
 
