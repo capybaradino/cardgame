@@ -1,14 +1,16 @@
-from flask.templating import render_template
-from flask import redirect
-from class_playdata import Playdata
-import card_db
-from class_playview import Play_view
-import card_play_util
 import os
 
+import card_db
+import card_play_util
+from class_playdata import Playdata
+from class_playview import Play_view
 
-def card_play_get2(sid):
-    playdata = Playdata(sid)
+from flask import redirect
+from flask.templating import render_template
+
+
+def card_play_get2(sid, param=None):
+    playdata = Playdata(sid, param)
     isdebug = os.path.isfile("debug.conf")
     if isdebug:
         debug_code = '<h1><a href="../p1">(debug)Cardgame/p1</a></h1><h1><a href="../p2">(debug)Cardgame/p2</a></h1>'
@@ -22,7 +24,20 @@ def card_play_get2(sid):
         return render_template("play_win.html", title="Win", debug_code=debug_code)
 
     if playdata.stat == "matching":
-        return render_template("play_matching.html", title="Matching")
+        return render_template(
+            "play_info.html", title="Matching", msg="Match making..."
+        )
+
+    if playdata.stat == "cancel":
+        return render_template("play_info.html", title="Cancel", msg="Match canceled.")
+
+    if playdata.stat == "error":
+        return render_template(
+            "play_info.html",
+            title="Error",
+            msg="Error has occured. Go back and reload window.",
+        )
+
     return render_template("play2.html")
 
 

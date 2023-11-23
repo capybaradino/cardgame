@@ -1,6 +1,6 @@
-from class_playview import Play_view
-from class_playinfo import Card_info
 import card_db
+from class_playinfo import Card_info
+from class_playview import Play_view
 
 
 def get(playview: Play_view):
@@ -8,9 +8,7 @@ def get(playview: Play_view):
     # ターン
     data_dict["turn"] = playview.turnstate
     # ログ
-    record = card_db.getrecord_fromsession(
-        "gamesession", "card_table", playview.playdata.card_table
-    )
+    record = card_db.getgamesession("card_table", playview.playdata.card_table)
     data_dict["log"] = record[4]
 
     # Player1

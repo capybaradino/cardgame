@@ -1,7 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<script>
+    // 5秒おきにリロード
+    setTimeout("location.reload()", 5000);
+</script>
+
 <h1><a href="../">Cardgame</a></h1>
 <h1>{{ title }}</h1>
-<h2>Match making...</h2>
+<h2>{{ msg }}</h2>
 {% endblock %}

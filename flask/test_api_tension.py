@@ -28,20 +28,19 @@ class TestAPITension(unittest.TestCase):
         self.playview.p2.player_tid = "test_player_2"
         card_db.getrecord_fromsession = Mock()
         card_db.getrecord_fromsession.return_value = [0, 0, "test_cuid", 0, 0, 0, 1, 0]
-        card_db.putsession = Mock()
+        card_db.putcardtable = Mock()
+        card_db.putplayerstats = Mock()
         card_db.appendlog = Mock()
         api_common_common.unit_hp_change = Mock()
 
     def test_api_tension_with_tension_up(self):
         result = api_tension.api_tension(self.sid, self.playview, "card1", "card2")
         self.assertEqual(result, {"info": "OK"})
-        card_db.putsession.assert_any_call(
-            "playerstats", "name", self.playview.p1name, "mp", 1
+        card_db.putplayerstats.assert_any_call("name", self.playview.p1name, "mp", 1)
+        card_db.putplayerstats.assert_any_call(
+            "name", self.playview.p1name, "tension", 3
         )
-        card_db.putsession.assert_any_call(
-            "playerstats", "name", self.playview.p1name, "tension", 3
-        )
-        card_db.putsession.assert_any_call(
+        card_db.putcardtable.assert_any_call(
             self.playview.playdata.card_table, "cuid", "test_cuid", "active", 0
         )
         card_db.appendlog.assert_called_once_with(
@@ -60,7 +59,9 @@ class TestAPITension(unittest.TestCase):
         self.assertEqual(result, {"error": "MP short"})
 
     def test_api_tension_with_tension_skill_wiz_board(self):
-        with patch("api_tension.Play_view") as play_view_mock:
+        with patch("api_tension.Play_view") as play_view_mock, patch(
+            "card_db.getplayerstats_byname"
+        ) as mock_getplayerstats_byname:
             self.playview.p1tension = 3
             playview_end = Mock()
             playview_end.p1hp = 10
@@ -91,7 +92,9 @@ class TestAPITension(unittest.TestCase):
             )
 
     def test_api_tension_with_tension_skill_wiz_leader(self):
-        with patch("api_tension.Play_view") as play_view_mock:
+        with patch("api_tension.Play_view") as play_view_mock, patch(
+            "card_db.getplayerstats_byname"
+        ) as mock_getplayerstats_byname:
             self.playview.p1tension = 3
             playview_end = Mock()
             playview_end.p1hp = 10
@@ -102,13 +105,6 @@ class TestAPITension(unittest.TestCase):
                 self.sid, self.playview, "card1", "rightboard_10"
             )
             self.assertEqual(result, {"info": "OK"})
-            # card_db.putsession.assert_any_call(
-            #     "playerstats",
-            #     "player_tid",
-            #     self.playview.p2.player_tid,
-            #     "hp",
-            #     7,
-            # )
             api_common_common.leader_hp_change.assert_called_once_with(
                 self.playview.p2, 3
             )
@@ -150,16 +146,17 @@ class TestAPITension(unittest.TestCase):
         self.assertEqual(result, ({"error": "target unit has antieffect"}, 403))
 
     def test_api_tension_with_tension_skill_mnk(self):
-        self.playview.p1tension = 3
-        self.playview.p1job = "mnk"
-        result = api_tension.api_tension(self.sid, self.playview, "card1", "card2")
-        self.assertEqual(result, {"info": "OK"})
-        self.assertEqual(self.playview.p1.draw_card.call_count, 1)
-        self.assertEqual(self.playview.p1.draw_bujutsucard.call_count, 1)
-        card_db.appendlog.assert_called_once_with(
-            self.playview.playdata.card_table,
-            "[" + self.playview.p1name + "]tension skill:",
-        )
+        with patch("card_db.getplayerstats_byname") as mock_getplayerstats_byname:
+            self.playview.p1tension = 3
+            self.playview.p1job = "mnk"
+            result = api_tension.api_tension(self.sid, self.playview, "card1", "card2")
+            self.assertEqual(result, {"info": "OK"})
+            self.assertEqual(self.playview.p1.draw_card.call_count, 1)
+            self.assertEqual(self.playview.p1.draw_bujutsucard.call_count, 1)
+            card_db.appendlog.assert_called_once_with(
+                self.playview.playdata.card_table,
+                "[" + self.playview.p1name + "]tension skill:",
+            )
 
     def test_api_tension_with_tension_skill_unknown_job(self):
         self.playview.p1tension = 3

@@ -26,8 +26,10 @@ class TestAPIPlay(unittest.TestCase):
         with patch("api_play.Play_view") as mock_playview, patch(
             "api_common_common.apply_effect"
         ) as mock_apply_effect, patch("card_db.appendlog") as mock_appendlog, patch(
-            "card_db.putsession"
-        ) as mock_putsession:
+            "card_db.putcardtable"
+        ) as mock_putsession, patch(
+            "card_db.putplayerstats"
+        ) as mock_putplayerstats:
             mock_apply_effect.return_value = ("OK", 200)
 
             # Test case 1: Test with valid input
@@ -48,9 +50,7 @@ class TestAPIPlay(unittest.TestCase):
                 "locnum",
                 3,
             )
-            mock_putsession.assert_any_call(
-                "playerstats", "name", playview.p1name, "mp", 2
-            )
+            mock_putplayerstats.assert_any_call("name", playview.p1name, "mp", 2)
 
             # Test case 2: Test with invalid input
             sid = 1
@@ -144,7 +144,7 @@ class TestAPIPlay(unittest.TestCase):
             card2 = "leftboard_3"
             card3 = ""
 
-            with patch("card_db.appendlog"), patch("card_db.putsession"):
+            with patch("card_db.appendlog"), patch("card_db.putcardtable"):
                 result = api_play_hand(sid, playview, card1, card2, card3)
                 self.assertEqual(result, {"info": "OK"})
                 playview.playdata.gameover.assert_called_once()
@@ -164,7 +164,7 @@ class TestAPIPlay(unittest.TestCase):
             card2 = "leftboard_3"
             card3 = ""
 
-            with patch("card_db.appendlog"), patch("card_db.putsession"):
+            with patch("card_db.appendlog"), patch("card_db.putcardtable"):
                 result = api_play_hand(sid, playview, card1, card2, card3)
                 self.assertEqual(result, {"info": "OK"})
                 playview.playdata.gamewin.assert_called_once()
