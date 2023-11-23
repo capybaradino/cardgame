@@ -1,5 +1,5 @@
-import sqlite3
 import os
+import sqlite3
 
 
 def delete_file(file_path):
@@ -51,7 +51,7 @@ def create_table(db_name, table_name):
         cursor = conn.cursor()
 
         # テーブルの作成
-        if (table_name == 'card_basicdata'):
+        if table_name == "card_basicdata":
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     cid TEXT PRIMARY KEY,
@@ -69,7 +69,7 @@ def create_table(db_name, table_name):
                     flavor TEXT
                 )
             """
-        if (table_name == 'card_material'):
+        if table_name == "card_material":
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     fid TEXT PRIMARY KEY,
@@ -81,7 +81,7 @@ def create_table(db_name, table_name):
                     upload_date TEXT NOT NULL
                 )
             """
-        if (table_name == 'user'):
+        if table_name == "user":
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     uid TEXT PRIMARY KEY,
@@ -90,7 +90,7 @@ def create_table(db_name, table_name):
                     grant TEXT
                 )
             """
-        if (table_name == 'usersession'):
+        if table_name == "usersession":
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     sid TEXT PRIMARY KEY,
@@ -100,7 +100,7 @@ def create_table(db_name, table_name):
                     name TEXT NOT NULL
                 )
             """
-        if (table_name == 'gamesession'):
+        if table_name == "gamesession":
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     gsid TEXT PRIMARY KEY,
@@ -112,7 +112,7 @@ def create_table(db_name, table_name):
                     lastupdate TEXT NOT NULL
                 )
             """
-        if (table_name == 'playerstats'):
+        if table_name == "playerstats":
             query = f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     player_tid TEXT PRIMARY KEY,
@@ -121,7 +121,16 @@ def create_table(db_name, table_name):
                     hp INTEGER NOT NULL,
                     mp INTEGER NOT NULL,
                     maxmp INTEGER NOT NULL,
-                    tension INTEGER NOT NULL
+                    tension INTEGER NOT NULL,
+                    skillboost INTEGER NOT NULL,
+                    rsv1 TEXT,
+                    rsv2 TEXT,
+                    rsv3 TEXT,
+                    rsv4 TEXT,
+                    rsv5 TEXT,
+                    rsv6 TEXT,
+                    rsv7 TEXT,
+                    rsv8 TEXT
                 )
             """
         cursor.execute(query)
@@ -164,60 +173,62 @@ def drop_tables_with_prefix(database_name, prefix):
 
 # main start
 print("[INFO] Select db to initialize.")
-print("       1:game.db 2:user.db 3:session.db 4:sesstable(not user) 5:sesstable(user) A:ALL C:Cancel")
+print(
+    "       1:game.db 2:user.db 3:session.db 4:sesstable(not user) 5:sesstable(user) A:ALL C:Cancel"
+)
 str = input()
 
-if (str == 'C'):
+if str == "C":
     exit()
 
 print("[INFO] Initialize db start.")
 
 # game.db
-if (str == '1' or str == 'A'):
-    dbfile_path = 'game.db'
+if str == "1" or str == "A":
+    dbfile_path = "game.db"
     delete_file(dbfile_path)
     create_database(dbfile_path)
-    table_name = 'card_basicdata'
+    table_name = "card_basicdata"
     create_table(dbfile_path, table_name)
-    table_name = 'card_material'
+    table_name = "card_material"
     create_table(dbfile_path, table_name)
 
 # user.db
-if (str == '2' or str == 'A'):
-    dbfile_path = 'user.db'
+if str == "2" or str == "A":
+    dbfile_path = "user.db"
     delete_file(dbfile_path)
     create_database(dbfile_path)
-    table_name = 'user'
+    table_name = "user"
     create_table(dbfile_path, table_name)
 
 # session.db
-if (str == '3' or str == 'A'):
-    dbfile_path = 'session.db'
+if str == "3" or str == "A":
+    dbfile_path = "session.db"
     delete_file(dbfile_path)
     create_database(dbfile_path)
-    table_name = 'usersession'
+    table_name = "usersession"
     create_table(dbfile_path, table_name)
-    table_name = 'gamesession'
+    table_name = "gamesession"
     create_table(dbfile_path, table_name)
-    table_name = 'playerstats'
+    table_name = "playerstats"
     create_table(dbfile_path, table_name)
 
 # session.db(not user)
-if (str == '4' or str == 'A'):
-    dbfile_path = 'session.db'
-    table_name = 'gamesession'
+if str == "4" or str == "A":
+    dbfile_path = "session.db"
+    table_name = "gamesession"
     drop_table(dbfile_path, table_name)
     create_table(dbfile_path, table_name)
-    table_name = 'playerstats'
+    table_name = "playerstats"
     drop_table(dbfile_path, table_name)
     create_table(dbfile_path, table_name)
     # 残存カード管理テーブルの削除
     drop_tables_with_prefix(dbfile_path, "c_")
 
 # session.db(user)
-if (str == '5' or str == 'A'):
-    dbfile_path = 'session.db'
-    table_name = 'usersession'
+if str == "5" or str == "A":
+    dbfile_path = "session.db"
+    table_name = "usersession"
     drop_table(dbfile_path, table_name)
     create_table(dbfile_path, table_name)
 

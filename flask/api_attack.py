@@ -38,13 +38,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         if playview.isblocked(number):
             return {"error": "card2 is blocked by other unit"}, 403
         # ステルスの確認
-        objcard2.refresh(playview.playdata.card_table)
+        objcard2.refresh()
         if "stealth" in objcard2.status:
             return {"error": "card2 has stealth"}, 403
         # 攻撃時効果
         ret = "OK"
         ret, scode = api_onattack(sid, playview, objcard1)
-        objcard1.refresh(playview.playdata.card_table)
+        objcard1.refresh()
 
         if ret != "OK":
             return ret, scode
@@ -63,9 +63,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         values.append(objcard1.attack)
         values.append(objcard2.attack)
         api_common_common.unit_hp_change_multi(sid, playview, objcards, values)
-        # 自ユニットを行動済みに変更
+        # 自ユニットの行動回数を1減らす
+        record = card_db.getrecord_fromsession(
+            playview.playdata.card_table, "cuid", objcard1.cuid
+        )
+        nactive = int(record[6])
         card_db.putsession(
-            playview.playdata.card_table, "cuid", objcard1.cuid, "active", 0
+            playview.playdata.card_table, "cuid", objcard1.cuid, "active", nactive - 1
         )
     elif re.match(pattern_p2leader, card2):
         # ウォールのチェック
@@ -73,8 +77,8 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             return {"error": "wall exists"}, 403
         # 攻撃時効果
         ret = "OK"
-        ret, scode = api_onattack(sid, playview, objcard1)
-        objcard1.refresh(playview.playdata.card_table)
+        ret, scode = api_onattack(sid, playview, objcard1, ifleader=True)
+        objcard1.refresh()
 
         if ret != "OK":
             return ret, scode
@@ -103,9 +107,13 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
                 "hp",
                 newhp,
             )
-        # 自ユニットを行動済みに変更
+        # 自ユニットの行動回数を1減らす
+        record = card_db.getrecord_fromsession(
+            playview.playdata.card_table, "cuid", objcard1.cuid
+        )
+        nactive = int(record[6])
         card_db.putsession(
-            playview.playdata.card_table, "cuid", objcard1.cuid, "active", 0
+            playview.playdata.card_table, "cuid", objcard1.cuid, "active", nactive - 1
         )
         if newhp <= 0:
             playview.playdata.gamewin(sid)
@@ -115,19 +123,22 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
     return {"info": "OK"}, 200
 
 
-def api_onattack(sid, playview: Play_view, objcard1: Card_info):
+def api_onattack(sid, playview: Play_view, objcard1: Card_info, ifleader=False):
     effect_array = objcard1.effect.split(",")
     effect: str
     for effect in effect_array:
         if effect.startswith("onattack"):
+            if effect.startswith("onattack_leader"):
+                if not ifleader:
+                    continue
             # 攻撃時効果
             subeffect = effect.split(":")[1]
-            api_common_common.onplay_effect_objcard(
-                sid, playview, subeffect, objcard1, True
+            api_common_common.apply_effect(
+                sid, playview, subeffect, objcard1, None, None, True
             )
 
     # ステルス解除
-    objcard1.refresh(playview.playdata.card_table)
+    objcard1.refresh()
     status = objcard1.status
     status = status.replace(",stealth", "")
     card_db.putsession(

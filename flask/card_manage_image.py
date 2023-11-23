@@ -12,7 +12,8 @@ def card_management_delete(filename, callback):
 
 
 def card_management_view():
-    uploadedinfo = card_util.card_gettablehtml_admin('card_material')
+    uploadedinfo = card_util.card_gettablehtml_admin("card_material")
 
-    return render_template('manage_image.html', title='manage_image', 
-                           uploadedinfo=uploadedinfo)
+    return render_template(
+        "manage_image.html", title="manage_image", uploadedinfo=uploadedinfo
+    )

@@ -22,27 +22,30 @@ def api_spell(sid, playview: Play_view, card1, card2):
     # 特技の対象確認
     for effect in effect_array:
         # 事前チェック
-        ret, scode = api_common_common.onplay_effect_spell(
-            sid, playview, effect, objcard1, card2, False
+        ret, scode = api_common_common.apply_effect(
+            sid, playview, effect, objcard1, None, card2, False
         )
         if ret != "OK":
             return ret, scode
 
-        # MP減算確認
-        remainingmp = playview.p1mp - objcard1.cost
-        if remainingmp < 0:
-            return {"error": "MP short"}, 403
+    # MP減算確認
+    remainingmp = playview.p1mp - objcard1.cost
+    if remainingmp < 0:
+        return {"error": "MP short"}, 403
 
-        # ALL OK DB更新
-        # 監査ログ
-        card_db.appendlog(
-            playview.playdata.card_table,
-            "[" + playview.p1name + "]spell:" + objcard1.name,
-        )
-        # MP減算
-        card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
-        ret, scode = api_common_common.onplay_effect_spell(
-            sid, playview, effect, objcard1, card2, True
+    # ALL OK DB更新
+    # 監査ログ
+    card_db.appendlog(
+        playview.playdata.card_table,
+        "[" + playview.p1name + "]spell:" + objcard1.name,
+    )
+    # MP減算
+    card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+
+    # 効果処理
+    for effect in effect_array:
+        ret, scode = api_common_common.apply_effect(
+            sid, playview, effect, objcard1, None, card2, True
         )
 
     # カード状態変更
@@ -53,6 +56,25 @@ def api_spell(sid, playview: Play_view, card1, card2):
         "loc",
         playview.p1name + "_cemetery",
     )
+
+    # playview更新
+    playview = Play_view(sid)
+    # ボード上のユニットのonspellエフェクト処理
+    for unit in playview.p1board:
+        if unit is None:
+            continue
+        effect_array = unit.effect.split(",")
+        for effect in effect_array:
+            if effect == "":
+                continue
+            if effect.startswith("onspell"):
+                if effect.startswith("onspell_self"):
+                    # :で分割
+                    effect = effect.split(":")[1]
+                    ret, scode = api_common_common.apply_effect(
+                        sid, playview, effect, unit, None, None, True
+                    )
+                # TODO onspell_other
 
     # 勝敗確認
     playview = Play_view(sid)

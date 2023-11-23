@@ -48,8 +48,8 @@ def api_tension(sid, playview: Play_view, card1, card2):
         # 魔法使い
         elif job == "wiz":
             # 事前チェック
-            ret, scode = api_common_common.onplay_effect_spell(
-                sid, playview, "any_3dmg", None, card2, False
+            ret, scode = api_common_common.apply_effect(
+                sid, playview, "any_3dmg", None, None, card2, False
             )
             if ret != "OK":
                 return ret, scode
@@ -59,8 +59,8 @@ def api_tension(sid, playview: Play_view, card1, card2):
                 "[" + playview.p1name + "]tension skill:",
             )
             _reset_tension(playview)
-            api_common_common.onplay_effect_spell(
-                sid, playview, "any_3dmg", None, card2, True
+            api_common_common.apply_effect(
+                sid, playview, "any_3dmg", None, None, card2, True
             )
             # 勝敗確認
             playview = Play_view(sid)
@@ -82,4 +82,9 @@ def api_tension(sid, playview: Play_view, card1, card2):
 def _reset_tension(playview):
     # テンション初期化
     card_db.putsession("playerstats", "name", playview.p1name, "tension", 0)
+    # スキルブースト+1
+    record = card_db.getrecord_fromsession("playerstats", "name", playview.p1name)
+    skillboost = record[7]
+    skillboost = skillboost + 1
+    card_db.putsession("playerstats", "name", playview.p1name, "skillboost", skillboost)
     return
