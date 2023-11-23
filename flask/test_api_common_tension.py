@@ -29,7 +29,7 @@ class TestAPICommonTension(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @patch("card_db.putsession")
+    @patch("card_db.putplayerstats")
     def test_api_common_tension_objcard_with_self_tension_effect(self, mock_putsession):
         # Test case 1: Test with self_tension effect
         mock_putsession.return_value = None
@@ -45,10 +45,10 @@ class TestAPICommonTension(unittest.TestCase):
         self.assertEqual(result, "OK")
         self.assertEqual(status_code, 200)
         mock_putsession.assert_called_once_with(
-            "playerstats", "player_tid", self.player_self.player_tid, "tension", 2
+            "player_tid", self.player_self.player_tid, "tension", 2
         )
 
-    @patch("card_db.putsession")
+    @patch("card_db.putplayerstats")
     def test_api_common_tension_objcard_with_enemy_tension_effect(
         self, mock_putsession
     ):
@@ -66,10 +66,10 @@ class TestAPICommonTension(unittest.TestCase):
         self.assertEqual(result, "OK")
         self.assertEqual(status_code, 200)
         mock_putsession.assert_called_once_with(
-            "playerstats", "player_tid", self.player_enemy.player_tid, "tension", 1
+            "player_tid", self.player_enemy.player_tid, "tension", 1
         )
 
-    @patch("card_db.putsession")
+    @patch("card_db.putplayerstats")
     def test_api_common_tension_objcard_with_each_tension_effect(self, mock_putsession):
         # Test case 3: Test with each_tension effect
         mock_putsession.return_value = None
@@ -85,13 +85,13 @@ class TestAPICommonTension(unittest.TestCase):
         self.assertEqual(result, "OK")
         self.assertEqual(status_code, 200)
         mock_putsession.assert_any_call(
-            "playerstats", "player_tid", self.player_self.player_tid, "tension", 3
+            "player_tid", self.player_self.player_tid, "tension", 3
         )
         mock_putsession.assert_any_call(
-            "playerstats", "player_tid", self.player_enemy.player_tid, "tension", 3
+            "player_tid", self.player_enemy.player_tid, "tension", 3
         )
 
-    @patch("card_db.putsession")
+    @patch("card_db.putcardtable")
     def test_api_common_tension_objcard_with_invalid_effect(self, mock_putsession):
         # Test case 4: Test with invalid effect
         mock_putsession.return_value = None

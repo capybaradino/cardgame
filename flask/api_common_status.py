@@ -20,7 +20,7 @@ def api_common_active(sid, playview: Play_view, effect, card2, isRun):
         ) = api_common_util.get_self_or_enemy(playview, objcard2)
         if "self" in effect:
             if isRun:
-                card_db.putsession(
+                card_db.putcardtable(
                     playview.playdata.card_table, "cuid", objcard2.cuid, "active", 1
                 )
     else:
@@ -69,7 +69,7 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
         # 対象ユニットステータス更新
         dattack = objcard2.dattack + value
         if isRun:
-            card_db.putsession(
+            card_db.putcardtable(
                 playview.playdata.card_table, "cuid", objcard2.cuid, "dattack", dattack
             )
         # このターンだけの場合減算をセット
@@ -80,7 +80,7 @@ def api_common_attack_card(sid, playview: Play_view, effect, objcard2: Card_info
             turnend_effect_ontime = record[8]
             turnend_effect_ontime = turnend_effect_ontime + ",self_attack-" + str(value)
             if isRun:
-                card_db.putsession(
+                card_db.putcardtable(
                     playview.playdata.card_table,
                     "cuid",
                     objcard2.cuid,

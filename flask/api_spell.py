@@ -40,7 +40,7 @@ def api_spell(sid, playview: Play_view, card1, card2):
         "[" + playview.p1name + "]spell:" + objcard1.name,
     )
     # MP減算
-    card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+    card_db.putplayerstats("name", playview.p1name, "mp", remainingmp)
 
     # 効果処理
     for effect in effect_array:
@@ -49,7 +49,7 @@ def api_spell(sid, playview: Play_view, card1, card2):
         )
 
     # カード状態変更
-    card_db.putsession(
+    card_db.putcardtable(
         playview.playdata.card_table,
         "cuid",
         objcard1.cuid,

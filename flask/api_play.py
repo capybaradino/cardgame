@@ -1,7 +1,7 @@
 import re
 
-import card_db
 import api_common_common
+import card_db
 from class_playinfo import Card_info
 from class_playview import Play_view
 
@@ -50,16 +50,16 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
             "[" + playview.p1name + "]play:" + objcard1.name,
         )
         # MP減算
-        card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+        card_db.putplayerstats("name", playview.p1name, "mp", remainingmp)
         # ハンドからボードへ移動
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table,
             "cuid",
             objcard1.cuid,
             "loc",
             playview.p1name + "_board",
         )
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table, "cuid", objcard1.cuid, "locnum", number
         )
 

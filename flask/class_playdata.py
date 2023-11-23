@@ -28,11 +28,9 @@ class Player:
         if self.maxmp < 10:
             self.maxmp = self.maxmp + 1
         self.mp = self.maxmp
-        card_db.putsession("playerstats", "player_tid", self.player_tid, "mp", self.mp)
-        card_db.putsession(
-            "playerstats", "player_tid", self.player_tid, "maxmp", self.maxmp
-        )
-        card_db.putsession(self.card_table, "loc", self.name + "_board", "active", 1)
+        card_db.putplayerstats("player_tid", self.player_tid, "mp", self.mp)
+        card_db.putplayerstats("player_tid", self.player_tid, "maxmp", self.maxmp)
+        card_db.putcardtable(self.card_table, "loc", self.name + "_board", "active", 1)
         # statusにattack_twiceがある場合はactiveを2にする
         records = card_db.getrecords_fromsession(
             self.card_table, "loc", self.name + "_board"
@@ -41,8 +39,10 @@ class Player:
             cuid = record[2]
             status = record[9]
             if "attack_twice" in status:
-                card_db.putsession(self.card_table, "cuid", cuid, "active", 2)
-        card_db.putsession(self.card_table, "loc", self.name + "_tension", "active", 1)
+                card_db.putcardtable(self.card_table, "cuid", cuid, "active", 2)
+        card_db.putcardtable(
+            self.card_table, "loc", self.name + "_tension", "active", 1
+        )
         return
 
     def draw_card(self):
@@ -76,7 +76,7 @@ class Player:
         for record in records:
             cid = record[0]
             cuid = record[2]
-            record2 = card_db.getrecord_fromgame("card_basicdata", "cid", cid)
+            record2 = card_db.getrecord_fromgamebasicdata("cid", cid)
             category = record2[6]
             if category == "spell":
                 cuids.append(cuid)
@@ -171,40 +171,30 @@ class Playdata:
                 self.stat = "win"
                 return
             else:
-                gamesession = card_db.getgamesession(self.gsid)
+                gamesession = card_db.getgamesession("gsid", self.gsid)
         else:
             gamesession = None
 
         # 既存ゲームがあるか確認(2)
-        record = card_db.getrecord_fromsession(
-            "playerstats", "name", card_db.getnickname_fromsid(sid)
-        )
+        record = card_db.getplayerstats_byname(card_db.getnickname_fromsid(sid))
         if record is not None:
             player_tid = record[0]
-            gamesession = card_db.getrecord_fromsession(
-                "gamesession", "p1_player_tid", player_tid
-            )
+            gamesession = card_db.getgamesession("p1_player_tid", player_tid)
             if gamesession is not None:
                 self.gsid = gamesession[0]
                 card_db.putusersession_gsid(sid, self.gsid)
             else:
-                gamesession = card_db.getrecord_fromsession(
-                    "gamesession", "p2_player_tid", player_tid
-                )
+                gamesession = card_db.getgamesession("p2_player_tid", player_tid)
                 if gamesession is not None:
                     self.gsid = gamesession[0]
                     card_db.putusersession_gsid(sid, self.gsid)
 
         # 対戦待ちのゲームがあるか確認
         if self.gsid == "" or gamesession is None and param != "cancel":
-            gamesession = card_db.getrecord_fromsession(
-                "gamesession", "p2_player_tid", "waiting"
-            )
+            gamesession = card_db.getgamesession("p2_player_tid", "waiting")
             if gamesession is not None:
                 p1_player_tid = gamesession[1]
-                record = card_db.getrecord_fromsession(
-                    "playerstats", "player_tid", p1_player_tid
-                )
+                record = card_db.getplayerstats_bytid(p1_player_tid)
                 p1_player_name = record[1]
                 if p1_player_name == card_db.getnickname_fromsid(sid):
                     # ゾンビゲームセッションがあった場合はつなぐ
@@ -354,9 +344,7 @@ class Playdata:
                 key = keystr + str(i)
                 ret = debug.getdebugparam(key)
                 if ret is not None and ret != "":
-                    record = card_db.getrecord_fromgame(
-                        "card_basicdata", "cardname", ret
-                    )
+                    record = card_db.getrecord_fromgamebasicdata("cardname", ret)
                     tcid = record[0]
                     cuid = card_db.postdeck(self.card_table, tcid, playername)
                     self.set_static_status_effect(tcid, cuid)
@@ -410,9 +398,7 @@ class Playdata:
             else:
                 # self.player2.start_turn()
                 self.state = "p2turn"
-                card_db.putsession(
-                    "playerstats", "name", self.player1.name, "tension", 2
-                )
+                card_db.putplayerstats("name", self.player1.name, "tension", 2)
 
             # ゲームセッション登録
             self.lastupdate = card_util.card_getdatestrnow()
@@ -435,7 +421,7 @@ class Playdata:
 
         # マッチング中・・・
         i = 0
-        gamesession = card_db.getgamesession(self.gsid)
+        gamesession = card_db.getgamesession("gsid", self.gsid)
         if gamesession is None:
             self.stat = "error"
             return
@@ -461,8 +447,8 @@ class Playdata:
         self.state = gamesession[5]
         self.lastupdate = gamesession[6]
 
-        self.p1_player_stats = card_db.getplayerstats(self.p1_player_tid)
-        self.p2_player_stats = card_db.getplayerstats(self.p2_player_tid)
+        self.p1_player_stats = card_db.getplayerstats_bytid(self.p1_player_tid)
+        self.p2_player_stats = card_db.getplayerstats_bytid(self.p2_player_tid)
         self.player1 = Player(
             self.p1_player_stats[0],
             self.p1_player_stats[1],
@@ -538,7 +524,7 @@ class Playdata:
         # ゾンビセッションの整理
         name = card_db.getnickname_fromsid(sid)
         while True:
-            record = card_db.getrecord_fromsession("playerstats", "name", name)
+            record = card_db.getplayerstats_byname(name)
             if record is None:
                 break
             player_tid = record[0]

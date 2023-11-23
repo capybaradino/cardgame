@@ -94,7 +94,7 @@ class TestUnitHPChangeMulti(unittest.TestCase):
 
         # card_db.putsession関数をモック化
         # api_common_util.get_self_or_enemyの戻り値をモック化
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy:
             # api_common_util.get_self_or_enemyの戻り値をモック化
@@ -127,7 +127,7 @@ class TestUnitHPChangeMulti(unittest.TestCase):
         objcard2.hp_org = 5  # 仮のhp_org値
         objcard2.dhp = -2  # 仮のdhp値
 
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy, patch(
             "api_common_common._ondead_effect"
@@ -183,7 +183,7 @@ class TestUnitHPChangeMulti(unittest.TestCase):
         objcard2.dhp = 0
         objcard2.status = ["metalbody"]
 
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy:
             # api_common_util.get_self_or_enemyの戻り値をモック化
@@ -231,7 +231,7 @@ class TestUnitHPChange(unittest.TestCase):
 
         # card_db.putsession関数をモック化
         # api_common_util.get_self_or_enemyの戻り値をモック化
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy:
             # api_common_util.get_self_or_enemyの戻り値をモック化
@@ -258,7 +258,7 @@ class TestUnitHPChange(unittest.TestCase):
         objcard2.hp_org = 5  # 仮のhp_org値
         objcard2.dhp = -3  # 仮のdhp値
 
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy, patch(
             "api_common_common._ondead_effect"
@@ -305,7 +305,7 @@ class TestUnitHPChange(unittest.TestCase):
         objcard2.dhp = 0
         objcard2.status = ["metalbody"]
 
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy:
             # api_common_util.get_self_or_enemyの戻り値をモック化
@@ -345,7 +345,7 @@ class TestUnitHPChange(unittest.TestCase):
 
         # card_db.putsession関数をモック化
         # api_common_util.get_self_or_enemyの戻り値をモック化
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putcardtable") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
         ) as mock_get_self_or_enemy, patch(
             "api_common_tension.api_common_tension_objcard"
@@ -419,13 +419,13 @@ class TestLeaderHPChange(unittest.TestCase):
         value = 10  # 減算する値
 
         # cards_db.putsession関数をモック化
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putplayerstats") as mock_putsession:
             # leader_hp_change関数を呼び出す
             leader_hp_change(player, value)
 
             # card_db.putsessionが呼ばれたかチェック
             mock_putsession.assert_called_once_with(
-                "playerstats", "player_tid", 1, "hp", 90  # 期待されるHP値
+                "player_tid", 1, "hp", 90  # 期待されるHP値
             )
 
 
