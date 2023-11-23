@@ -471,6 +471,13 @@ class Playdata:
             self.p2_player_stats[6],
             self.card_table,
         )
+
+        # paramがsurrenderであればゲームを終了する
+        if param == "surrender":
+            self.stat = "lose"
+            self.gameover(sid)
+            return
+
         return
 
     def set_static_status_effect(self, tcid: str, cuid: str):
