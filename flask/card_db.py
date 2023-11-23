@@ -94,6 +94,16 @@ def deletegamesession(gsid):
     return
 
 
+def getallgamesessions():
+    con = sqlite3.connect("session.db")
+    cur = con.cursor()
+    query = "SELECT * FROM gamesession"
+    cur.execute(query)
+    gamesessions = cur.fetchall()
+    con.close()
+    return gamesessions
+
+
 def getgamesessions(key_name, key):
     # key_nameがgsid, p1_player_tid, p2_player_tidであるかどうかを判定
     if key_name not in ["gsid", "p1_player_tid", "p2_player_tid", "card_table"]:
