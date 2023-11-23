@@ -192,7 +192,8 @@ class Playdata:
         # 対戦待ちのゲームがあるか確認
         if self.gsid == "" or gamesession is None and param != "cancel":
             gamesession = card_db.getgamesession("p2_player_tid", "waiting")
-            if gamesession is not None:
+            # gamesessionがある場合、かつparamがnewmatchで無い場合はマッチングする
+            if gamesession is not None and param != "newmatch":
                 p1_player_tid = gamesession[1]
                 record = card_db.getplayerstats_bytid(p1_player_tid)
                 p1_player_name = record[1]
@@ -208,6 +209,7 @@ class Playdata:
                     self.state = gamesession[5]
                     newgame = 0
                     matchinggame = 1
+            # 対戦待ちgamesessionが無い、またはnewmatchの場合は新規ゲームを作成する
             else:
                 newgame = 1
                 matchinggame = 0
