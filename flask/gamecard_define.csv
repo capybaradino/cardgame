@@ -16,3 +16,24 @@
 亡者のひとだま	mouja-ghost	antieffect
 シルビア	silvia	onplay:each_tension+3
 バアルゼブブ	baaru-zebubu	onplay:enemy_3dmg_leader
+かくとうパンサー	kakuto-panther	onplay:self_1drow_bujutsu
+はりせんもぐら	harisen-mole	ondead:self_tension+1
+タイガークロー	tiger-claw	
+せいけん突き	seiken-punch	
+とうこん討ち	tokon-punch	
+まわしげり	mawashi-kick	
+ふくめんバニー	fukumen-bunny	
+ジャガーメイジ	jaguar-mage	
+ムーンキメラ	moon-chimera	
+キラーピッケル	killer-pickel	
+キラーマシン	killer-machine	
+アンルシア	anlucia	
+ハッサン	hassan	
+モリー	molly	
+マルティナ	martina	
+キングレオ	king-leo	
+ネルゲル	nelgel	
+シドー	sydow	
+精神統一	bujutsu_meditation	self_1drow
+飛びげり	bujutsu_jump-kick	switch
+ストレートパンチ	bujutsu_straight-punch	any_1dmg

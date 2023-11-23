@@ -305,6 +305,16 @@ def putdeck(table_name, cuid, loc):
     return
 
 
+def putdeck_locnum(table_name, cuid, loc):
+    con = sqlite3.connect('session.db')
+    cursor = con.cursor()
+    query = f"UPDATE {table_name} SET locnum = ? WHERE cuid = ?"
+    cursor.execute(query, (loc, cuid))
+    con.commit()
+    con.close()
+    return
+
+
 def isexist_cuid(table_name, cuid):
     con = sqlite3.connect('session.db')
     cur = con.cursor()
@@ -457,6 +467,16 @@ def getcardname_fromcid(cid):
     cur = con.cursor()
     cur.execute(
         "select cardname from card_basicdata where cid = '" + cid + "'")
+    cardname = card_fetchone(cur)
+    con.close()
+    return cardname
+
+
+def getcid_fromcardname(cardname):
+    con = sqlite3.connect('game.db')
+    cur = con.cursor()
+    cur.execute(
+        "select cid from card_basicdata where cardname = '" + cardname + "'")
     cardname = card_fetchone(cur)
     con.close()
     return cardname

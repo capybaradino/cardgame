@@ -21,6 +21,7 @@ def get(playview: Play_view):
     player1["MP"] = playview.p1mp
     player1["maxMP"] = playview.p1maxmp
     player1["tension"] = playview.p1tension
+    player1["job"] = playview.p1job
     # テンションカードアクティブ確認
     record = card_db.getrecord_fromsession(
         playview.playdata.card_table, "loc", playview.p1name+"_tension")
@@ -79,6 +80,7 @@ def get(playview: Play_view):
     player2["MP"] = playview.p2mp
     player2["maxMP"] = playview.p2maxmp
     player2["tension"] = playview.p2tension
+    player2["job"] = playview.p2job
     # Player2はハンドの中身は返さない
     player2["handnum"] = playview.p2handnum
     # ボード
