@@ -68,7 +68,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             playview.playdata.card_table, "cuid", objcard1.cuid
         )
         nactive = int(record[6])
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table, "cuid", objcard1.cuid, "active", nactive - 1
         )
     elif re.match(pattern_p2leader, card2):
@@ -92,16 +92,14 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
         # リーダーHP減算
         newhp = playview.p2hp - objcard1.attack
         if playview.playdata.player1.name == playview.p1name:
-            card_db.putsession(
-                "playerstats",
+            card_db.putplayerstats(
                 "player_tid",
                 playview.playdata.p2_player_tid,
                 "hp",
                 newhp,
             )
         else:
-            card_db.putsession(
-                "playerstats",
+            card_db.putplayerstats(
                 "player_tid",
                 playview.playdata.p1_player_tid,
                 "hp",
@@ -112,7 +110,7 @@ def api_unit_attack(sid, playview: Play_view, card1, card2):
             playview.playdata.card_table, "cuid", objcard1.cuid
         )
         nactive = int(record[6])
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table, "cuid", objcard1.cuid, "active", nactive - 1
         )
         if newhp <= 0:
@@ -141,7 +139,7 @@ def api_onattack(sid, playview: Play_view, objcard1: Card_info, ifleader=False):
     objcard1.refresh()
     status = objcard1.status
     status = status.replace(",stealth", "")
-    card_db.putsession(
+    card_db.putcardtable(
         playview.playdata.card_table, "cuid", objcard1.cuid, "status", status
     )
 

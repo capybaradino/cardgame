@@ -44,7 +44,7 @@ class TestAPIUnitAttack(unittest.TestCase):
         ) as mock_getrecord_fromsession, patch(
             "card_db.appendlog"
         ) as mock_appendlog, patch(
-            "card_db.putsession"
+            "card_db.putcardtable"
         ) as mock_putsession, patch(
             "api_attack.api_onattack"
         ) as mock_api_onattack, patch(
@@ -142,7 +142,7 @@ class TestAPIUnitAttack(unittest.TestCase):
 
     def test_api_unit_attack_with_leader(self):
         self.card2 = self.pattern_p2leader
-        with patch("card_db.putsession") as mock_putsession, patch(
+        with patch("card_db.putplayerstats") as mock_putsession, patch(
             "api_attack.api_onattack"
         ) as mock_api_onattack:
             mock_api_onattack.return_value = "OK", 200
@@ -154,7 +154,6 @@ class TestAPIUnitAttack(unittest.TestCase):
             self.assertEqual(result, {"info": "OK"})
             self.assertEqual(status_code, 200)
             mock_putsession.assert_any_call(
-                "playerstats",
                 "player_tid",
                 self.playview.playdata.p2_player_tid,
                 "hp",
@@ -194,7 +193,7 @@ class TestAPIOnAttack(unittest.TestCase):
         card_db.getrecord_fromsession = Mock()
         card_db.getrecord_fromsession.return_value = [0, 0, 0, 0, 0, 0, 1, 0]
         card_db.appendlog = Mock()
-        card_db.putsession = Mock()
+        card_db.putcardtable = Mock()
         api_common_util.get_self_or_enemy = Mock()
         api_common_util.get_self_or_enemy.return_value = [
             Mock(),
@@ -241,7 +240,7 @@ class TestAPIOnAttack(unittest.TestCase):
         # ステルス解除
         self.objcard1.status = ",stealth"
         api_onattack(self.sid, self.playview, self.objcard1)
-        card_db.putsession.assert_called_once_with(
+        card_db.putcardtable.assert_called_once_with(
             self.playview.playdata.card_table, "cuid", self.objcard1.cuid, "status", ""
         )
 
