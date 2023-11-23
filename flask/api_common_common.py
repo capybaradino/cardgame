@@ -522,7 +522,7 @@ def _unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value, mode):
             value = 1
     if mode == "hponly" or mode == "all":
         objcard2.dhp = objcard2.dhp - value
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table, "cuid", objcard2.cuid, "dhp", objcard2.dhp
         )
     else:
@@ -534,7 +534,7 @@ def _unit_hp_change(sid, playview: Play_view, objcard2: Card_info, value, mode):
             player_self,
             player_enemy,
         ) = api_common_util.get_self_or_enemy(playview, objcard2)
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table,
             "cuid",
             objcard2.cuid,
@@ -567,5 +567,5 @@ def leader_hp_change(player: Player, value):
     """
     # リーダーHP減算
     newhp = player.hp - value
-    card_db.putsession("playerstats", "player_tid", player.player_tid, "hp", newhp)
+    card_db.putplayerstats("player_tid", player.player_tid, "hp", newhp)
     return

@@ -38,7 +38,7 @@ def card_turnend(sid, state, nickname):
                     sid, playview, effect, objcard2, None, None, True
                 )
         # 効果の削除
-        card_db.putsession(
+        card_db.putcardtable(
             playview.playdata.card_table,
             "cuid",
             objcard2.cuid,

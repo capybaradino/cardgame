@@ -53,7 +53,7 @@ class TestCardTurnend(unittest.TestCase):
     # p1ターン終了時のテスト
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_p1turn(self):
@@ -78,7 +78,7 @@ class TestCardTurnend(unittest.TestCase):
     # p1ターン終了時のテスト(条件が自ユニットだけの場合)
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_p1turn(self):
@@ -103,7 +103,7 @@ class TestCardTurnend(unittest.TestCase):
     # p2ターン終了時のテスト(ユニット数、片方４体の場合)
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_p2turn(self):
@@ -124,7 +124,7 @@ class TestCardTurnend(unittest.TestCase):
     # 無効なstateのテスト
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_invalid_state(self):
@@ -135,7 +135,7 @@ class TestCardTurnend(unittest.TestCase):
     # ボードテーブルにエフェクトを持つカードがいない場合のテスト
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_no_effect(self):
@@ -152,7 +152,7 @@ class TestCardTurnend(unittest.TestCase):
     # 無効なキーワードを持つカードがいる場合のテスト
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_unknown_keyword(self):
@@ -169,7 +169,7 @@ class TestCardTurnend(unittest.TestCase):
     # エフェクトを複数持つカードがいる場合のテスト
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_multiple_effects(self):
@@ -195,7 +195,7 @@ class TestCardTurnend(unittest.TestCase):
     # attack値変更のテスト
     @patch("card_turnend.Playdata", mock_playdata)
     @patch("card_turnend.Play_view", mock_playview)
-    @patch("card_db.putsession", mock_putsession)
+    @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
     def test_card_turnend_with_attack_effect(self):
@@ -207,7 +207,7 @@ class TestCardTurnend(unittest.TestCase):
         ]
         card_turnend(self.sid, self.state, self.nickname)
         self.assertEqual(
-            card_db.putsession.call_args_list[0][0][4],
+            card_db.putcardtable.call_args_list[0][0][4],
             self.playview.p1board[0].dattack - 2,
         )
         self.playview.p1.draw_card.assert_not_called()
