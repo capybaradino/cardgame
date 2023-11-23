@@ -202,6 +202,8 @@ class TestAPIOnAttack(unittest.TestCase):
             self.playview.p2player,
         ]
 
+    mock_cardcommon_judge = Mock()
+
     def test_api_onattack_with_attack_subeffect(self):
         with patch(
             "api_common_status.api_common_attack_card"
@@ -212,6 +214,7 @@ class TestAPIOnAttack(unittest.TestCase):
                 self.sid, self.playview, "self_attack+1", self.objcard1
             )
 
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_api_onattack_with_draw_subeffect_and_enemy(self):
         # 敵に1ドロー
         self.objcard1.effect = "onattack:enemy_1draw_any"

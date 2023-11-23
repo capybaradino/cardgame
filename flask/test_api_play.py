@@ -18,7 +18,6 @@ class TestAPIPlay(unittest.TestCase):
         playview.p1name = "p1"
         playview.p1hp = 10
         playview.p2hp = 10
-        playview.playdata.gameover = Mock()
         card1 = "card_0"
         card2 = "leftboard_3"
         card3 = ""
@@ -29,7 +28,9 @@ class TestAPIPlay(unittest.TestCase):
             "card_db.putcardtable"
         ) as mock_putsession, patch(
             "card_db.putplayerstats"
-        ) as mock_putplayerstats:
+        ) as mock_putplayerstats, patch(
+            "card_common.judge"
+        ) as mock_cardcommon_judge:
             mock_apply_effect.return_value = ("OK", 200)
 
             # Test case 1: Test with valid input
@@ -144,10 +145,12 @@ class TestAPIPlay(unittest.TestCase):
             card2 = "leftboard_3"
             card3 = ""
 
-            with patch("card_db.appendlog"), patch("card_db.putcardtable"):
+            with patch("card_db.appendlog"), patch("card_db.putcardtable"), patch(
+                "card_common.judge"
+            ) as mock_cardcommon_judge:
                 result = api_play_hand(sid, playview, card1, card2, card3)
                 self.assertEqual(result, {"info": "OK"})
-                playview.playdata.gameover.assert_called_once()
+                mock_cardcommon_judge.assert_called_once()
 
             # Test case 8: Test with player 2 HP <= 0
             sid = 1
@@ -164,10 +167,12 @@ class TestAPIPlay(unittest.TestCase):
             card2 = "leftboard_3"
             card3 = ""
 
-            with patch("card_db.appendlog"), patch("card_db.putcardtable"):
+            with patch("card_db.appendlog"), patch("card_db.putcardtable"), patch(
+                "card_common.judge"
+            ) as mock_cardcommon_judge:
                 result = api_play_hand(sid, playview, card1, card2, card3)
                 self.assertEqual(result, {"info": "OK"})
-                playview.playdata.gamewin.assert_called_once()
+                mock_cardcommon_judge.assert_called_once()
 
             # Test case 9: Test with illegal card2
             sid = 1

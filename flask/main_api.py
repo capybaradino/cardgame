@@ -32,6 +32,11 @@ def _getstatus(gsid, sid):
             return {"status": "matching"}, 200
         return {"status": "playing"}, 200
 
+def _isUUID(gsid):
+    if re.match(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-"
+                r"[0-9a-f]{4}-[0-9a-f]{12}", gsid) is None:
+        return False
+    return True
 
 @api.route("/system/<sid>/<command>")
 class Card_system(Resource):
@@ -42,7 +47,7 @@ class Card_system(Resource):
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if gsid == "":
+        if _isUUID(gsid) is False:
             if command == "newgame":
                 stat = api_system.newgame(sid)
                 return {"info": stat}, 200
@@ -68,6 +73,8 @@ class Card_system(Resource):
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
+        if _isUUID(gsid) is False:
+            return {"error": "gamesession not exist"}, 403
         if command == "status":
             return _getstatus(gsid, sid)
         elif command == "result":
@@ -171,7 +178,7 @@ class Card_view(Resource):
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if gsid == "":
+        if _isUUID(gsid) is False:
             return {"error": "gamesession is null"}, 403
         playview = Play_view(sid)
 
@@ -202,7 +209,8 @@ class Card_play(Resource):
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if gsid == "":
+        # gsidがUUIDでなければエラー
+        if _isUUID(gsid) is False:
             return {"error": "gamesession is null"}
         playview = Play_view(sid)
 
@@ -252,7 +260,7 @@ class Card_play2(Resource):
 
         # 既存ゲームがあるか確認
         gsid = card_db.getgsid_fromsid(sid)
-        if gsid == "":
+        if _isUUID(gsid) is False:
             return {"error": "gamesession is null"}
         playview = Play_view(sid)
 

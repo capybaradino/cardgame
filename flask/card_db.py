@@ -140,6 +140,7 @@ def putplayerstats(key_name, key, column, value):
         "maxmp",
         "tension",
         "skillboost",
+        "fatigue",
     ]:
         # job, hp, mp, maxmp, tension, skillboostでない場合はエラー
         raise ValueError("column must be job, hp, mp, maxmp, tension, skillboost")
@@ -311,7 +312,9 @@ def postgamesession(
     return
 
 
-def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension, skillboost=0):
+def postplayerstats(
+    player_tid, name, job, hp, mp, maxmp, tension, skillboost=0, fatigue=0
+):
     con = sqlite3.connect("session.db")
     cur = con.cursor()
     cur.execute(
@@ -325,7 +328,7 @@ def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension, skillboost=0)
             maxmp,
             tension,
             skillboost,
-            "",
+            fatigue,
             "",
             "",
             "",
