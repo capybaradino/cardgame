@@ -59,9 +59,11 @@ class TestAPIUnitAttack(unittest.TestCase):
             )
             self.assertEqual(result, {"info": "OK"})
             self.assertEqual(status_code, 200)
-            mock_getrecord_fromsession.assert_called_once_with(
+            mock_getrecord_fromsession.assert_any_call(
                 self.playview.playdata.card_table, "cuid", self.objcard1.cuid
             )
+            # モックが2回呼ばれていることを確認
+            self.assertEqual(mock_getrecord_fromsession.call_count, 2)
             mock_appendlog.assert_any_call(
                 self.playview.playdata.card_table,
                 "[" + self.playview.p1name + "]attack:" + self.objcard1.name,
@@ -158,7 +160,9 @@ class TestAPIUnitAttack(unittest.TestCase):
                 "hp",
                 7,
             )
-            mock_api_onattack.assert_called_with(self.sid, self.playview, self.objcard1)
+            mock_api_onattack.assert_called_with(
+                self.sid, self.playview, self.objcard1, ifleader=True
+            )
 
 
 class TestAPIOnAttack(unittest.TestCase):
@@ -195,7 +199,7 @@ class TestAPIOnAttack(unittest.TestCase):
         api_common_util.get_self_or_enemy.return_value = [
             Mock(),
             Mock(),
-            Mock(),
+            self.playview.p1player,
             self.playview.p2player,
         ]
 
@@ -209,17 +213,29 @@ class TestAPIOnAttack(unittest.TestCase):
                 self.sid, self.playview, "self_attack+1", self.objcard1
             )
 
-    def test_api_onattack_with_drow_subeffect_and_enemy(self):
+    def test_api_onattack_with_draw_subeffect_and_enemy(self):
         # 敵に1ドロー
-        self.objcard1.effect = "onattack:enemy_1drow_any"
+        self.objcard1.effect = "onattack:enemy_1draw_any"
         api_onattack(self.sid, self.playview, self.objcard1)
         self.assertEqual(self.playview.p2player.draw_card.call_count, 1)
 
-    # def test_api_onattack_with_drow_subeffect_and_self(self):
+    # def test_api_onattack_with_draw_subeffect_and_self(self):
     #     # 自分に1ドロー
-    #     self.objcard1.effect = "onattack:self_1drow"
+    #     self.objcard1.effect = "onattack:self_1draw"
     #     api_onattack(self.sid, self.playview, self.objcard1)
     #     self.assertEqual(self.playview.p1player.draw_card.call_count, 1)
+
+    def test_api_onattack_leader_draw_bujutsu(self):
+        # 攻撃対象が敵リーダーだった場合、武術カードを1ドロー
+        self.objcard1.effect = "onattack_leader:self_1draw_bujutsu"
+        api_onattack(self.sid, self.playview, self.objcard1, ifleader=True)
+        self.assertEqual(self.playview.p1player.draw_bujutsucard.call_count, 1)
+
+    def test_api_onattack_leader_draw_bujutsu(self):
+        # 攻撃対象が敵リーダーじゃなかった場合、武術カードを1ドローしない
+        self.objcard1.effect = "onattack_leader:self_1draw_bujutsu"
+        api_onattack(self.sid, self.playview, self.objcard1)
+        self.assertEqual(self.playview.p1player.draw_bujutsucard.call_count, 0)
 
     def test_api_onattack_with_stealth_status(self):
         # ステルス解除

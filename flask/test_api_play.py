@@ -24,11 +24,11 @@ class TestAPIPlay(unittest.TestCase):
         card3 = ""
 
         with patch("api_play.Play_view") as mock_playview, patch(
-            "api_play.onplay_effect"
-        ) as mock_onplay_effect, patch("card_db.appendlog") as mock_appendlog, patch(
+            "api_common_common.apply_effect"
+        ) as mock_apply_effect, patch("card_db.appendlog") as mock_appendlog, patch(
             "card_db.putsession"
         ) as mock_putsession:
-            mock_onplay_effect.return_value = ("OK", 200)
+            mock_apply_effect.return_value = ("OK", 200)
 
             # Test case 1: Test with valid input
             mock_playview.return_value = playview
@@ -104,9 +104,9 @@ class TestAPIPlay(unittest.TestCase):
             card1 = "card_0"
             card2 = "leftboard_3"
             card3 = ""
-            onplay_effect = MagicMock(return_value=("error", 403))
+            apply_effect = MagicMock(return_value=("error", 403))
 
-            with patch("api_play.onplay_effect", onplay_effect):
+            with patch("api_common_common.apply_effect", apply_effect):
                 result = api_play_hand(sid, playview, card1, card2, card3)
                 self.assertEqual(result, ("error", 403))
 
@@ -123,9 +123,9 @@ class TestAPIPlay(unittest.TestCase):
             card1 = "card_0"
             card2 = "leftboard_3"
             card3 = ""
-            onplay_effect = MagicMock(return_value=("OK", 200))
+            apply_effect = MagicMock(return_value=("OK", 200))
 
-            with patch("api_play.onplay_effect", onplay_effect):
+            with patch("api_common_common.apply_effect", apply_effect):
                 result = api_play_hand(sid, playview, card1, card2, card3)
                 self.assertEqual(result, {"info": "OK"})
 

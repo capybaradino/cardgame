@@ -33,6 +33,15 @@ class Player:
             "playerstats", "player_tid", self.player_tid, "maxmp", self.maxmp
         )
         card_db.putsession(self.card_table, "loc", self.name + "_board", "active", 1)
+        # statusにattack_twiceがある場合はactiveを2にする
+        records = card_db.getrecords_fromsession(
+            self.card_table, "loc", self.name + "_board"
+        )
+        for record in records:
+            cuid = record[2]
+            status = record[9]
+            if "attack_twice" in status:
+                card_db.putsession(self.card_table, "cuid", cuid, "active", 2)
         card_db.putsession(self.card_table, "loc", self.name + "_tension", "active", 1)
         return
 
@@ -81,7 +90,14 @@ class Player:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5])
+                Card_info(
+                    record[0],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5],
+                    self.card_table,
+                )
             )
         return cards
 
@@ -105,7 +121,14 @@ class Field:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5])
+                Card_info(
+                    record[0],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5],
+                    self.card_table,
+                )
             )
         return cards
 
@@ -114,7 +137,14 @@ class Field:
         cards: Card_info = []
         for record in records:
             cards.append(
-                Card_info(record[0], record[2], record[3], record[4], record[5])
+                Card_info(
+                    record[0],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5],
+                    self.card_table,
+                )
             )
         return cards
 
@@ -314,13 +344,14 @@ class Playdata:
             else:
                 playername = self.player2.name
 
-            # デバッグ用：任意のカードをデッキトップに配置
+            # デバッグ用：任意のカードをデッキトップに配置(matchinggameの場合のみ)
+            if newgame:
+                keystr = "p1_topcard"
+            else:
+                keystr = "p2_topcard"
             i = 0
             while i < 3:
-                if i == 0:
-                    key = "topcard"
-                else:
-                    key = "topcard" + str(i)
+                key = keystr + str(i)
                 ret = debug.getdebugparam(key)
                 if ret is not None and ret != "":
                     record = card_db.getrecord_fromgame(
@@ -332,6 +363,7 @@ class Playdata:
                     self.set_static_turnend_effect(tcid, cuid)
                 i = i + 1
 
+            # デッキ登録
             cids = card_db.getcids_fromdeck(deck_name)
             num_cids = len(cids)
             if num_cids != 30:
@@ -442,9 +474,15 @@ class Playdata:
         return
 
     def set_static_status_effect(self, tcid: str, cuid: str):
-        card = Card_info(tcid, "", 0, 0, 0)
+        card = Card_info(tcid, cuid, 0, 0, 0, self.card_table)
         effect_array = card.effect.split(",")
-        static_effect_list = ["stealth", "metalbody", "antieffect"]
+        static_effect_list = [
+            "stealth",
+            "metalbody",
+            "antieffect",
+            "attack_twice",
+            "fortress",
+        ]
         for effect in effect_array:
             for static_effect in static_effect_list:
                 if static_effect in effect:
@@ -454,7 +492,7 @@ class Playdata:
         return
 
     def set_static_turnend_effect(self, tcid: str, cuid: str):
-        card = Card_info(tcid, "", 0, 0, 0)
+        card = Card_info(tcid, cuid, 0, 0, 0, self.card_table)
         effect_array = card.effect.split(",")
         for effect in effect_array:
             if "onturnend" in effect:

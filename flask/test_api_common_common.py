@@ -1,4 +1,3 @@
-import random
 import unittest
 from unittest.mock import Mock, patch
 
@@ -9,124 +8,9 @@ from api_common_common import (
     api_common_dmg,
     api_common_dmg_leader,
     leader_hp_change,
-    onplay_effect,
     unit_hp_change,
     unit_hp_change_multi,
 )
-
-
-class TestOnplayEffect(unittest.TestCase):
-    @patch("api_common_util.getobjcard")
-    @patch("api_common_common.api_common_dmg")
-    @patch("api_common_common.api_common_dmg_leader")
-    @patch("api_common_status.api_common_attack")
-    @patch("api_common_status.api_common_active")
-    @patch("api_common_tension.api_common_tension")
-    @patch("api_common_util.get_self_or_enemy")
-    def test_onplay_effect(
-        self,
-        mock_api_common_get_self_or_enemy,
-        mock_api_common_tension,
-        mock_api_common_active,
-        mock_api_common_attack,
-        mock_api_common_dmg_leader,
-        mock_api_common_dmg,
-        mock_getobjcard,
-    ):
-        # Mockオブジェクトの設定
-        objcard3 = Mock()
-        objcard3.status = "test_status"
-        mock_getobjcard.return_value = objcard3
-        mock_api_common_dmg.return_value = ("OK", 200)
-        mock_api_common_dmg_leader.return_value = ("OK", 200)
-        mock_api_common_active.return_value = ("OK", 200)
-        mock_api_common_attack.return_value = ("OK", 200)
-        mock_api_common_tension.return_value = ("OK", 200)
-        mock_api_common_get_self_or_enemy.return_value = [
-            Mock(),
-            Mock(),
-            Mock(),
-            Mock(),
-        ]
-
-        # テスト対象の関数を呼び出す
-        sid = "test_sid"
-        playview = Mock()  # Play_viewのMockオブジェクト
-        playview.p1 = Mock()
-        playview.p1.draw_bujutsucard = Mock()
-        playview.p1.draw_card_spell = Mock()
-        playview.p1.draw_card = Mock()
-        card2 = "test_card2"
-        card3 = "rightboard_3"
-        isRun = True
-
-        # draw_bujutsuのテスト
-        effect = "self_1drow_bujutsu"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        playview.p1.draw_bujutsucard.assert_called_once()
-
-        # draw_card_spellのテスト
-        effect = "self_1drow_spell"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        playview.p1.draw_card_spell.assert_called_once()
-
-        # dmgのテスト
-        effect = "any_5dmg"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        mock_api_common_dmg.assert_called_once()
-
-        # dmgのテスト(対象が敵リーダー)
-        effect = "enemy_5dmg"
-        card3 = "rightboard_10"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        mock_api_common_dmg_leader.assert_called_once()
-
-        # attackのテスト
-        effect = "unit_attack+2_thisturn"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        mock_api_common_attack.assert_called_once()
-
-        # tensionのテスト
-        effect = "tension+2"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        mock_api_common_tension.assert_called_once()
-
-        # activeのテスト
-        effect = "active"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        mock_api_common_active.assert_called_once()
-
-        # 前回のテストで呼び出されたMockオブジェクトをリセット
-        mock_api_common_dmg_leader.reset_mock()
-        # dmgのテスト(対象が敵リーダー限定)
-        effect = "enemy_3dmg_leader"
-        card3 = "test_card3"
-        result = onplay_effect(sid, playview, effect, card2, card3, isRun)
-        # 戻り値の確認
-        self.assertEqual(result, ("OK", 200))
-        # Mockオブジェクトが期待通りに呼び出されたことを確認
-        mock_api_common_dmg_leader.assert_called_once()
 
 
 class TestApiCommonDmg(unittest.TestCase):
@@ -135,7 +19,7 @@ class TestApiCommonDmg(unittest.TestCase):
     def test_api_common_dmg(self, mock_unit_hp_change, mock_search):
         # Mockオブジェクトの設定
         mock_search.return_value.group.side_effect = ["target", "10"]
-        mock_unit_hp_change.return_value = None
+        mock_unit_hp_change.return_value = 10
         # card_db.appendlog関数をモック化
         card_db.appendlog = Mock()
 
@@ -359,7 +243,7 @@ class TestUnitHPChange(unittest.TestCase):
             unit_hp_change(sid, playview, objcard2, value)
 
             # objcard2のrefreshメソッドが呼ばれたことを確認
-            objcard2.refresh.assert_called_once_with(playview.playdata.card_table)
+            objcard2.refresh.assert_called_once_with()
 
             # card_db.putsessionが呼ばれたかチェック
             mock_putsession.assert_called_once_with(
@@ -463,12 +347,14 @@ class TestUnitHPChange(unittest.TestCase):
         # api_common_util.get_self_or_enemyの戻り値をモック化
         with patch("card_db.putsession") as mock_putsession, patch(
             "api_common_util.get_self_or_enemy"
-        ) as mock_get_self_or_enemy:
+        ) as mock_get_self_or_enemy, patch(
+            "api_common_tension.api_common_tension_objcard"
+        ) as mock_tension_objcard:
             # api_common_util.get_self_or_enemyの戻り値をモック化
             player_self = Mock()
             player_self.name = "player_self"
             card = Mock()
-            card.hp = 5
+            card.hp_org = 5
             card.dhp = 0
             card.name = "test_name"
             player_enemy = Mock()
@@ -482,42 +368,41 @@ class TestUnitHPChange(unittest.TestCase):
 
             # tensionのテスト
             objcard2.effect = "ondead:self_tension+1"
-            api_common_tension.api_common_tension_objcard = Mock(
-                return_value=("OK", 200)
-            )
+            mock_tension_objcard.return_value = ("OK", 200)
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)
             # Mockオブジェクトが期待通りに呼び出されたことを確認
-            api_common_tension.api_common_tension_objcard.assert_called_once()
+            mock_tension_objcard.assert_called_once()
 
-            # dmgのテスト(対象がユニット)
-            objcard2.effect = "ondead:enemy_1dmg_random"
-            api_common_common.unit_hp_change = Mock(return_value=("OK", 200))
-            random.randrange = Mock(return_value=0)
-            # unit_hp_change関数を呼び出す
-            unit_hp_change(sid, playview, objcard2, value)
-            # Mockオブジェクトが期待通りに呼び出されたことを確認
-            api_common_common.unit_hp_change.assert_called_once()
+            with patch("random.randrange") as mock_randrange:
+                # dmgのテスト(対象がユニット)
+                objcard2.effect = "ondead:enemy_1dmg_random"
+                api_common_common.unit_hp_change = Mock(return_value=("OK", 200))
+                mock_randrange.return_value = 0
+                # unit_hp_change関数を呼び出す
+                unit_hp_change(sid, playview, objcard2, value)
+                # Mockオブジェクトが期待通りに呼び出されたことを確認
+                api_common_common.unit_hp_change.assert_called_once()
 
-            # dmgのテスト(対象がリーダー)
-            objcard2.effect = "ondead:enemy_1dmg_random"
-            api_common_common.leader_hp_change = Mock(return_value=("OK", 200))
-            random.randrange = Mock(return_value=1)
-            # unit_hp_change関数を呼び出す
-            unit_hp_change(sid, playview, objcard2, value)
-            # Mockオブジェクトが期待通りに呼び出されたことを確認
-            api_common_common.leader_hp_change.assert_called_once()
+                # dmgのテスト(対象がリーダー)
+                objcard2.effect = "ondead:enemy_1dmg_random"
+                api_common_common.leader_hp_change = Mock(return_value=("OK", 200))
+                mock_randrange.return_value = 1
+                # unit_hp_change関数を呼び出す
+                unit_hp_change(sid, playview, objcard2, value)
+                # Mockオブジェクトが期待通りに呼び出されたことを確認
+                api_common_common.leader_hp_change.assert_called_once()
 
-            # drowのテスト(対象が自リーダー)
-            objcard2.effect = "ondead:self_1drow_spell"
+            # drawのテスト(対象が自リーダー)
+            objcard2.effect = "ondead:self_1draw_spell"
             player_self.draw_card_spell = Mock()
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)
             # Mockオブジェクトが期待通りに呼び出されたことを確認
             player_self.draw_card_spell.assert_called_once()
 
-            # drowのテスト(対象が敵リーダー)
-            objcard2.effect = "ondead:enemy_1drow_any"
+            # drawのテスト(対象が敵リーダー)
+            objcard2.effect = "ondead:enemy_1draw_any"
             player_enemy.draw_card = Mock()
             # unit_hp_change関数を呼び出す
             unit_hp_change(sid, playview, objcard2, value)
