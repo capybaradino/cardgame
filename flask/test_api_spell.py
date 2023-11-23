@@ -70,7 +70,7 @@ class TestAPISpell(unittest.TestCase):
             playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
-            card_db.putsession = MagicMock()
+            card_db.putplayerstats = MagicMock()
             self.objcard.effect = "self_1draw"
             result, status_code = api_spell(
                 self.sid, self.playview, self.card1, self.card2
@@ -78,10 +78,10 @@ class TestAPISpell(unittest.TestCase):
             self.assertEqual(result, {"info": "OK"})
             self.assertEqual(status_code, 200)
             self.player_self.draw_card.assert_called_once()
-            card_db.putsession.assert_any_call(
-                "playerstats", "name", self.playview.p1name, "mp", 2
+            card_db.putplayerstats.assert_any_call(
+                "name", self.playview.p1name, "mp", 2
             )
-            card_db.putsession.assert_any_call(
+            card_db.putcardtable.assert_any_call(
                 self.playview.playdata.card_table,
                 "cuid",
                 self.objcard.cuid,
@@ -103,7 +103,8 @@ class TestAPISpell(unittest.TestCase):
                 return_value=(self.objcard3, 2, 1)
             )
             card_db.putdeck_locnum = MagicMock()
-            card_db.putsession = MagicMock()
+            card_db.putcardtable = MagicMock()
+            card_db.putplayerstats = MagicMock()
             self.objcard.effect = "switch"
             result, status_code = api_spell(
                 self.sid, self.playview, self.card1, self.card2
@@ -119,10 +120,10 @@ class TestAPISpell(unittest.TestCase):
             card_db.putdeck_locnum.assert_any_call(
                 self.playview.playdata.card_table, self.objcard3.cuid, 2
             )
-            card_db.putsession.assert_any_call(
-                "playerstats", "name", self.playview.p1name, "mp", 2
+            card_db.putplayerstats.assert_any_call(
+                "name", self.playview.p1name, "mp", 2
             )
-            card_db.putsession.assert_any_call(
+            card_db.putcardtable.assert_any_call(
                 self.playview.playdata.card_table,
                 "cuid",
                 self.objcard.cuid,
@@ -139,7 +140,8 @@ class TestAPISpell(unittest.TestCase):
             playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
-            card_db.putsession = MagicMock()
+            card_db.putcardtable = MagicMock()
+            card_db.putplayerstats = MagicMock()
             api_common_common.unit_hp_change = MagicMock(return_value=3)
             self.objcard.effect = "any_3dmg"
             result, status_code = api_spell(
@@ -150,10 +152,10 @@ class TestAPISpell(unittest.TestCase):
             api_common_common.unit_hp_change.assert_called_once_with(
                 self.sid, self.playview, self.objcard1, 3
             )
-            card_db.putsession.assert_any_call(
-                "playerstats", "name", self.playview.p1name, "mp", 2
+            card_db.putplayerstats.assert_any_call(
+                "name", self.playview.p1name, "mp", 2
             )
-            card_db.putsession.assert_any_call(
+            card_db.putcardtable.assert_any_call(
                 self.playview.playdata.card_table,
                 "cuid",
                 self.objcard.cuid,
@@ -170,7 +172,8 @@ class TestAPISpell(unittest.TestCase):
             playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
-            card_db.putsession = MagicMock()
+            card_db.putcardtable = MagicMock()
+            card_db.putplayerstats = MagicMock()
             api_common_common.unit_hp_change = MagicMock(return_value=1)
             self.objcard.effect = "unit_1dmg_3times"
             result, status_code = api_spell(
@@ -185,10 +188,10 @@ class TestAPISpell(unittest.TestCase):
             api_common_common.unit_hp_change.assert_any_call(
                 self.sid, self.playview, self.objcard1, 1
             )
-            card_db.putsession.assert_any_call(
-                "playerstats", "name", self.playview.p1name, "mp", 2
+            card_db.putplayerstats.assert_any_call(
+                "name", self.playview.p1name, "mp", 2
             )
-            card_db.putsession.assert_any_call(
+            card_db.putcardtable.assert_any_call(
                 self.playview.playdata.card_table,
                 "cuid",
                 self.objcard.cuid,
@@ -203,7 +206,8 @@ class TestAPISpell(unittest.TestCase):
             playview_end.p1board = [None, None, None, None, None, None]
             play_view_mock.return_value = playview_end
             api_common_util.getobjcard = MagicMock(return_value=self.objcard1)
-            card_db.putsession = MagicMock()
+            card_db.putcardtable = MagicMock()
+            card_db.putplayerstats = MagicMock()
             api_common_common.unit_hp_change = MagicMock(return_value=0)
             self.objcard.effect = "unit_1dmg_3times"
             result, status_code = api_spell(
@@ -218,10 +222,10 @@ class TestAPISpell(unittest.TestCase):
             api_common_common.unit_hp_change.assert_any_call(
                 self.sid, self.playview, self.objcard1, 1
             )
-            card_db.putsession.assert_any_call(
-                "playerstats", "name", self.playview.p1name, "mp", 2
+            card_db.putplayerstats.assert_any_call(
+                "name", self.playview.p1name, "mp", 2
             )
-            card_db.putsession.assert_any_call(
+            card_db.putcardtable.assert_any_call(
                 self.playview.playdata.card_table,
                 "cuid",
                 self.objcard.cuid,
@@ -274,7 +278,7 @@ class TestAPISpell(unittest.TestCase):
             objcard_onspell.effect = "onspell_self:self_tension+1,skillboost+2+2"
             playview_end.p1board = [None, None, None, None, objcard_onspell, None]
             play_view_mock.return_value = playview_end
-            card_db.putsession = MagicMock()
+            card_db.putcardtable = MagicMock()
             api_common_common.unit_hp_change = MagicMock(return_value=3)
             mock_api_common_tension_objcard.return_value = ("OK", 200)
             result, status_code = api_spell(

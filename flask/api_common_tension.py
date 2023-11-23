@@ -34,8 +34,7 @@ def api_common_tension_objcard(
             if newvalue > 3:
                 newvalue = 3
             if isRun:
-                card_db.putsession(
-                    "playerstats",
+                card_db.putplayerstats(
                     "player_tid",
                     player_self.player_tid,
                     "tension",
@@ -46,8 +45,7 @@ def api_common_tension_objcard(
             if newvalue > 3:
                 newvalue = 3
             if isRun:
-                card_db.putsession(
-                    "playerstats",
+                card_db.putplayerstats(
                     "player_tid",
                     player_enemy.player_tid,
                     "tension",

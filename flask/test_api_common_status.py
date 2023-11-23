@@ -24,10 +24,10 @@ class TestAPICommonActive(unittest.TestCase):
         api_common_util.get_self_or_enemy = MagicMock(
             return_value=[None, None, None, None]
         )
-        card_db.putsession = MagicMock()
+        card_db.putcardtable = MagicMock()
 
         # 事前チェックは不要の場合のテスト
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_active(sid, playview, effect, card2, False)
             self.assertEqual(result, "OK")
             self.assertEqual(status_code, 200)
@@ -38,7 +38,7 @@ class TestAPICommonActive(unittest.TestCase):
 
         # 自分自身をactive化するパターン
         effect = "onplay:self_active"
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_active(sid, playview, effect, card2, isRun)
             self.assertEqual(result, "OK")
             self.assertEqual(status_code, 200)
@@ -59,7 +59,7 @@ class TestAPICommonActive(unittest.TestCase):
         objcard2 = Mock()
         objcard2.dattack = 3
 
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_attack_card(
                 sid, playview, effect, objcard2
             )
@@ -89,7 +89,7 @@ class TestAPICommonActive(unittest.TestCase):
             return_value=[0, 0, 0, 0, 0, 0, 0, 0, "test"]
         )
 
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_attack_card(
                 sid, playview, effect, objcard2
             )
@@ -118,7 +118,7 @@ class TestAPICommonActive(unittest.TestCase):
             return_value=[None, None, player_self, None]
         )
 
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_attack_card(
                 sid, playview, effect, objcard2
             )
@@ -143,7 +143,7 @@ class TestAPICommonActive(unittest.TestCase):
         objcard2.attack = 4
         objcard2.dattack = 3
 
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_attack_card(
                 sid, playview, effect, objcard2
             )
@@ -165,7 +165,7 @@ class TestAPICommonActive(unittest.TestCase):
         effect = "unit_attack+2"
         card2 = "leftboard_3"
 
-        with patch("card_db.putsession") as mock_putsession:
+        with patch("card_db.putcardtable") as mock_putsession:
             result, status_code = api_common_attack(sid, playview, effect, card2, True)
             self.assertEqual(result, "OK")
             self.assertEqual(status_code, 200)
