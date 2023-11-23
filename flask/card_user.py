@@ -60,11 +60,6 @@ def card_getgrant(uid):
     return card_db.getgrant_fromuid(uid)
 
 
-def card_getgrant_fromsid(sid):
-    uid = card_db.getuid_fromsid(sid)
-    return card_db.getgrant_fromuid(uid)
-
-
 def card_auth(email):
     username = None
     username = card_db.getnickname_fromemail(email)
