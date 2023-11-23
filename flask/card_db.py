@@ -340,6 +340,15 @@ def postplayerstats(player_tid, name, job, hp, mp, maxmp, tension, skillboost=0)
     return
 
 
+def getallplayerstats():
+    con = sqlite3.connect("session.db")
+    cur = con.cursor()
+    cur.execute("select * from playerstats")
+    playerstats = cur.fetchall()
+    con.close()
+    return playerstats
+
+
 def getplayerstats_bytid(player_tid):
     con = sqlite3.connect("session.db")
     cur = con.cursor()
