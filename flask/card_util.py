@@ -4,6 +4,62 @@ from datetime import datetime
 import card_db
 
 
+def cleanupPlayerstats():
+    # playerstats上のname重複ありの場合の処理
+    maxcnt = 10
+    i = 0
+    while i < maxcnt:
+        playerstats = card_db.getallplayerstats()
+        foundDuplicate = False
+        for playerstat in playerstats:
+            tid = playerstat[0]
+            name = playerstat[1]
+            for playerstat in playerstats:
+                # 自分自身は除外
+                if tid == playerstat[0]:
+                    continue
+                if name == playerstat[1]:
+                    # 重複検出、このnameを持つplayerstatを全削除
+                    for playerstat in playerstats:
+                        card_db.deleteplayerstats(playerstat[0])
+                    foundDuplicate = True
+                    break
+            # 重複が見つかった場合は一度ループを抜けDBを再読み込み
+            if foundDuplicate:
+                break
+        # 重複が見つからなかった場合はループを抜ける
+        if not foundDuplicate:
+            break
+        i += 1
+    # gamesession視点での整合性チェック
+    gamesessions = card_db.getallgamesessions()
+    for gamesession in gamesessions:
+        gsid = gamesession[0]
+        p1_player_tid = gamesession[1]
+        p2_player_tid = gamesession[2]
+        card_table = gamesession[3]
+        playerstats = card_db.getplayerstats_bytid(p1_player_tid)
+        # player_tidがplayerstatsに存在しない場合は削除
+        if playerstats is None:
+            card_db.deletegamesession(gsid)
+            card_db.deletedecktable(card_table)
+            continue
+        playerstats = card_db.getplayerstats_bytid(p2_player_tid)
+        if playerstats is None and p2_player_tid != "waiting":
+            card_db.deletegamesession(gsid)
+            card_db.deletedecktable(card_table)
+            continue
+    # playerstats視点での整合性チェック
+    playerstats = card_db.getallplayerstats()
+    for playerstat in playerstats:
+        # player_tidがgamesessionに存在しない場合は削除
+        tid = playerstat[0]
+        gamesession1 = card_db.getgamesession("p1_player_tid", tid)
+        gamesession2 = card_db.getgamesession("p2_player_tid", tid)
+        if gamesession1 is None and gamesession2 is None:
+            card_db.deleteplayerstats(tid)
+
+
 def _getnamefromtid(gamesession):
     p1_player_tid = gamesession[1]
     p2_player_tid = gamesession[2]
@@ -23,6 +79,8 @@ def _gettidfromname(player_name):
 
 
 def card_getwaitingsessionhtml(username):
+    # TODO 実行契機見直し
+    cleanupPlayerstats()
     # HTMLでテーブルを作成する
     headers = ""
     headers += "<table border=1>"
