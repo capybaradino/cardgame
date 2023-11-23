@@ -255,11 +255,16 @@ async function fetchData_impl() {
                 if (attack >= 0) {
                     setdivvalue('p1card' + i + '_attack', attack);
                     setdivvalue('p1card' + i + '_hp', hp);
+                } else {
+                    setdivvalue('p1card' + i + '_attack', "");
+                    setdivvalue('p1card' + i + '_hp', "");
                 }
                 setdivvalue('p1card' + i + '_name', "" + name + "");
                 const effect = item['effect'];
                 if (effect != "") {
                     seteffecttext('p1card' + i + '_text', effect);
+                } else {
+                    seteffecttext('p1card' + i + '_text', "");
                 }
                 if (player1[key_mp] >= cost) {
                     changeBorderColor('p1card' + i, "green");
@@ -299,6 +304,8 @@ async function fetchData_impl() {
                     effect = item['effect'];
                     if (effect != "") {
                         seteffecttext('p1board' + i + '_text', effect);
+                    } else {
+                        seteffecttext('p1card' + i + '_text', "");
                     }
                     const active = item['active'];
                     if (active == 1) {
@@ -363,12 +370,26 @@ async function fetchData_impl() {
                 }
                 changeBgColor("p1tension" + "3", "white")
             } else {
+                var job = player1["job"];
                 const i = 10
-                const graphic = "uploads/test/merami.png"  // TODO graphic
-                const cost = "";
-                const attack = "";
-                const hp = "";
-                const name = "guren fireball";
+                var graphic;
+                var cost;
+                var attack;
+                var hp;
+                var name;
+                if (job == "wiz") {
+                    graphic = "uploads/test/merami.png"  // TODO graphic
+                    cost = "";
+                    attack = "";
+                    hp = "";
+                    name = "guren fireball";
+                } else if (job == "mnk") {
+                    graphic = "uploads/system/tension_otenba.png"
+                    cost = "";
+                    attack = "";
+                    hp = "";
+                    name = "otenba princess";
+                }
                 setdivvalue('p1card' + i + '_cost', cost);
                 setdivvalue('p1card' + i + '_attack', attack);
                 setdivvalue('p1card' + i + '_hp', hp);
@@ -473,12 +494,26 @@ async function fetchData_impl() {
                 setdivimage('p2card' + i, graphic);
                 changeBgColor("p2tension" + "3", "white")
             } else {
+                var job = player2["job"];
                 const i = 10
-                const graphic = "uploads/test/merami.png"  // TODO graphic
-                const cost = "";
-                const attack = "";
-                const hp = "";
-                const name = "guren fireball";
+                var graphic;
+                var cost;
+                var attack;
+                var hp;
+                var name;
+                if (job == "wiz") {
+                    graphic = "uploads/test/merami.png"  // TODO graphic
+                    cost = "";
+                    attack = "";
+                    hp = "";
+                    name = "guren fireball";
+                } else if (job == "mnk") {
+                    graphic = "uploads/system/tension_otenba.png"
+                    cost = "";
+                    attack = "";
+                    hp = "";
+                    name = "otenba princess";
+                }
                 setdivvalue('p2card' + i + '_cost', cost);
                 setdivvalue('p2card' + i + '_attack', attack);
                 setdivvalue('p2card' + i + '_hp', hp);
