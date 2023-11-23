@@ -1,6 +1,7 @@
 import re
 
 import api_common_common
+import card_common
 import card_db
 from class_playinfo import Card_info
 from class_playview import Play_view
@@ -70,11 +71,8 @@ def api_play_hand(sid, playview: Play_view, card1, card2, card3):
                     sid, playview, effect, objcard1, card2, card3, True
                 )
 
-        playview = Play_view(sid)
-        if playview.p1hp <= 0:
-            playview.playdata.gameover(sid)
-        if playview.p2hp <= 0:
-            playview.playdata.gamewin(sid)
+        # 勝敗判定
+        card_common.judge(sid)
     else:
         return {"error": "illegal card2"}, 403
 

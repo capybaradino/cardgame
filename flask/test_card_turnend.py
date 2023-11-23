@@ -42,6 +42,7 @@ class TestCardTurnend(unittest.TestCase):
     mock_putsession = Mock()
     mock_putgamesession = Mock()
     mock_get_self_or_enemy = Mock()
+    mock_cardcommon_judge = Mock()
 
     def tearDown(self):
         self.mock_playdata.reset_mock()
@@ -81,6 +82,7 @@ class TestCardTurnend(unittest.TestCase):
     @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_card_turnend_with_p1turn(self):
         self.state = "p1turn"
         card_db.getrecords_fromsession = Mock()
@@ -106,6 +108,7 @@ class TestCardTurnend(unittest.TestCase):
     @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_card_turnend_with_p2turn(self):
         self.state = "p2turn"
         self.playdata.state = self.state
@@ -172,6 +175,7 @@ class TestCardTurnend(unittest.TestCase):
     @patch("card_db.putcardtable", mock_putsession)
     @patch("card_db.putgamesession", mock_putgamesession)
     @patch("api_common_util.get_self_or_enemy", mock_get_self_or_enemy)
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_card_turnend_with_multiple_effects(self):
         card_db.getrecords_fromsession = Mock()
         card_db.getrecords_fromsession.return_value = [
