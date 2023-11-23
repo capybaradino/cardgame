@@ -528,9 +528,7 @@ class Playdata:
             if record is None:
                 break
             player_tid = record[0]
-            record = card_db.getrecord_fromsession(
-                "gamesession", "p1_player_tid", player_tid
-            )
+            record = card_db.getgamesession("p1_player_tid", player_tid)
             if record is not None:
                 card_table = record[3]
                 other_player_tid = record[2]
