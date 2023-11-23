@@ -15,7 +15,7 @@ class Card_info:
             self.update()
 
     def update(self):
-        record = card_db.getrecord_fromgame("card_basicdata", "cid", self.cid)
+        record = card_db.getrecord_fromgamebasicdata("cid", self.cid)
         self.name = record[2]
         self.cost = record[5]
         self.category = record[6]
@@ -47,7 +47,7 @@ class Card_info:
                 owner = loc.split("_")[0]
             else:
                 owner = loc
-            record2 = card_db.getrecord_fromsession("playerstats", "name", owner)
+            record2 = card_db.getplayerstats_byname(owner)
             skillboost = int(record2[7])
             # スキルブーストの値に応じてhp_org,attack_orgを変更
             self.hp_org = self.hp_org + boost_hp_ratio * skillboost

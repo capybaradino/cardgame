@@ -24,11 +24,11 @@ def api_tension(sid, playview: Play_view, card1, card2):
         remainingmp = playview.p1mp - 1
         if remainingmp < 0:
             return {"error": "MP short"}
-        card_db.putsession("playerstats", "name", playview.p1name, "mp", remainingmp)
+        card_db.putplayerstats("name", playview.p1name, "mp", remainingmp)
         tension = tension + 1
-        card_db.putsession("playerstats", "name", playview.p1name, "tension", tension)
+        card_db.putplayerstats("name", playview.p1name, "tension", tension)
         # テンションカードを非アクティブ化
-        card_db.putsession(playview.playdata.card_table, "cuid", cuid, "active", 0)
+        card_db.putcardtable(playview.playdata.card_table, "cuid", cuid, "active", 0)
         card_db.appendlog(
             playview.playdata.card_table, "[" + playview.p1name + "]tension up:"
         )
@@ -81,10 +81,10 @@ def api_tension(sid, playview: Play_view, card1, card2):
 
 def _reset_tension(playview):
     # テンション初期化
-    card_db.putsession("playerstats", "name", playview.p1name, "tension", 0)
+    card_db.putplayerstats("name", playview.p1name, "tension", 0)
     # スキルブースト+1
-    record = card_db.getrecord_fromsession("playerstats", "name", playview.p1name)
+    record = card_db.getplayerstats_byname(playview.p1name)
     skillboost = record[7]
     skillboost = skillboost + 1
-    card_db.putsession("playerstats", "name", playview.p1name, "skillboost", skillboost)
+    card_db.putplayerstats("name", playview.p1name, "skillboost", skillboost)
     return

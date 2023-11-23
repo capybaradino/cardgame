@@ -58,7 +58,7 @@ class TestSpecifiedCase1(unittest.TestCase):
         self.playview.isblocked = Mock()
         self.playview.isblocked.return_value = False
         card_db.appendlog = Mock()
-        card_db.putsession = Mock()
+        card_db.putcardtable = Mock()
         api_common_util.get_self_or_enemy = Mock()
         api_common_util.get_self_or_enemy.return_value = [
             None,
