@@ -141,6 +141,7 @@ def putplayerstats(key_name, key, column, value):
         "tension",
         "skillboost",
         "fatigue",
+        "turnstarttime",
     ]:
         # job, hp, mp, maxmp, tension, skillboostでない場合はエラー
         raise ValueError("column must be job, hp, mp, maxmp, tension, skillboost")
@@ -298,6 +299,15 @@ def getsid_fromgsid(gsid):
     return sid
 
 
+def getsid_fromname(name):
+    con = sqlite3.connect("session.db")
+    cur = con.cursor()
+    cur.execute("SELECT sid FROM usersession WHERE name = ?", (name,))
+    sid = _card_fetchone(cur)
+    con.close()
+    return sid
+
+
 def postgamesession(
     gsid, p1_player_table, p2_player_table, card_table, log, state, lastupdate
 ):
@@ -313,7 +323,16 @@ def postgamesession(
 
 
 def postplayerstats(
-    player_tid, name, job, hp, mp, maxmp, tension, skillboost=0, fatigue=0
+    player_tid,
+    name,
+    job,
+    hp,
+    mp,
+    maxmp,
+    tension,
+    skillboost=0,
+    fatigue=0,
+    turnstarttime="",
 ):
     con = sqlite3.connect("session.db")
     cur = con.cursor()
@@ -329,7 +348,7 @@ def postplayerstats(
             tension,
             skillboost,
             fatigue,
-            "",
+            turnstarttime,
             "",
             "",
             "",
