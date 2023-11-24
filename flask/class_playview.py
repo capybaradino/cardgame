@@ -1,12 +1,16 @@
 import card_db
+import card_util
 from class_playdata import Field, Playdata
 from class_playinfo import Card_info
 
 
 class Play_view:
-    def __init__(self, sid):
+    def __init__(self, sid, timeoutcheck=False):
         self.sid = sid
-        playdata = Playdata(sid)
+        playdata = Playdata(sid, timeoutcheck=timeoutcheck)
+        if playdata.stat == "timeout":
+            return
+        self.timeout = card_util.card_gettimeoutvalue()
         self.playdata = playdata
         nickname = card_db.getnickname_fromsid(sid)
         # ゲーム終了時のエラー対策

@@ -57,7 +57,9 @@ class Player:
             card_db.putplayerstats(
                 "player_tid", self.player_tid, "fatigue", currentfatigue
             )
-            card_db.appendlog(self.card_table, f"fatigue({currentfatigue})->" + self.name)
+            card_db.appendlog(
+                self.card_table, f"fatigue({currentfatigue})->" + self.name
+            )
         else:
             if len(self.get_hand()) < 10:
                 card_db.putdeck(self.card_table, cuid, self.name + "_hand")
@@ -165,7 +167,7 @@ class Field:
 
 
 class Playdata:
-    def __init__(self, sid, param="") -> None:
+    def __init__(self, sid, param="", timeoutcheck=False) -> None:
         self.gsid = ""
         self.p1_player_tid = ""
         self.p2_player_tid = ""
@@ -433,6 +435,13 @@ class Playdata:
             card_db.putusersession_gsid(sid, self.gsid)
             if self.state == "p2turn":
                 self.player2.start_turn()
+            # タイマーセット
+            p1_player_tid = card_db.getgamesession("gsid", self.gsid)[1]
+            player1_name = card_db.getplayerstats_bytid(p1_player_tid)[1]
+            if self.state == "p2turn":
+                card_util.card_settimer(player1_name, self.player2.name, "p1turn")
+            else:
+                card_util.card_settimer(player1_name, self.player2.name, "p2turn")
 
         # マッチング中・・・
         i = 0
@@ -490,6 +499,27 @@ class Playdata:
             self.stat = "lose"
             self.gameover(sid)
             return
+
+        if timeoutcheck:
+            # 現在時刻がturnstarttimeから設定時間を超過していたら敗北とする
+            gamesession = card_db.getgamesession("gsid", self.gsid)
+            turnstate = gamesession[5]
+            currenttime = card_util.card_getdatestrnow()
+            if turnstate == "p1turn":
+                player_tid = gamesession[1]
+                turnstarttime = card_db.getplayerstats_bytid(player_tid)[9]
+                player = self.player1
+            else:
+                player_tid = gamesession[2]
+                turnstarttime = card_db.getplayerstats_bytid(player_tid)[9]
+                player = self.player2
+            # 時刻を比較
+            if turnstarttime is not None and turnstarttime != "":
+                if card_util.card_istimeout(turnstarttime, currenttime):
+                    # player.nameに一致する方を敗北とする
+                    losersid = card_db.getsid_fromname(player.name)
+                    self.gameover(losersid)
+                    self.stat = "timeout"
 
         return
 
