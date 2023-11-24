@@ -10,6 +10,8 @@ def get(playview: Play_view):
     # ログ
     record = card_db.getgamesession("card_table", playview.playdata.card_table)
     data_dict["log"] = record[4]
+    # タイムアウト時間
+    data_dict["timeout"] = playview.timeout - 5 # 5秒余裕を持たせる
 
     # Player1
     player1 = {}
