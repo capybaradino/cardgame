@@ -124,7 +124,7 @@ def create_table(db_name, table_name):
                     tension INTEGER NOT NULL,
                     skillboost INTEGER NOT NULL,
                     fatigue INTEGER NOT NULL,
-                    rsv2 TEXT,
+                    turnstarttime TEXT,
                     rsv3 TEXT,
                     rsv4 TEXT,
                     rsv5 TEXT,

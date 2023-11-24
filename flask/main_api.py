@@ -32,11 +32,17 @@ def _getstatus(gsid, sid):
             return {"status": "matching"}, 200
         return {"status": "playing"}, 200
 
+
 def _isUUID(gsid):
-    if re.match(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-"
-                r"[0-9a-f]{4}-[0-9a-f]{12}", gsid) is None:
+    if (
+        re.match(
+            r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-" r"[0-9a-f]{4}-[0-9a-f]{12}", gsid
+        )
+        is None
+    ):
         return False
     return True
+
 
 @api.route("/system/<sid>/<command>")
 class Card_system(Resource):
@@ -180,9 +186,10 @@ class Card_view(Resource):
         gsid = card_db.getgsid_fromsid(sid)
         if _isUUID(gsid) is False:
             return {"error": "gamesession is null"}, 403
-        playview = Play_view(sid)
+        playview = Play_view(sid, timeoutcheck=True)
 
         # ゲームが終了処理中でないか確認
+        gsid = card_db.getgsid_fromsid(sid)
         data, statuscode = _getstatus(gsid, sid)
         if data["status"] != "playing":
             return {"error": "game is over"}, 403
