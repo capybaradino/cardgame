@@ -10,3 +10,4 @@ bot/bot.conf
 flask/game.ini
 cardbot.log
 flask/tmp/*
+flask/gamecard_define.csv
