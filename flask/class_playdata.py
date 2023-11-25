@@ -231,7 +231,10 @@ class Playdata:
                     return
             except ValueError:
                 # それ以外の場合は一番上のゲームを選択
-                gamesession = gamesessions[0]
+                if gamesessions is not None and len(gamesessions) > 0:
+                    gamesession = gamesessions[0]
+                else:
+                    gamesession = None
             # gamesessionがある場合、かつparamがnewmatchで無い場合はマッチングする
             if gamesession is not None and param != "newmatch":
                 p1_player_tid = gamesession[1]
