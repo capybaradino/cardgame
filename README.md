@@ -31,6 +31,10 @@ sudo systemctl enable cardgame
 sudo systemctl enable cardgame_api  
 sudo cp /home/pi/cardgame/logrotate_cardgame.service /etc/logrotate.d/  
 
+### Cardgame for production mode bot setting
+sudo ln -s /home/pi/cardgame/cardgame_bot.service /etc/systemd/system/  
+sudo systemctl enable cardgame_bot  
+
 ## Debug
 To skip user authentication, create file below in the same directory with main.py  
 Then, open two browser window. (Note: need using secret mode to use cookies individualy)  
