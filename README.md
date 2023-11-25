@@ -40,32 +40,33 @@ Access as follows:
 
 debug.conf
 ```
-[debug]
 email1 = user1@example.com
 email2 = user2@example.com
+email3 = user3@example.com
 # p1hp = 5
 # p2hp = 5
 # p1mp = 7
 # p2mp = 7
-p1hp = 15
-p2hp = 15
-# p1hp = 25
-# p2hp = 25
+# p1hp = 15
+# p2hp = 15
+p1hp = 25
+p2hp = 25
 p1mp = 0
 p2mp = 0
 senkou = 1
-p1_topcard0 = meraghost
-p1_topcard1 = obake-candle
-p1_topcard2 = petite-anon
-# p1_topcard0 =
-# p1_topcard1 =
-# p1_topcard2 =
-p2_topcard0 = jaguar-mage
-p2_topcard1 = moon-chimera
-p2_topcard2 = killer-pickel
-# p2_topcard0 =
-# p2_topcard1 =
-# p2_topcard2 =
+turntimeout = 125
+# p1_topcard0 = meraghost
+# p1_topcard1 = obake-candle
+# p1_topcard2 = baaru-zebubu
+p1_topcard0 =
+p1_topcard1 =
+p1_topcard2 =
+# p2_topcard0 = molly
+# p2_topcard1 = killer-pickel
+# p2_topcard2 = jaguar-mage
+p2_topcard0 =
+p2_topcard1 =
+p2_topcard2 =
 p1_deck = gamecard_wiz_2018haru_3_aguzesi
 # p2_deck = gamecard_wiz_2018haru_3_aguzesi
 p2_deck = gamecard_mnk_2018haru_2_butoka
