@@ -33,5 +33,5 @@ def turnend(sid):
 
 
 def newgame(sid):
-    playdata = Playdata(sid)
+    playdata = Playdata(sid, param="newmatch")
     return playdata.stat
