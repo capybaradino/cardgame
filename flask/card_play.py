@@ -13,7 +13,7 @@ def card_play_get2(sid, param=None):
     playdata = Playdata(sid, param)
     isdebug = os.path.isfile("debug.conf")
     if isdebug:
-        debug_code = '<h1><a href="../p1">(debug)Cardgame/p1</a></h1><h1><a href="../p2">(debug)Cardgame/p2</a></h1>'
+        debug_code = '<h1><a href="../p1">(debug)Cardgame/p1</a></h1><h1><a href="../p2">(debug)Cardgame/p2</a></h1><h1><a href="../p3">(debug)Cardgame/p3</a></h1>'
     else:
         debug_code = ""
 
