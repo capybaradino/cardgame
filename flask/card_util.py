@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 
 import card_db
+import game
 
 
 def cleanupPlayerstats():
@@ -137,16 +138,36 @@ def card_getwaitingsessionhtml(username):
 
 def card_getdatestrnow():
     dt_now = datetime.now()
-    return card_getdatestr(dt_now)
+    return _card_getdatestr(dt_now)
 
 
-def card_getdatestr(dt):
+def _card_getdatestr(dt):
     return dt.isoformat()
 
 
-def card_getdatenow():
-    return datetime.now()
+def card_settimer(p1name, p2name, turnstate):
+    if turnstate == "p1turn":
+        # Player1のturnstarttimeを削除し、Player2のturnstarttimeを設定
+        card_db.putplayerstats("name", p1name, "turnstarttime", "")
+        card_db.putplayerstats("name", p2name, "turnstarttime", card_getdatestrnow())
+    else:
+        # Player2のturnstarttimeを削除し、Player1のturnstarttimeを設定
+        card_db.putplayerstats("name", p2name, "turnstarttime", "")
+        card_db.putplayerstats("name", p1name, "turnstarttime", card_getdatestrnow())
 
 
-def card_getdate(dt):
-    return datetime.fromisoformat(dt)
+def card_gettimeoutvalue():
+    # 制限時間(秒)を取得
+    turntimeout = int(game.getparam("turntimeout"))
+    return turntimeout
+
+
+def card_istimeout(datestr1, datestr2):
+    dt1 = datetime.fromisoformat(datestr1)
+    dt2 = datetime.fromisoformat(datestr2)
+    # 制限時間(秒)を取得
+    turntimeout = card_gettimeoutvalue()
+    # 時間差を取得
+    timedelta = dt2 - dt1
+    # 時間差が制限時間を超えている場合はTrue
+    return timedelta.total_seconds() > turntimeout

@@ -5,6 +5,7 @@ import api_common_common
 import api_common_status
 import api_common_tension
 import api_common_util
+import card_common
 import card_db
 from class_playdata import Player
 from class_playinfo import Card_info
@@ -183,6 +184,7 @@ def apply_effect(
                 else:
                     player.draw_card()
                 i = i + 1
+            card_common.judge(sid)
         ret = "OK"
         scode = 200
     elif "dmg" in effect:
