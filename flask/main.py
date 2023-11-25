@@ -52,6 +52,12 @@ def debugp(debugp=None):
             abort(404)
             return
         return index(email)
+    elif debugp == "p3":
+        email = debug.getdebugparam("email3")
+        if email is None:
+            abort(404)
+            return
+        return index(email)
     else:
         abort(404)
 

@@ -188,6 +188,13 @@ class Playdata:
                 self.stat = "win"
                 return
             else:
+                # もしparamがUUIDの場合はエラー
+                try:
+                    uuid.UUID(param)
+                    self.stat = "error"
+                    return
+                except ValueError:
+                    pass
                 gamesession = card_db.getgamesession("gsid", self.gsid)
         else:
             gamesession = None
@@ -208,7 +215,23 @@ class Playdata:
 
         # 対戦待ちのゲームがあるか確認
         if self.gsid == "" or gamesession is None and param != "cancel":
-            gamesession = card_db.getgamesession("p2_player_tid", "waiting")
+            # 待機中のゲームセッション一覧を選択
+            gamesessions = card_db.getgamesessions("p2_player_tid", "waiting")
+            # paramがUUIDの場合はそのセッションを選択
+            try:
+                uuid.UUID(param)
+                found = False
+                for gamesession in gamesessions:
+                    if gamesession[0] == param:
+                        found = True
+                        break
+                # 見つからなかった場合はエラー
+                if not found:
+                    self.stat = "error"
+                    return
+            except ValueError:
+                # それ以外の場合は一番上のゲームを選択
+                gamesession = gamesessions[0]
             # gamesessionがある場合、かつparamがnewmatchで無い場合はマッチングする
             if gamesession is not None and param != "newmatch":
                 p1_player_tid = gamesession[1]
