@@ -177,6 +177,22 @@ async function pageReload() {
     }, 1000);
 }
 
+var intervalId3;
+var timer = 60;
+var preturn = "";
+
+async function countdown() {
+    intervalId3 = setInterval(function () {
+        document.getElementById("p1leader_time").textContent = timer;
+        timer--;
+        if (timer < 0) {
+            clearInterval(intervalId3);
+            time = 60;
+            system_turnend();
+        }
+    }, 1000);
+}
+
 async function fetchData_impl() {
     var sid = getCookieValue("card_sid");
     try {
@@ -194,7 +210,15 @@ async function fetchData_impl() {
         turn = data[key_turn];
         if (turn == "p1turn") {
             clearInterval(intervalId);
+            if (preturn != turn) {
+                // id="p1leader_time"のdivに60秒のカウントダウンタイマーを表示
+                timer = data["timeout"];
+                countdown();
+            }
+        } else {
+            clearInterval(intervalId3);
         }
+        preturn = turn;
 
         // ログ情報
         const key_log = "log";

@@ -47,10 +47,24 @@ class Player:
 
     def draw_card(self):
         cuid = card_db.getfirstcuid_fromdeck(self.card_table, self.name)
-        if len(self.get_hand()) < 10:
-            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+        # デッキが空の場合はFatigueを受ける
+        if cuid is None or cuid == "":
+            currentfatigue = card_db.getplayerstats_byname(self.name)[8]
+            currentfatigue = currentfatigue + 1
+            currenthp = card_db.getplayerstats_byname(self.name)[3]
+            currenthp = currenthp - currentfatigue
+            card_db.putplayerstats("player_tid", self.player_tid, "hp", currenthp)
+            card_db.putplayerstats(
+                "player_tid", self.player_tid, "fatigue", currentfatigue
+            )
+            card_db.appendlog(
+                self.card_table, f"fatigue({currentfatigue})->" + self.name
+            )
         else:
-            card_db.putdeck(self.card_table, cuid, "drop")
+            if len(self.get_hand()) < 10:
+                card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+            else:
+                card_db.putdeck(self.card_table, cuid, "drop")
         return
 
     def draw_bujutsucard(self):
@@ -82,7 +96,10 @@ class Player:
                 cuids.append(cuid)
         if len(cuids) > 0:
             cuid = cuids[random.randrange(len(cuids))]
-            card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+            if len(self.get_hand()) < 10:
+                card_db.putdeck(self.card_table, cuid, self.name + "_hand")
+            else:
+                card_db.putdeck(self.card_table, cuid, "drop")
         return
 
     def get_hand(self):
@@ -150,7 +167,7 @@ class Field:
 
 
 class Playdata:
-    def __init__(self, sid, param="") -> None:
+    def __init__(self, sid, param="", timeoutcheck=False) -> None:
         self.gsid = ""
         self.p1_player_tid = ""
         self.p2_player_tid = ""
@@ -394,11 +411,9 @@ class Playdata:
             if ret is None:
                 ret = str(random.randrange(2))
             if ret == "0":
-                # self.player1.start_turn()
                 self.state = "p1turn"
                 self.player1.start_turn()
             else:
-                # self.player2.start_turn()
                 self.state = "p2turn"
                 card_db.putplayerstats("name", self.player1.name, "tension", 2)
 
@@ -420,6 +435,13 @@ class Playdata:
             card_db.putusersession_gsid(sid, self.gsid)
             if self.state == "p2turn":
                 self.player2.start_turn()
+            # タイマーセット
+            p1_player_tid = card_db.getgamesession("gsid", self.gsid)[1]
+            player1_name = card_db.getplayerstats_bytid(p1_player_tid)[1]
+            if self.state == "p2turn":
+                card_util.card_settimer(player1_name, self.player2.name, "p1turn")
+            else:
+                card_util.card_settimer(player1_name, self.player2.name, "p2turn")
 
         # マッチング中・・・
         i = 0
@@ -471,6 +493,34 @@ class Playdata:
             self.p2_player_stats[6],
             self.card_table,
         )
+
+        # paramがsurrenderであればゲームを終了する
+        if param == "surrender":
+            self.stat = "lose"
+            self.gameover(sid)
+            return
+
+        if timeoutcheck:
+            # 現在時刻がturnstarttimeから設定時間を超過していたら敗北とする
+            gamesession = card_db.getgamesession("gsid", self.gsid)
+            turnstate = gamesession[5]
+            currenttime = card_util.card_getdatestrnow()
+            if turnstate == "p1turn":
+                player_tid = gamesession[1]
+                turnstarttime = card_db.getplayerstats_bytid(player_tid)[9]
+                player = self.player1
+            else:
+                player_tid = gamesession[2]
+                turnstarttime = card_db.getplayerstats_bytid(player_tid)[9]
+                player = self.player2
+            # 時刻を比較
+            if turnstarttime is not None and turnstarttime != "":
+                if card_util.card_istimeout(turnstarttime, currenttime):
+                    # player.nameに一致する方を敗北とする
+                    losersid = card_db.getsid_fromname(player.name)
+                    self.gameover(losersid)
+                    self.stat = "timeout"
+
         return
 
     def set_static_status_effect(self, tcid: str, cuid: str):

@@ -3,6 +3,7 @@ import re
 import api_common_common
 import api_common_util
 import card_db
+import card_util
 from class_playdata import Playdata
 from class_playinfo import Card_info
 from class_playview import Play_view
@@ -84,4 +85,9 @@ def card_turnend(sid, state, nickname):
         card_db.putgamesession(playdata.gsid, "state", "p2turn")
     else:
         card_db.putgamesession(playdata.gsid, "state", "p1turn")
+
+    card_util.card_settimer(
+        playview.playdata.player1.name, playview.playdata.player2.name, state
+    )
+
     return

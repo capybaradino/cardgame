@@ -1,6 +1,7 @@
-from class_playdata import Playdata
+import card_common
 import card_db
 import card_turnend
+from class_playdata import Playdata
 
 
 def surrender(sid):
@@ -27,6 +28,7 @@ def turnend(sid):
         card_db.appendlog(playdata.card_table, "=" + nickname + " end=")
         nextp = playdata.player1
     nextp.start_turn()
+    card_common.judge(sid)
     return {"info": "OK"}
 
 
