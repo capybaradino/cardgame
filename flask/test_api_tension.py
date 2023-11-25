@@ -33,6 +33,8 @@ class TestAPITension(unittest.TestCase):
         card_db.appendlog = Mock()
         api_common_common.unit_hp_change = Mock()
 
+    mock_cardcommon_judge = Mock()
+
     def test_api_tension_with_tension_up(self):
         result = api_tension.api_tension(self.sid, self.playview, "card1", "card2")
         self.assertEqual(result, {"info": "OK"})
@@ -61,7 +63,7 @@ class TestAPITension(unittest.TestCase):
     def test_api_tension_with_tension_skill_wiz_board(self):
         with patch("api_tension.Play_view") as play_view_mock, patch(
             "card_db.getplayerstats_byname"
-        ) as mock_getplayerstats_byname:
+        ) as mock_getplayerstats_byname, patch("card_common.judge") as mock_judge:
             self.playview.p1tension = 3
             playview_end = Mock()
             playview_end.p1hp = 10
@@ -94,7 +96,7 @@ class TestAPITension(unittest.TestCase):
     def test_api_tension_with_tension_skill_wiz_leader(self):
         with patch("api_tension.Play_view") as play_view_mock, patch(
             "card_db.getplayerstats_byname"
-        ) as mock_getplayerstats_byname:
+        ) as mock_getplayerstats_byname, patch("card_common.judge") as mock_judge:
             self.playview.p1tension = 3
             playview_end = Mock()
             playview_end.p1hp = 10
@@ -145,6 +147,7 @@ class TestAPITension(unittest.TestCase):
         )
         self.assertEqual(result, ({"error": "target unit has antieffect"}, 403))
 
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_api_tension_with_tension_skill_mnk(self):
         with patch("card_db.getplayerstats_byname") as mock_getplayerstats_byname:
             self.playview.p1tension = 3

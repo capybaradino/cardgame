@@ -2,6 +2,7 @@ import re
 
 import api_common_common
 import api_common_util
+import card_common
 import card_db
 from class_playinfo import Card_info
 from class_playview import Play_view
@@ -77,10 +78,6 @@ def api_spell(sid, playview: Play_view, card1, card2):
                 # TODO onspell_other
 
     # 勝敗確認
-    playview = Play_view(sid)
-    if playview.p1hp <= 0:
-        playview.playdata.gameover(sid)
-    if playview.p2hp <= 0:
-        playview.playdata.gamewin(sid)
+    card_common.judge(sid)
 
     return {"info": "OK"}, 200

@@ -54,6 +54,8 @@ class TestAPISpell(unittest.TestCase):
             return_value=(Mock(), Mock(), self.player_self, self.player_enemy)
         )
 
+    mock_cardcommon_judge = Mock()
+
     def test_api_spell_with_illegal_card1_number(self):
         # Test case 1: Test with illegal card1 number
         api_common_util.getobjcard = MagicMock(return_value=None)
@@ -61,6 +63,7 @@ class TestAPISpell(unittest.TestCase):
         self.assertEqual(result, {"error": "illegal card1 number"})
         self.assertEqual(status_code, 403)
 
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_api_spell_with_self_1draw_effect(self):
         # Test case 2: Test with self_1draw effect
         with patch("api_spell.Play_view") as play_view_mock:
@@ -91,7 +94,9 @@ class TestAPISpell(unittest.TestCase):
 
     def test_api_spell_with_switch_effect(self):
         # Test case 3: Test with switch effect
-        with patch("api_spell.Play_view") as play_view_mock:
+        with patch("api_spell.Play_view") as play_view_mock, patch(
+            "card_common.judge"
+        ) as mock_cardcommon_judge:
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
@@ -133,7 +138,9 @@ class TestAPISpell(unittest.TestCase):
 
     def test_api_spell_with_dmg_enemy_effect(self):
         # Test case 4: Test with dmg_enemy effect
-        with patch("api_spell.Play_view") as play_view_mock:
+        with patch("api_spell.Play_view") as play_view_mock, patch(
+            "card_common.judge"
+        ) as mock_cardcommon_judge:
             playview_end = Mock()
             playview_end.p1hp = 10
             playview_end.p2hp = 7
@@ -163,6 +170,7 @@ class TestAPISpell(unittest.TestCase):
                 self.playview.p1name + "_cemetery",
             )
 
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_api_spell_with_dmg_enemy_effect_3times(self):
         # Test case 4-2: Test with dmg_enemy effect 3times
         with patch("api_spell.Play_view") as play_view_mock:
@@ -267,6 +275,7 @@ class TestAPISpell(unittest.TestCase):
         self.assertEqual(status_code, 403)
 
     @patch("api_common_tension.api_common_tension_objcard")
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_api_spell_with_onspell_effect(self, mock_api_common_tension_objcard):
         # Test case 9: Test with onspell effect
         with patch("api_spell.Play_view") as play_view_mock:

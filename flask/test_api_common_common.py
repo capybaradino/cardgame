@@ -212,6 +212,8 @@ class TestUnitHPChangeMulti(unittest.TestCase):
 
 
 class TestUnitHPChange(unittest.TestCase):
+    mock_cardcommon_judge = Mock()
+
     def test_unit_hp_change(self):
         # テスト用のダミーデータと引数を設定
         sid = "test_sid"
@@ -325,6 +327,7 @@ class TestUnitHPChange(unittest.TestCase):
                 -1,  # 期待されるdhp値
             )
 
+    @patch("card_common.judge", mock_cardcommon_judge)
     def test_unit_hp_change_with_ondead_effect(self):
         # effectにondeadが含まれる場合のテスト
         # テスト用のダミーデータと引数を設定

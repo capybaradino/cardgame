@@ -1,6 +1,7 @@
 import re
 
 import api_common_common
+import card_common
 import card_db
 from class_playinfo import Card_info
 from class_playview import Play_view
@@ -45,6 +46,8 @@ def api_tension(sid, playview: Play_view, card1, card2):
             card_db.appendlog(
                 playview.playdata.card_table, "[" + playview.p1name + "]tension skill:"
             )
+            # 勝敗確認
+            card_common.judge(sid)
         # 魔法使い
         elif job == "wiz":
             # 事前チェック
@@ -63,11 +66,7 @@ def api_tension(sid, playview: Play_view, card1, card2):
                 sid, playview, "any_3dmg", None, None, card2, True
             )
             # 勝敗確認
-            playview = Play_view(sid)
-            if playview.p1hp <= 0:
-                playview.playdata.gameover(sid)
-            if playview.p2hp <= 0:
-                playview.playdata.gamewin(sid)
+            card_common.judge(sid)
             return {"info": "OK"}
 
         else:
