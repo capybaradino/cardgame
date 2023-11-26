@@ -20,6 +20,9 @@ sudo pip3 install flask-restx
 cd cardgame/flask  
 python3 ./initialize_db.py  
 A  
+wget https://capybaradino.mydns.jp/resources.tgz  
+tar zxvf resources.tgz  
+./reset_game.sh  
 
 ### Cardgame for production mode
 [Note] need edit cardgame.service for your environment  
@@ -44,6 +47,7 @@ Access as follows:
 
 debug.conf
 ```
+[debug]
 email1 = user1@example.com
 email2 = user2@example.com
 email3 = user3@example.com
