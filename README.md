@@ -1,9 +1,13 @@
 Cardgame
 ====
 
-Cardgame specification
+
+Multiplayer Card Game
 
 ## Description
+
+![Menu Image](screensample_menu.jpg)  
+![Game Image](screensample_game.jpg)  
 
 ## Requirement
 Python3
@@ -39,8 +43,8 @@ sudo ln -s /home/pi/cardgame/cardgame_bot.service /etc/systemd/system/
 sudo systemctl enable cardgame_bot  
 
 ## Debug
-To skip user authentication, create file below in the same directory with main.py  
-Then, open two browser window. (Note: need using secret mode to use cookies individualy)  
+To skip user authentication, create a file below in the same directory as main.py  
+Then, open two browser windows. (Note: need to use secret mode to use cookies individually)  
 Access as follows:  
   Player1 - http://127.0.0.1:5000/p1  
   Player2 - http://127.0.0.1:5000/p2  
@@ -84,4 +88,8 @@ p2_deck = gamecard_mnk_2018haru_2_butoka
 
 ## Licence
 
+Apache-2.0 license  
+
 ## Author
+
+https://github.com/capybaradino 
