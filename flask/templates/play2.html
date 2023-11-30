@@ -110,7 +110,9 @@
                         <div class="p1leader_char1" ondragover="f_dragover(event)" ondrop="f_drop(event)"
                             onclick="f_onclick(event)">
                             <div class="p1leader_char2">
-                                <button class="p1leader_char3" id="leftboard_10">Player1</button>
+                                <div class="p1leader_char3div">
+                                    <button class="p1leader_char3" id="leftboard_10">Player1</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -443,7 +445,9 @@
                         <div class="p2leader_char1" ondragover="f_dragover(event)" ondrop="f_drop(event)"
                             onclick="f_onclick(event)">
                             <div class="p2leader_char2">
-                                <button class="p2leader_char3" id="rightboard_10">Player2</button>
+                                <div class="p2leader_char3div">
+                                    <button class="p2leader_char3" id="rightboard_10">Player2</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -481,7 +485,7 @@
                                             <div class="p1stat_card_name" , id="p1card10_text"></div>
                                         </span>
                                         <a class="p1stat_card_child_hover" id="hand_10" draggable="true" href="#"
-                                            ondragstart="f_dragstart(event)"></a>
+                                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                                     </div>
                                 </div>
                                 <div class="p2stat_herocard"></div>
@@ -520,7 +524,7 @@
                             <div class="p1stat_card_text" , id="p1card0_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_0" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card1"></div><!--画像格納用div-->
@@ -540,7 +544,7 @@
                             <div class="p1stat_card_text" , id="p1card1_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_1" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card2"></div><!--画像格納用div-->
@@ -560,7 +564,7 @@
                             <div class="p1stat_card_text" , id="p1card2_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_2" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card3"></div><!--画像格納用div-->
@@ -580,7 +584,7 @@
                             <div class="p1stat_card_text" , id="p1card3_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_3" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card4"></div><!--画像格納用div-->
@@ -600,7 +604,7 @@
                             <div class="p1stat_card_text" , id="p1card4_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_4" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card5"></div><!--画像格納用div-->
@@ -620,7 +624,7 @@
                             <div class="p1stat_card_text" , id="p1card5_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_5" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card6"></div><!--画像格納用div-->
@@ -640,7 +644,7 @@
                             <div class="p1stat_card_text" , id="p1card6_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_6" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card7"></div><!--画像格納用div-->
@@ -660,7 +664,7 @@
                             <div class="p1stat_card_text" , id="p1card7_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_7" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card8"></div><!--画像格納用div-->
@@ -680,7 +684,7 @@
                             <div class="p1stat_card_text" , id="p1card8_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_8" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                     <div class="p1stat_card_child">
                         <div class="p1stat_card_child" , id="p1card9"></div><!--画像格納用div-->
@@ -700,7 +704,7 @@
                             <div class="p1stat_card_text" , id="p1card9_text"></div>
                         </span>
                         <a class="p1stat_card_child_hover" id="hand_9" draggable="true" href="#"
-                            ondragstart="f_dragstart(event)"></a>
+                            ondragstart="f_dragstart(event)" onclick="f_onclick2(event)"></a>
                     </div>
                 </div>
                 <div class="bottom3_settings">

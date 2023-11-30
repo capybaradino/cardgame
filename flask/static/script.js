@@ -110,11 +110,50 @@ function resetBorderColor(id) {
     divElement.style.borderWidth = "1px";
 }
 
+var click2event = null;
+var clicked = false;
+
 function f_onclick(event) {
     if (temp_url != "") {
         var id_name_dst = event.target.id;
         var url = temp_url + "/" + id_name_dst;
         play_post(url);
+    } else if (click2event != null) {
+        //API発行
+        id_name_src = click2event.target.id;
+        id_name_dst = event.target.id;
+        if (id_name_src.startsWith("hand_")) {
+            if (id_name_dst.startsWith("leftboard_")) {
+                play_left(id_name_src, id_name_dst);
+            }
+            if (id_name_dst.startsWith("rightboard_")) {
+                play_attack(id_name_src, id_name_dst);
+            }
+        }
+        if (id_name_src.startsWith("leftboard_")) {
+            if (id_name_dst.startsWith("rightboard_")) {
+                play_attack(id_name_src, id_name_dst);
+            }
+        }
+        click2event.target.style.backgroundColor = "rgba(255, 255, 255, 0)";
+        click2event = null;
+        clicked = false;
+    } else {
+        f_onclick2(event);
+    }
+}
+
+// クリックバージョン
+function f_onclick2(event) {
+    // divの色を半透明の赤にする
+    if (clicked == false) {
+        event.target.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        click2event = event;
+        clicked = true;
+    } else {
+        event.target.style.backgroundColor = "rgba(255, 255, 255, 0)";
+        click2event = null;
+        clicked = false;
     }
 }
 

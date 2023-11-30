@@ -795,7 +795,9 @@ div {
 }
 
 .p1leader_char3,
-.p2leader_char3 {
+.p1leader_char3div,
+.p2leader_char3,
+.p2leader_char3div {
     width: 80px;
     height: 80px;
     background-color: rgb(210, 235, 243);
