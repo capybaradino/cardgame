@@ -25,7 +25,7 @@ def card_play_get2(sid, param=None):
 
     if playdata.stat == "matching":
         return render_template(
-            "play_info.html", title="Matching", msg="Match making..."
+            "play_autoreload.html", title="Matching", msg="Match making..."
         )
 
     if playdata.stat == "cancel":

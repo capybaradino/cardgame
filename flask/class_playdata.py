@@ -188,11 +188,12 @@ class Playdata:
                 self.stat = "win"
                 return
             else:
-                # もしparamがUUIDの場合はエラー
+                # もしparamがUUIDの場合は既存ゲームと一致しているかチェック
                 try:
                     uuid.UUID(param)
-                    self.stat = "error"
-                    return
+                    if param != self.gsid:
+                        self.stat = "error"
+                        return
                 except ValueError:
                     pass
                 gamesession = card_db.getgamesession("gsid", self.gsid)
